@@ -1,14 +1,15 @@
-var chip8 = function(){
-	this.reset();
-};
+//Referenced http://blog.alexanderdickson.com/javascript-chip-8-emulator for initialization and reset function
 
-// Resets parameters of the emulator, saved into a reset() function
-chip8.prototype.reset = funtion(){
+
+var chip8 = function(){
+
+	//Initialize the chip8 emulator
+
 	//Program Counter
-	this.pc
+	this.pc = 0
 
 	//Memory
-	this.memory = new Array(4096); // Standard Chip8 memory size
+	this.memory = new Array(0x1000); // Standard Chip8 memory size, 4096 bytes
 
 	//Stack
 	this.stack = new Array(16); // According to Wikipedia page, modern systems use 16 levels
@@ -17,7 +18,7 @@ chip8.prototype.reset = funtion(){
 	this.sp = 0;
 
 	//"V" Registers
-	this.v = new Array(16);
+	this.v = new Array(16); // According to Wikipedia page, modern systems use 16 levels
 
 	// "I" Registers
 	this.i = 0;
@@ -27,6 +28,32 @@ chip8.prototype.reset = funtion(){
 
 	//Sound Timer
 	this.soundTimer = 0;
+};
 
-}
+// Resets parameters of the emulator, saved into a reset() function
+chip8.prototype = {
 
+	reset: function() {
+		var i;
+
+		for(i = 0; i < this.memory.length; i++){
+			this.memory[i] = 0;
+		};
+
+		for(i = 0; i < this.v.length; i++){
+			this.v[i] = 0;
+		};
+
+		// reset stack pointers
+		this.sp = 0;
+		this.i = 0;
+
+		// reset the PC to 0x200
+		this.pc = 0x200;
+
+		// Reset timers
+		this.delayTimer = 0;
+		this.soundTimer = 0;
+	};
+
+};
