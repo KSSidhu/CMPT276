@@ -1,6 +1,6 @@
 # CMPT 276: Product Document
 
-## introduction
+## Introduction
 
 what is the project about?
 ## Project Organization
@@ -33,13 +33,15 @@ However, when problems arise the creators of said product must return, fix, and 
 |Chip8 Tool             | Chamodi and Aloshius   |
 |Games                  | Adam, Aloshius, Chamodi|
 
-### risk analysis
+## Risk analysis
 
 key risks, and how they will be dealt with
-### hardware and software requirements
+## Hardware and software requirements
 
-hardware and software that is needed, both for development and after development during production
-### work breakdown
+### Language and Libraries
+JavaScript, Jest Testing Library, HTML
+
+## Work breakdown
 
 Release 1:
 <ol>
@@ -84,12 +86,11 @@ Release 4:
   
 a detailed list of all the expected work and deliverables
 ## Project Schedule
+
 ### Meeting Schedule
 - Every Saturday at 1:00 pm - 2:00 pm
 
-a detailed list of all the important due dates and milestones
-
-# Work Breakdown
+### Project Scheduling
 
 ##### Release 1: Chip8 Emulator
   > - Research: Jan. 8 - 12
@@ -117,34 +118,18 @@ a detailed list of all the important due dates and milestones
 > - Submit Apr. 8
 > - Presentation Apr. 8
 
-### Project Scheduling
-- Release 1
-  - Begin: Jan. 8
-  - Due: Feb. 6
-
-
-- Release 2
-  - Begin: Jan. 14
-  - Due: Feb. 27
-
-
-- Release 3
-  - Begin: Feb. 18
-  - Due: Mar. 13
-
-
-- Release 4: Chip 8 Final Release
-  - Begin: March. 13
-  - Due: Apr. 8
-
-### monitoring and reporting mechanisms
-
-how will the team report on what its doing?
-how will re-planning work?
-
-
 ### Major Features For Next Release
 - Release 1: Chip8 Emulator
 
-### Language and Libraries
-JavaScript, Jest Testing Library, HTML
+Chip8 Emulator :
+- Keyboard mapping
+- Opcodes
+- Processor implementation
+
+Chip8 Visualizer :
+- UI Design
+- Keyboard Tracking and Log
+
+### Monitoring and reporting mechanisms
+
+Main communication and updates through Slack, and submit changes to implementation onto Github. Weekly Meetings go over major design changes and general planning. Reports on progress are discussed through weekly meetings and on Slack. 
