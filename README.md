@@ -1,13 +1,20 @@
 # CMPT 276: Product Document
 
-### Meeting Schedule
-- Every Saturday at 1:00 pm - 2:00 pm
+## introduction
+
+what is the project about?
+## Project Organization
 
 ### Communication Tools
 - Slack
 
 ### Software Repository
 - Git and [Github](https://github.com/KSSidhu/CMPT276)
+
+### Testing and Quality Assurance Tools
+- Running previously created games
+- Using available software to test emulator and Visualizer
+- Jest is possible automated testing tool
 
 ### Software Methodology
 Roles:
@@ -25,6 +32,14 @@ However, when problems arise the creators of said product must return, fix, and 
 |Emulator and Visualizer| Kirat and James        |
 |Chip8 Tool             | Chamodi and Aloshius   |
 |Games                  | Adam, Aloshius, Chamodi|
+
+### risk analysis
+
+key risks, and how they will be dealt with
+### hardware and software requirements
+
+hardware and software that is needed, both for development and after development during production
+### work breakdown
 
 Release 1:
 <ol>
@@ -66,11 +81,17 @@ Release 4:
   <li>Game designers should be able to use them freely at this point
   <li>Designers will test games on our own emulators and visualizers along with publicly available ones
   </ol>
+  
+a detailed list of all the expected work and deliverables
+## Project Schedule
+### Meeting Schedule
+- Every Saturday at 1:00 pm - 2:00 pm
 
-### Testing and Quality Assurance Tools
-- Running previously created games
-- Using available software to test emulator and Visualizer
-- Jest is possible automated testing tool
+a detailed list of all the important due dates and milestones
+### monitoring and reporting mechanisms
+
+how will the team report on what its doing?
+how will re-planning work?
 
 
 ### Major Features For Next Release
