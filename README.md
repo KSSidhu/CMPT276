@@ -88,19 +88,8 @@ a detailed list of all the expected work and deliverables
 - Every Saturday at 1:00 pm - 2:00 pm
 
 a detailed list of all the important due dates and milestones
-### monitoring and reporting mechanisms
 
-how will the team report on what its doing?
-how will re-planning work?
-
-
-### Major Features For Next Release
-- Release 1: Chip8 Emulator
-
-### Language and Libraries
-JavaScript, Jest Testing Library, HTML
-
-### Work Breakdown
+# Work Breakdown
 
 ##### Release 1: Chip8 Emulator
   > - Research: Jan. 8 - 12
@@ -147,3 +136,15 @@ JavaScript, Jest Testing Library, HTML
 - Release 4: Chip 8 Final Release
   - Begin: March. 13
   - Due: Apr. 8
+
+### monitoring and reporting mechanisms
+
+how will the team report on what its doing?
+how will re-planning work?
+
+
+### Major Features For Next Release
+- Release 1: Chip8 Emulator
+
+### Language and Libraries
+JavaScript, Jest Testing Library, HTML
