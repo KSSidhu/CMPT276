@@ -107,8 +107,8 @@ a detailed list of all the expected work and deliverables
 ##### Release 3: Chip8 Plugin
 > - Research: Feb. 18 - 27
 > - Design Two Weeks: Feb. 27 - Feb. 6
-> - Test: Feb. 6 - Feb. 12
-> - Submit Feb. 13
+> - Test: Mar. 6 - Mar. 12
+> - Submit Mar. 13
 
 ##### Release 4: Chip8 Games: Pong, Block Breaker
 > - Research Game Design: Mar. 13 - Mar. 20
