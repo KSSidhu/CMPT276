@@ -1,9 +1,14 @@
 # CMPT 276: Product Document
 
 ## Introduction
+This project is to design a Chip8 Emulator for CMPT 276. It is designed for educational purposes primarily aimed at hobbyists.
 
-what is the project about?
 ## Project Organization
+- Project Manger: Kirat Sidhu
+- 2 Testers: Adam Tran, Chamodi Basnayake
+- Emulator and Visualizer Designers: James Young, Kirat Sidhu
+- Game Designers: Adam Tran, Aloshius
+- Chip8 Tool Designer: Chamodi Basnayake
 
 ### Communication Tools
 - Slack
@@ -14,15 +19,9 @@ what is the project about?
 ### Testing and Quality Assurance Tools
 - Running previously created games
 - Using available software to test emulator and Visualizer
-- Jest is possible automated testing tool
+- Selenium Testing Tool
 
 ### Software Methodology
-Roles:
-- Emulator: James Young, Kirat Sidhu
-- Visualizer: James Young, Kirat Sidhu
-- Plugin: Chamodi
-- Game 1: Adam
-- Game 2: Aloshius
 
 Primarily team members will be testing their own work
 However, when problems arise the creators of said product must return, fix, and retest
@@ -35,11 +34,19 @@ However, when problems arise the creators of said product must return, fix, and 
 
 ## Risk analysis
 
-key risks, and how they will be dealt with
+##### Exams and Other Courses:
+  - During exam periods work may be postponed or given to other team members who aren't studying for exams.
+  - Alternatively team members may focus on other components of the project until team member is free to continue.
+
+##### Experience:
+  - Most members are new to JavaScript and Chip8
+  - Research, research, research
+  - Tutorials for both are pursued and UI design will be researched by looking into previously created projects
+
 ## Hardware and software requirements
 
 ### Language and Libraries
-JavaScript, Jest Testing Library, HTML
+JavaScript, Selenium, HTML
 
 ## Work breakdown
 
