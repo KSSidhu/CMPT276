@@ -51,11 +51,8 @@ chip8.prototype = {
 	  0xF0, 0x80, 0xF0, 0x80, 0x80  // F
 	];
 
-<<<<<<< HEAD
 	// Resets parameters of the emulator, saved into a reset() function
-=======
 
->>>>>>> 8fc36d34333bca9a828a333b2e2fcf442b84a3a3
 	reset: function() { // Used to initialize chip8 emulator
 
 		var k;
