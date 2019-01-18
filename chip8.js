@@ -85,19 +85,127 @@ chip8.prototype = {
 
 		//Decode Opcode
 
-		switch(opcode & 0xF000){
+		switch(opcode & 0xF000) {
 
-			//opcode cases here ....
+			case 0x0000:
+				switch(opcode & 0x000F) {
+					case 0x0000: //0x000E Clears display
+
+					break;
+
+					case 0x000E:
+						pc = stack[sp]; // push PC to top of stack
+						sp -= 1;
+					break;
+				}
+			break;
+
+
+			case 0x1000:
+				pc = opcode & 0x0FFF;
+			break;
+
+
+			case 0x2000:
+				sp++;
+				stack[sp] = pc;
+				pc = opcode & 0x0FFF;
+			break;
+
+
+			case 0x3000:
+				if(v[opcode & 0x0F000] == (opcode & 0x00FF)) { //compare V[x] to last 8 bits
+					pc += 2;
+				}
+			break;
+
+
+			case 0x4000:
+				if(v[opcode & 0x0F000] != (opcode & 0x00FF)) { //compare V[x] to last 8 bits
+					pc += 2;
+				}
+			break;
+
+
+			case 0x5000:
+				if(v[opcode & 0x0F00] == v[opcode & 0x00F0]) {
+					pc += 2;
+				}
+			break;
+
+
+			case 0x6000:
+				v[opcode & 0x0F00] = (opcode & 0x00FF);
+			break;
+
+
+			case 0x7000:
+				v[opcode & 0x0F00] += (opcode & 0x00FF);
+			break;
+
+
+			case 0x8000:
+				switch(opcode & 0x000F) {
+					case 0x0000:
+						v[opcode & 0x0F00] = v[opcode & 0x00F0];
+					break;
+
+
+					case 0x0001:
+						x = opcode & 0x0F00;
+						v[x] = (v[x] | v[opcode & 0x00F0]);
+					break;
+
+
+					case 0x0002:
+						x = opcode & 0x0F00;
+						v[x] = (v[x] & v[opcode & 0x00F0]);
+					break;
+
+
+					case 0x0003:
+						x = opcode & 0x0F00;
+						v[x] = (v[x] ^ v[opcode & 0x00F0]);
+					break;
+
+
+					case 0x0004;
+
+					break;
+
+
+					case 0x0005:
+
+					break;
+
+
+					case 0x0006:
+
+					break;
+
+
+					case 0x0007:
+
+					break;
+
+
+					case 0x000E:
+
+					break;
+				}
 
 			case 0xA000: // ANNN : Sets I to address NNN
 				i = opcode & 0x0FFF; // This case grabs the last 12 bits to analyze
 				pc += 2;
 			break;
 
-			// Execute Opcode
+			case 0xB000:
+				pc = (opcode & 0x0FFF) + v[0];
+			break;
+			
 
 			default:
-				//print out Error statement
+				console.log("Unknown Opcode [0x0000]: opcode");
 
 		}
 	}
