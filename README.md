@@ -109,7 +109,7 @@ a detailed list of all the expected work and deliverables
 > - Research: Jan. 14 - 19
 > - Design Two Weeks: Jan. 20 - Feb. 3
 > - Test: Feb. 3 - Feb. 9
-> - Submit Feb. 10
+> - Submit Feb. 27
 
 ##### Release 3: Chip8 Plugin -> 60 Hrs
 > - Research: Feb. 18 - 27
