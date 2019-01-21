@@ -3,43 +3,14 @@
 
 // Chip 8 processor
 var chip8 = function(){
+	this.initialize();
 
-	//Program Counter
-	this.pc = 0
-
-	//Memory
-	this.memory = new Array(0x1000); // Standard Chip8 memory size, 4096 bytes
-
-	//Stack
-	this.stack = new Array(16); // According to Wikipedia page, modern systems use 16 levels
-
-	//Stack Pointer
-	this.sp = 0;
-
-	//"V" Registers
-	this.v = new Array(16); // V[0] -> V[F]
-
-	// Video Memory
-	this.vram = new Array(64 * 32);
-
-	//Keyboard Buffer
-	this.buffer = new Array(16);
-
-	// Draw Operation Flag
-	this.drawFlag = false;
-
-	//Key Press
-	this.keyPress = false;
-
-	// "I" Index Registers
-	this.i = 0;
-
-	// Delay Timer
-	this.delayTimer = 0;
-
-	//Sound Timer
-	this.soundTimer = 0;
+	wihle(true){
+		this.runCycle();
+	}
 };
+
+
 
 chip8.prototype = {
 
@@ -61,6 +32,46 @@ chip8.prototype = {
 	  0xF0, 0x80, 0xF0, 0x80, 0xF0, // E
 	  0xF0, 0x80, 0xF0, 0x80, 0x80  // F
 	];
+
+
+	initialize: function() {
+
+		//Program Counter
+		this.pc = 0
+
+		//Memory
+		this.memory = new Array(0x1000); // Standard Chip8 memory size, 4096 bytes
+
+		//Stack
+		this.stack = new Array(16); // According to Wikipedia page, modern systems use 16 levels
+
+		//Stack Pointer
+		this.sp = 0;
+
+		//"V" Registers
+		this.v = new Array(16); // V[0] -> V[F]
+
+		// Video Memory
+		this.vram = new Array(64 * 32);
+
+		//Keyboard Buffer
+		this.buffer = new Array(16);
+
+		// Draw Operation Flag
+		this.drawFlag = false;
+
+		//Key Press
+		this.keyPress = false;
+
+		// "I" Index Registers
+		this.i = 0;
+
+		// Delay Timer
+		this.delayTimer = 0;
+
+		//Sound Timer
+		this.soundTimer = 0;
+	};
 
 	// Resets parameters of the emulator, saved into a reset() function
 
@@ -357,6 +368,6 @@ chip8.prototype = {
 				console.log("Unknown Opcode [0x0000]: opcode");
 
 		}
-	}
+	};
 
 };
