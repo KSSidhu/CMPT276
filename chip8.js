@@ -43,6 +43,9 @@ chip8 = {
 	//Keyboard Buffer
 	buffer: new Array(16),
 
+	//Tracks previous keys pressed
+	keyLog: new Array(16),
+
 	// Draw Operation Flag
 	drawFlag: false,
 
@@ -57,6 +60,15 @@ chip8 = {
 
 	//Sound Timer
 	soundTimer: 0,
+
+	//Flag for program loaded
+	loadFlag : false,
+
+	//Track if a key is pressed or waiting for key to be pressed
+	keyWait : false,
+
+
+
 
 	// Resets parameters of the emulator, saved into a reset() function
 
@@ -94,6 +106,12 @@ chip8 = {
 		// Reset timers
 		chip8.delayTimer = 0;
 		chip8.soundTimer = 0;
+
+		//reset flags
+		drawFlag = false;
+		loadFlag = false;
+		keyPress = false;
+		keyWait = false;
 	},
 
 	//Emulation Cycle
@@ -352,6 +370,30 @@ chip8 = {
 				console.log('Unknown Opcode [0x0000]: opcode');
 		}
 	}
+
+	//Detects the key pressed
+	keyPress: function(key)
+	{
+		if (key < 16)
+		{
+			keyLog[key] = true;
+			if (keyWait != nil)
+			{
+				keyWait = key;
+				waitFlag = true;
+			}
+		}
+
+	},
+
+	keyRelease: function(key)
+	{
+		if (key < 16)
+		{
+			keyLog[key] = false;
+		}
+	},
+
 };
 
 module.exports = chip8; // exporting the chip8 object to run tests with JEST.js
