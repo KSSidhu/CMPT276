@@ -2,6 +2,25 @@
 // Reference http://www.multigesture.net/articles/how-to-write-an-emulator-chip-8-interpreter/ for reset function construction
 
 
+var CHIP8_FONTSET =[
+  0xF0, 0x90, 0x90, 0x90, 0xF0, // 0
+  0x20, 0x60, 0x20, 0x20, 0x70, // 1
+  0xF0, 0x10, 0xF0, 0x80, 0xF0, // 2
+  0xF0, 0x10, 0xF0, 0x10, 0xF0, // 3
+  0x90, 0x90, 0xF0, 0x10, 0x10, // 4
+  0xF0, 0x80, 0xF0, 0x10, 0xF0, // 5
+  0xF0, 0x80, 0xF0, 0x90, 0xF0, // 6
+  0xF0, 0x10, 0x20, 0x40, 0x40, // 7
+  0xF0, 0x90, 0xF0, 0x90, 0xF0, // 8
+  0xF0, 0x90, 0xF0, 0x10, 0xF0, // 9
+  0xF0, 0x90, 0xF0, 0x90, 0x90, // A
+  0xE0, 0x90, 0xE0, 0x90, 0xE0, // B
+  0xF0, 0x80, 0x80, 0x80, 0xF0, // C
+  0xE0, 0x90, 0x90, 0x90, 0xE0, // D
+  0xF0, 0x80, 0xF0, 0x80, 0xF0, // E
+  0xF0, 0x80, 0xF0, 0x80, 0x80  // F
+];
+
 chip8 = {
 	// Program Counter
 	pc: 0,
@@ -44,11 +63,29 @@ chip8 = {
 	reset: function() {
 		// Used to initialize chip8 emulator
 
+		//clear memory
 		chip8.memory = chip8.memory.map( ()=> 0);
-		chip8.v = chip8.v.map( ()=> 0);
+
+		// load fontset into memory
+		for(var i = 0; i < CHIP8_FONTSET.length; i++){
+			chip8.memory[i] = CHIP8_FONTSET[i];
+		}
+
+		// Clear V registers
+		// chip8.v = chip8.v.map( ()=> 0);
+		for(let i = 0; i < chip8.v.length; i++){
+			chip8.v[i] = 0;
+		}
+
+		// Clear stack
+		// chip8.stack = chip8.stack.map( ()=> 0);
+		for(let i = 0; i < chip8.stack.length; i++) {
+			chip8.stack[i] = 0;
+		}
 
 		// reset stack pointers
 		chip8.sp = 0;
+
 		chip8.i = 0;
 
 		// reset the PC to 0x200
@@ -60,12 +97,12 @@ chip8 = {
 	},
 
 	//Emulation Cycle
-	runCycle: function() {
+	runCycle: function(opcode) {
 		//Fetch Opcode
-		var opcode = (chip8.memory[chip8.pc] << 8) | chip8.memory[chip8.pc + 1]; // obtain 16-bit opcode command
+		// var opcode = (chip8.memory[chip8.pc] << 8) | chip8.memory[chip8.pc + 1]; // obtain 16-bit opcode command
 		//Grab top 8 bits of opcode, shift left by 8 to make space to add remaining 8 bits of opcode
 
-		
+		// var opcode = 0x1000;
 		
 
 		//Decode Opcode
@@ -73,14 +110,16 @@ chip8 = {
 		switch (opcode & 0xf000) { // Check 4 most significant bits
 			case 0x0000:
 				switch (opcode & 0x000f) { // Check least 4 significant bits
-					case 0x0000: //0x000E Clears display
-						break;
+					// case 0x0000: //0x000E Clears display
+						
+					// break;
+					//Case 0x000 is ignored on modern interpreters according to Cowgod's Chip 8 Technical Manual
 
 					case 0x000e:
-						sp--;
-						pc = stack[sp]; // push PC to top of stack
-						pc += 2;
-						break;
+						chip8.sp--;
+						chip8.pc = chip8.stack[chip8.sp]; // push PC to top of stack
+						chip8.pc += 2;
+					break;
 				}
 				break;
 
@@ -88,92 +127,90 @@ chip8 = {
 				var y = (opcode & 0x00f0) >> 4;
 
 			case 0x1000:
-				pc = opcode & 0x0fff;
+				chip8.pc = opcode & 0x0fff;
 				break;
 
 			case 0x2000:
-				stack[sp] = pc;
-				sp++;
-				pc = opcode & 0x0fff;
+				chip8.stack[chip8.sp] = chip8.pc;
+				chip8.sp++;
+				chip8.pc = opcode & 0x0fff;
 				break;
 
 			case 0x3000:
-				if (v[x] == (opcode & 0x00ff)) {
+				if (chip8.v[x] == (opcode & 0x00ff)) {
 					//compare V[x] to last 8 bits
-					pc += 4;
-				} else {
-					pc += 2;
+					chip8.pc += 2;
 				}
 				break;
 
 			case 0x4000:
-				if (v[x] != (opcode & 0x00ff)) {
+				if (chip8.v[x] != (opcode & 0x00ff)) {
 					//compare V[x] to last 8 bits
-					pc += 4;
-				} else {
-					pc += 2;
+					chip8.pc += 2;
 				}
 				break;
 
 			case 0x5000:
 				if (v[x] == v[y]) {
-					pc += 4;
+					chip8.pc += 4;
 				} else {
-					pc += 2;
+					chip8.pc += 2;
 				}
 				break;
 
 			case 0x6000:
-				v[x] = opcode & 0x00ff;
-				pc += 2;
+				chip8.v[x] = opcode & 0x00ff;
+				chip8.pc += 2;
 				break;
 
 			case 0x7000:
-				v[x] += opcode & 0x00ff;
-				pc += 2;
+				chip8.v[x] += opcode & 0x00ff;
+				chip8.pc += 2;
 				break;
 
 			case 0x8000:
 				switch (opcode & 0x000f) {
 					case 0x0000:
-						v[x] = v[y];
-						pc += 2;
+						chip8.v[x] = chip8.v[y];
+						chip8.pc += 2;
 						break;
 
 					case 0x0001:
 						x = opcode & 0x0f00;
-						v[x] = v[x] | v[y];
-						pc += 2;
+						chip8.v[x] = chip8.v[x] | chip8.v[y];
+						chip8.pc += 2;
 						break;
 
 					case 0x0002:
-						v[x] = v[x] & v[y];
-						pc += 2;
+						chip8.v[x] = chip8.v[x] & chip8.v[y];
+						chip8.pc += 2;
 						break;
 
 					case 0x0003:
-						v[x] = v[x] ^ v[y];
-						pc += 2;
+						chip8.v[x] = chip8.v[x] ^ chip8.v[y];
+						chip8.pc += 2;
 						break;
 
 					case 0x0004:
-						if (v[y] > 0xff - v[x])
-							v[0xf] = 1; //carry
-						else v[0xf] = 0;
-						v[x] += v[y];
-						pc += 2;
+						if (chip8.v[y] > 0xff - chip8.v[x])
+							chip8.v[0xf] = 1; //carry
+						else 
+							chip8.v[0xf] = 0;
+
+						chip8.v[x] += chip8.v[y];
+						chip8.pc += 2;
 						break;
 
 					case 0x0005:
-						if (v[x] > v[y]) {
+						if (chip8.v[x] > chip8.v[y]) {
 							// Vx > Vy
-							v[0xf] = 1; //carry
+							chip8.v[0xf] = 1; //carry
 						} else {
-							v[0xf] = 0;
+							chip8.v[0xf] = 0;
 						}
 
-						v[x] -= v[y]; //Vx = Vx - Vy
-						pc += 2;
+						chip8.v[x] -= chip8.v[y]; //Vx = Vx - Vy
+						chip8.pc += 2;
 						break;
 
 					case 0x0006:
@@ -256,6 +293,13 @@ chip8 = {
 				break;
 
 			case 0xe000:
+				switch(opcode & 0x00ff) {
+					case 0x009e:
+						break;
+
+					case 0x00a1:
+						break;
+				}
 				break;
 
 			case 0xf000:
@@ -266,6 +310,7 @@ chip8 = {
 						break;
 
 					case 0x000a:
+
 						break;
 
 					case 0x0015:
@@ -284,15 +329,22 @@ chip8 = {
 						break;
 
 					case 0x0029:
+						chip8.i = chip8.v[x] * 5;
 						break;
 
 					case 0x0033:
 						break;
 
 					case 0x0055:
+						for(let i = 0; i <= x; i++) {
+							chip8.v[i] = chip8.memory[chip8.i + i];
+						}
 						break;
 
 					case 0x0065:
+						for(let i = 0; i <= x; i++) {
+							chip8.v[i] = chip8.memory[chip8.i + i];
+						}
 						break;
 				}
 
@@ -301,3 +353,5 @@ chip8 = {
 		}
 	}
 };
+
+module.exports = chip8; // exporting the chip8 object to run tests with JEST.js
