@@ -18,16 +18,19 @@ html {
   box-sizing: inherit;
 }
 
-textarea {
+#logtextarea {
   width:  calc(50vw - 20px);      /* calc and viewport to the rescue */
   height: calc(30vh - 20px);
   resize: none;
+  max-width: 640px;
 }
 
 #memtextarea {
   width:  calc(30vw - 20px);      /* calc and viewport to the rescue */
   height: calc(50vh - 20px);
   resize: none;
+  max-height: 320px;
+  min-height: 320px;
 }
 
 .visualizer {
@@ -61,10 +64,15 @@ textarea {
   float: left;
   width: 35%;
   padding: 10px;
+  min-height: 300px;
+  max-height: 300px;
 }
+
 .keys {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
+	display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    min-height: 20px;
+    min-width: 20px;
 }
 
 /* Clear floats after the columns */
@@ -73,8 +81,14 @@ textarea {
   display: table;
   clear: both;
 }
+button {
+  background-color: #66ccff;
+  padding: 3%;
+  border: 2px solid;
+  color: black;
+}
 
-.btn:hover {
+.button:hover {
   background-color: #ddd;
 }
 
@@ -88,6 +102,7 @@ textarea {
   <div class="row">
     <div class="romDisplay" style="background-color:#aaa;">
       <h2>ROM</h2>
+      <canvas width="640" height="320" ></canvas>
     </div>
     <div class="memDisplay" style="background-color:#bbb;">
       <h2>Memory</h2>
@@ -98,10 +113,24 @@ textarea {
   <div class="row">
     <div class="logDisplay" style="background-color:#ccc;">
       <h2>Log</h2>
-      <textarea rows="10" cols="30" readonly></textarea>
+      <textarea id="logtextarea" rows="10" cols="70" readonly></textarea>
     </div>
     <div class="keyDisplay" style="background-color:#ddd;">
       <h2>Keyboard</h2>
+      <div class="keys">
+        <button type="button"> 1 </button>
+        <button type="button"> 2 </button>
+        <button type="button"> 3 </button>
+        <button type="button"> Q </button>
+        <button type="button"> W </button>
+        <button type="button"> E </button>
+        <button type="button"> A </button>
+        <button type="button"> S </button>
+        <button type="button"> D </button>
+        <button type="button"> Z </button>
+        <button type="button"> X </button>
+        <button type="button"> C </button>
+      </div>
     </div>
   </div>
 </div>
