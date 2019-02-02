@@ -18,6 +18,10 @@ html {
   box-sizing: inherit;
 }
 
+.toolbar{
+
+}
+
 .visualizer {
   border: 1px solid #ccc;
   border-radius: 5px;
@@ -45,6 +49,11 @@ html {
 	right: 0;
 }
 /* Create two equal columns that floats next to each other */
+.toolbar{
+	float: left;
+	width: 100%;
+	height: 10%;
+}
 .romDisplay {
   float: left;
   width: 65%;
@@ -86,7 +95,7 @@ html {
 
 .keys {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
 }
 
 /* Clear floats after the columns */
@@ -95,13 +104,33 @@ html {
   display: table;
   clear: both;
 }
+
 button {
   background-color: #66ccff;
-  border: 2px solid;
+  border: 1px solid;
   color: black;
   height : 60px;
 }
 
+.loadrom {
+  color: black;
+  height: 20px;
+  background-color: #e7e7e7;
+  border: 1px solid;
+  padding: 2px;
+}
+
+input[type="file"] {
+    display: none;
+}
+
+#toolbarbutton {
+  color: black;
+  height: 20px;
+  background-color: #e7e7e7;
+  border: 1px solid;
+  padding: 2px;
+}
 .button:hover {
   background-color: #ddd;
 }
@@ -109,11 +138,18 @@ button {
 </style>
 </head>
 <body>
-
+<input type="file" id="file-input" />
 <br>
 <div class="wrapper" id="wrapper">
 	<div class="visualizer" id="visualizer">
 	  <div class="row">
+	  	<div class="toolbar" style="background-color:#eee;">
+	  		<label id="loadrom">
+   				<input type="file"/>
+   				Load ROM
+			</label>
+	  		<button id="toolbarbutton" type="button"> Help </button>
+	  	</div>
 	    <div class="romDisplay" style="background-color:#aaa;">
 	      <h2>ROM</h2>
 	      <canvas width="640" height="320" ></canvas>
@@ -127,7 +163,8 @@ button {
 	  <div class="row">
 	    <div class="logDisplay" style="background-color:#ccc;">
 	      <h2>Log</h2>
-	      <textarea id="logtextarea" rows="10" cols="70" readonly></textarea>
+	      <textarea id="logtextarea" rows="10" cols="70" readonly>
+	      </textarea>
 	    </div>
 	    <div class="keyDisplay" style="background-color:#ddd;">
 	      <h2>Keyboard</h2>
@@ -135,20 +172,25 @@ button {
 	        <button type="button"> 1 </button>
 	        <button type="button"> 2 </button>
 	        <button type="button"> 3 </button>
+	        <button type="button"> 4 </button>
 	        <button type="button"> Q </button>
 	        <button type="button"> W </button>
 	        <button type="button"> E </button>
+	        <button type="button"> R </button>
 	        <button type="button"> A </button>
 	        <button type="button"> S </button>
 	        <button type="button"> D </button>
+	        <button type="button"> F </button>
 	        <button type="button"> Z </button>
 	        <button type="button"> X </button>
 	        <button type="button"> C </button>
+	        <button type="button"> V </button>
 	      </div>
 	    </div>
 	  </div>
 	</div>
 </div>
+
 <script>
 // Get the elements with class="column"
 var elements = document.getElementsByClassName("column");
