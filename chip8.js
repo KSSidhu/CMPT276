@@ -1,5 +1,5 @@
-// Referenced http://blog.alexanderdickson.com/javascript-chip-8-emulator for chip 8 processor construction
-// Reference http://www.multigesture.net/articles/how-to-write-an-emulator-chip-8-interpreter/ for reset function construction
+// Reference http://www.multigesture.net/articles/how-to-write-an-emulator-chip-8-interpreter/ for chip8 object layout and functions to include
+// Referenced http://devernay.free.fr/hacks/chip8/C8TECH10.HTM#00E0 for opcode instructions
 
 let CHIP8_FONTSET =[
   0xF0, 0x90, 0x90, 0x90, 0xF0, // 0
@@ -36,7 +36,7 @@ chip8 = {
 	//"V" Registers
 	v: new Uint16Array(16), // V[0] -> V[F]
 
-	// Video Memory
+	// Video Memory holding size of display
 	vram: new Uint8Array(64 * 32),
 
 	//Keyboard Buffer
@@ -51,7 +51,7 @@ chip8 = {
 	//Key Press
 	keyPress: false,
 
-	// "I" Index Registers
+	// "I" Index Register
 	i: 0,
 
 	// Delay Timer
@@ -66,34 +66,34 @@ chip8 = {
 	//Track if a key is pressed or waiting for key to be pressed
 	keyWait: false,
 
-	// Resets parameters of the emulator, saved into a reset() function
 
 	reset: function() {
 		// Used to initialize chip8 emulator
 
 		//clear memory
-		chip8.memory = chip8.memory.map(() => 0);
+		chip8.memory = chip8.memory.fill(0);
 
 		// load fontset into memory
-		for (var i = 0; i < CHIP8_FONTSET.length; i++) {
-			chip8.memory[i] = CHIP8_FONTSET[i];
-		}
+		// for (var i = 0; i < CHIP8_FONTSET.length; i++) {
+		// 	chip8.memory[i] = CHIP8_FONTSET[i];
+		// }
+
+		// Clear display
+		chip8.vram = chip8.vram.fill(0);
 
 		// Clear V registers
-		chip8.v = chip8.v.map(() => 0);
-		// for (let i = 0; i < chip8.v.length; i++) {
-		// 	chip8.v[i] = 0;
-		// }
+		chip8.v = chip8.v.fill(0);
 
 		// Clear stack
-		chip8.stack = chip8.stack.map(() => 0);
-		// for (let i = 0; i < chip8.stack.length; i++) {
-		// 	chip8.stack[i] = 0;
-		// }
+		chip8.stack = chip8.stack.fill(0);
+
+		// Clear keyboard buffer
+		chip8.buffer = chip8.buffer.fill(0);
 
 		// reset stack pointers
 		chip8.sp = 0;
 
+		// set I address to 0
 		chip8.i = 0;
 
 		// reset the PC to 0x200
@@ -125,9 +125,9 @@ chip8 = {
 		switch (opcode & 0xf000) { // Check 4 most significant bits
 			case 0x0000:
 				switch (opcode & 0x000f) { // Check least 4 significant bits
-					// case 0x0000: //0x000E Clears display
-
-					// break;
+					case 0x0000: //0x000E Clears display
+						chip8.vram = chip8.vram.map(() => 0); // clear content of the vram array
+						break;
 					//Case 0x000 is ignored on modern interpreters according to Cowgod's Chip 8 Technical Manual
 
 					case 0x000e:
@@ -243,11 +243,6 @@ chip8 = {
 						break;
 
 					case 0x000e:
-						// if (chip8.v[x] >> 7) {
-						// 	chip8.v[0xf] = 1;
-						// } else {
-						// 	chip8.v[0xf] = 0;
-						// }
 						chip8.v[0xf] = chip8.v[x] >> 7;
 						chip8.v[x] *= 2;
 						chip8.pc += 2;
@@ -287,10 +282,10 @@ chip8 = {
 
 					for (var xlim = 0; xlim < 8; xlim++) {
 						if ((sprite & (0x80 >> xlim)) != 0) {
-							if (vram[v[x] + xlim + (v[y] + ylim) * 64] == 1) {
+							if (vram[v[x] + xlim + (v[y] + ylim) * 64] == 1) { // checks if any sprites currently exist at position
 								v[0xf] = 1;
 							}
-							vram[v[x] + xlim + (v[y] + ylim) * 64] ^= 1;
+							vram[v[x] + xlim + (v[y] + ylim) * 64] ^= 1; // draw sprite to screen
 						}
 					}
 				}
@@ -300,9 +295,17 @@ chip8 = {
 			case 0xe000:
 				switch(opcode & 0x00ff) {
 					case 0x009e:
+						let index1 = chip8.v[x];
+						if(chip8.buffer[index1] != 0) {
+							chip8.pc += 2;
+						}
 						break;
 
 					case 0x00a1:
+						let index2 = chip8.v[x];
+						if(chip8.buffer[index2] == 0) {
+							chip8.pc += 2;
+						}
 						break;
 				}
 				break;
@@ -310,34 +313,50 @@ chip8 = {
 			case 0xf000:
 				switch (opcode & 0x00ff) {
 					case 0x0007:
-						v[x] = delayTimer;
-						pc += 2;
+						chip8.v[x] = chip8.delayTimer;
+						chip8.pc += 2;
 						break;
 
 					case 0x000a:
+						let keyPress = false;
+						for(let i = 0; i < 16; i++) {
+							if(chip8.buffer[i] != 0) { // if key is pressed
+								chip8.v[x] = i; // store the value of the key into V[x]
+								keyPress = true;
+							}
 
+							if(!keyPress) // if no key is pressed, stop execution until input is given
+								return;
+							chip8.pc += 2;
+						}
 						break;
 
 					case 0x0015:
-						delayTimer = v[x];
-						pc += 2;
+						chip8.delayTimer = chip8.v[x];
+						chip8.pc += 2;
 						break;
 
 					case 0x0018:
-						soundTimer = v[x];
-						pc += 2;
+						chip8.soundTimer = chip8.v[x];
+						chip8.pc += 2;
 						break;
 
 					case 0x001e:
-						i += v[x];
-						pc += 2;
+						chip8.i += chip8.v[x];
+						chip8.pc += 2;
 						break;
 
 					case 0x0029:
 						chip8.i = chip8.v[x] * 5;
+						chip8.pc += 2;
 						break;
 
 					case 0x0033:
+						//Store binary decimal representation of I
+						chip8.memory[chip8.i] = chip8.v[x] / 100; //Store hundreth's position at location i in memory
+						chip8.memory[chip8.i + 1] = (chip8.v[x] / 10) % 10; // Store tens digit into location i + 1 in memory
+						chip8.memory[chip8.i + 2] = (chip8.v[x] % 100) % 10; // Store ones digit into location i + 2 in memory
+						chip8.pc += 2;
 						break;
 
 					case 0x0055:
@@ -352,9 +371,10 @@ chip8 = {
 						}
 						break;
 				}
+			break;
 
 			default:
-				console.log('Unknown Opcode [0x0000]: opcode');
+				console.log('Unknown Opcode: ' + opcode);
 		}
 	}
 
