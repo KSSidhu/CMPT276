@@ -18,18 +18,6 @@ html {
   box-sizing: inherit;
 }
 
-textarea {
-  width:  calc(50vw - 20px);      /* calc and viewport to the rescue */
-  height: calc(30vh - 20px);
-  resize: none;
-}
-
-#memtextarea {
-  width:  calc(30vw - 20px);      /* calc and viewport to the rescue */
-  height: calc(50vh - 20px);
-  resize: none;
-}
-
 .visualizer {
   border: 1px solid #ccc;
   border-radius: 5px;
@@ -40,6 +28,21 @@ textarea {
   
   width: 90%;
   height: 90%;
+}
+
+.wrapper{
+	padding: 20px;
+	resize: both;
+	position: relative;
+	height: 320px;
+}
+
+.resize-ui{
+	width: 10px;
+	height: 10px;
+	position: absolute;
+	bottom: 0;
+	right: 0;
 }
 /* Create two equal columns that floats next to each other */
 .romDisplay {
@@ -57,14 +60,33 @@ textarea {
   width: 65%;
   padding: 10px;
 }
+
+#logtextarea {
+  width:  calc(50vw - 20px);      /* calc and viewport to the rescue */
+  height: calc(30vh - 20px);
+  resize: none;
+  max-width: 640px;
+  max-height: 236px;
+  min-height: 236px;
+}
+
+#memtextarea {
+  width:  calc(30vw - 20px);      /* calc and viewport to the rescue */
+  height: calc(50vh - 20px);
+  resize: none;
+  max-height: 320px;
+  min-height: 320px;
+}
+
 .keyDisplay {
   float: left;
   width: 35%;
   padding: 10px;
 }
+
 .keys {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
 }
 
 /* Clear floats after the columns */
@@ -73,8 +95,14 @@ textarea {
   display: table;
   clear: both;
 }
+button {
+  background-color: #66ccff;
+  border: 2px solid;
+  color: black;
+  height : 60px;
+}
 
-.btn:hover {
+.button:hover {
   background-color: #ddd;
 }
 
@@ -83,29 +111,44 @@ textarea {
 <body>
 
 <br>
+<div class="wrapper" id="wrapper">
+	<div class="visualizer" id="visualizer">
+	  <div class="row">
+	    <div class="romDisplay" style="background-color:#aaa;">
+	      <h2>ROM</h2>
+	      <canvas width="640" height="320" ></canvas>
+	    </div>
+	    <div class="memDisplay" style="background-color:#bbb;">
+	      <h2>Memory</h2>
+	      <textarea id="memtextarea" rows="10" cols="40" readonly></textarea>
+	    </div>
+	  </div>
 
-<div class="visualizer">
-  <div class="row">
-    <div class="romDisplay" style="background-color:#aaa;">
-      <h2>ROM</h2>
-    </div>
-    <div class="memDisplay" style="background-color:#bbb;">
-      <h2>Memory</h2>
-      <textarea id="memtextarea" rows="10" cols="40" readonly></textarea>
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="logDisplay" style="background-color:#ccc;">
-      <h2>Log</h2>
-      <textarea rows="10" cols="30" readonly></textarea>
-    </div>
-    <div class="keyDisplay" style="background-color:#ddd;">
-      <h2>Keyboard</h2>
-    </div>
-  </div>
+	  <div class="row">
+	    <div class="logDisplay" style="background-color:#ccc;">
+	      <h2>Log</h2>
+	      <textarea id="logtextarea" rows="10" cols="70" readonly></textarea>
+	    </div>
+	    <div class="keyDisplay" style="background-color:#ddd;">
+	      <h2>Keyboard</h2>
+	      <div class="keys">
+	        <button type="button"> 1 </button>
+	        <button type="button"> 2 </button>
+	        <button type="button"> 3 </button>
+	        <button type="button"> Q </button>
+	        <button type="button"> W </button>
+	        <button type="button"> E </button>
+	        <button type="button"> A </button>
+	        <button type="button"> S </button>
+	        <button type="button"> D </button>
+	        <button type="button"> Z </button>
+	        <button type="button"> X </button>
+	        <button type="button"> C </button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
 </div>
-
 <script>
 // Get the elements with class="column"
 var elements = document.getElementsByClassName("column");
