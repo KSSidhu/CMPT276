@@ -313,8 +313,8 @@ chip8 = {
 			case 0xf000:
 				switch (opcode & 0x00ff) {
 					case 0x0007:
-						v[x] = delayTimer;
-						pc += 2;
+						chip8.v[x] = chip8.delayTimer;
+						chip8.pc += 2;
 						break;
 
 					case 0x000a:
@@ -332,29 +332,30 @@ chip8 = {
 						break;
 
 					case 0x0015:
-						delayTimer = v[x];
-						pc += 2;
+						chip8.delayTimer = chip8.v[x];
+						chip8.pc += 2;
 						break;
 
 					case 0x0018:
-						soundTimer = v[x];
-						pc += 2;
+						chip8.soundTimer = chip8.v[x];
+						chip8.pc += 2;
 						break;
 
 					case 0x001e:
-						i += v[x];
-						pc += 2;
+						chip8.i += chip8.v[x];
+						chip8.pc += 2;
 						break;
 
 					case 0x0029:
 						chip8.i = chip8.v[x] * 5;
+						chip8.pc += 2;
 						break;
 
 					case 0x0033:
 						//Store binary decimal representation of I
 						chip8.memory[chip8.i] = chip8.v[x] / 100; //Store hundreth's position at location i in memory
 						chip8.memory[chip8.i + 1] = (chip8.v[x] / 10) % 10; // Store tens digit into location i + 1 in memory
-						chip8.memory[chip8.i + 1] = (chip8.v[x] % 100) % 10; // Store ones digit into location i + 2 in memory
+						chip8.memory[chip8.i + 2] = (chip8.v[x] % 100) % 10; // Store ones digit into location i + 2 in memory
 						chip8.pc += 2;
 						break;
 
@@ -370,9 +371,10 @@ chip8 = {
 						}
 						break;
 				}
+			break;
 
 			default:
-				console.log('Unknown Opcode [0x0000]: opcode');
+				console.log('Unknown Opcode: ' + opcode);
 		}
 	}
 

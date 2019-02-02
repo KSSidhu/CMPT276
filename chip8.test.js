@@ -1,16 +1,42 @@
 const chip8 = require('./chip8');
 // import chip8 from './chip8';
 
-//test reset function
-// test('reset function works', () => {
-// 	chip8.reset();
+// test reset function
+test('reset function works', () => {
+	chip8.reset();
 
-// 	expect(chip8).toMatchObject({});
-// });
+	// Check static variables
+	expect(chip8).toMatchObject({pc: 0x200, sp: 0, i: 0, delayTimer: 0, soundTimer: 0});
+	// Check flags
+	expect(chip8).toMatchObject({drawFlag: false, loadFlag: false, keyPress: false, keyWait: false});
+	// Check arrays for memory, registers and vram
+	for(let i = 0; i < chip8.memory.length; i++) {
+		expect(chip8.memory[i]).toEqual(0);
+		if(i < 16) {
+			expect(chip8.v[i]).toEqual(0);
+			expect(chip8.stack[i]).toEqual(0);
+		} else if (i < 2048) {
+			expect(chip8.vram[i]).toEqual(0)
+		}
+	}
+
+	for(let i = 0; i < chip8.buffer.length; i++) {
+
+			expect(chip8.buffer[i]).toEqual(0);
+	}
+});
 
 // Rest the chip8 object prior to running any test
 beforeEach(() => {
 	chip8.reset();
+});
+
+test('opcode: 0x00e0 is correct', () => {
+	let opcode = 0x0000;
+	chip8.runCycle(opcode);
+	for(let i = 0; i < chip8.vram.length; i++) {
+		expect(chip8.vram[i]).toEqual(0);
+	}
 });
 
 test('opcode: 0x000e is correct', () => {
@@ -197,6 +223,59 @@ test('opcode: 0xc000 is correct', () => {
 	chip8.v[0] = 12;
 
 	chip8.runCycle(opcode);
-	expect(chip8.v[x]).not.toBe(0);
+	// expect(chip8.v[x]).not.toBe(0);
 	expect(chip8).toMatchObject({pc: 514});
 }); 
+
+
+test('opcode: 0xe000 is correct', () => {
+	let opcode = 0xe09e;
+	let x = (opcode & 0x0f00) >> 8;
+	chip8.buffer[0] = 1;
+
+	chip8.runCycle(opcode);
+	expect(chip8).toMatchObject({pc: 514});
+
+	opcode = 0xe0a1;
+	chip8.buffer[0] = 0;
+	chip8.runCycle(opcode);
+	expect(chip8).toMatchObject({pc: 516});
+}); 
+
+
+test('opcode: 0xf000 is correct', () => {
+	let opcode = 0xf007;
+	let x = (opcode & 0x0f00) >> 8;
+	chip8.delayTimer = 12;
+	chip8.runCycle(opcode);
+
+	expect(chip8).toMatchObject({pc: 514});
+	expect(chip8.v[x]).toEqual(12);
+
+	chip8.v[x] = 11
+	opcode = 0xf015;
+	chip8.runCycle(opcode);
+	expect(chip8).toMatchObject({pc: 516, delayTimer: 11});
+
+	opcode = 0xf018;
+	chip8.runCycle(opcode);
+	expect(chip8).toMatchObject({pc: 518, soundTimer: 11});
+
+	opcode = 0xf01e;
+	chip8.runCycle(opcode);
+	expect(chip8).toMatchObject({pc: 520, i: 11});
+
+	opcode = 0xf029;
+	chip8.runCycle(opcode);
+	expect(chip8).toMatchObject({pc: 522, i: 55});
+
+	opcode = 0xf033;
+	chip8.v[x] = 101;
+	chip8.i = 0;
+	let index = 0;
+	chip8.runCycle(opcode);
+	expect(chip8.memory[chip8.i]).toEqual(1);
+	expect(chip8.memory[chip8.i + 1]).toEqual(0);
+	expect(chip8.memory[chip8.i + 2]).toEqual(1);
+
+});
