@@ -1,8 +1,7 @@
 // Referenced http://blog.alexanderdickson.com/javascript-chip-8-emulator for chip 8 processor construction
 // Reference http://www.multigesture.net/articles/how-to-write-an-emulator-chip-8-interpreter/ for reset function construction
 
-
-var CHIP8_FONTSET =[
+let CHIP8_FONTSET =[
   0xF0, 0x90, 0x90, 0x90, 0xF0, // 0
   0x20, 0x60, 0x20, 0x20, 0x70, // 1
   0xF0, 0x10, 0xF0, 0x80, 0xF0, // 2
@@ -29,16 +28,16 @@ chip8 = {
 	memory: new Uint8Array(4096), // Standard Chip8 memory size, 4096 bytes
 
 	//Stack
-	stack: new Array(16), // According to Wikipedia page, modern systems use 16 levels
+	stack: new Uint16Array(16), // According to Wikipedia page, modern systems use 16 levels
 
 	//Stack Pointer
 	sp: 0,
 
 	//"V" Registers
-	v: new Array(16), // V[0] -> V[F]
+	v: new Uint16Array(16), // V[0] -> V[F]
 
 	// Video Memory
-	vram: new Array(64 * 32),
+	vram: new Uint8Array(64 * 32),
 
 	//Keyboard Buffer
 	buffer: new Array(16),
@@ -62,13 +61,10 @@ chip8 = {
 	soundTimer: 0,
 
 	//Flag for program loaded
-	loadFlag : false,
+	loadFlag: false,
 
 	//Track if a key is pressed or waiting for key to be pressed
-	keyWait : false,
-
-
-
+	keyWait: false,
 
 	// Resets parameters of the emulator, saved into a reset() function
 
@@ -76,24 +72,24 @@ chip8 = {
 		// Used to initialize chip8 emulator
 
 		//clear memory
-		chip8.memory = chip8.memory.map( ()=> 0);
+		chip8.memory = chip8.memory.map(() => 0);
 
 		// load fontset into memory
-		for(var i = 0; i < CHIP8_FONTSET.length; i++){
+		for (var i = 0; i < CHIP8_FONTSET.length; i++) {
 			chip8.memory[i] = CHIP8_FONTSET[i];
 		}
 
 		// Clear V registers
-		// chip8.v = chip8.v.map( ()=> 0);
-		for(let i = 0; i < chip8.v.length; i++){
-			chip8.v[i] = 0;
-		}
+		chip8.v = chip8.v.map(() => 0);
+		// for (let i = 0; i < chip8.v.length; i++) {
+		// 	chip8.v[i] = 0;
+		// }
 
 		// Clear stack
-		// chip8.stack = chip8.stack.map( ()=> 0);
-		for(let i = 0; i < chip8.stack.length; i++) {
-			chip8.stack[i] = 0;
-		}
+		chip8.stack = chip8.stack.map(() => 0);
+		// for (let i = 0; i < chip8.stack.length; i++) {
+		// 	chip8.stack[i] = 0;
+		// }
 
 		// reset stack pointers
 		chip8.sp = 0;
@@ -120,29 +116,25 @@ chip8 = {
 		// var opcode = (chip8.memory[chip8.pc] << 8) | chip8.memory[chip8.pc + 1]; // obtain 16-bit opcode command
 		//Grab top 8 bits of opcode, shift left by 8 to make space to add remaining 8 bits of opcode
 
-		// var opcode = 0x1000;
-		
+		//Calculate x and y indicies
+		var x = (opcode & 0x0f00) >> 8;
+		var y = (opcode & 0x00f0) >> 4;
+
 
 		//Decode Opcode
-
 		switch (opcode & 0xf000) { // Check 4 most significant bits
 			case 0x0000:
 				switch (opcode & 0x000f) { // Check least 4 significant bits
 					// case 0x0000: //0x000E Clears display
-						
+
 					// break;
 					//Case 0x000 is ignored on modern interpreters according to Cowgod's Chip 8 Technical Manual
 
 					case 0x000e:
-						chip8.sp--;
-						chip8.pc = chip8.stack[chip8.sp]; // push PC to top of stack
-						chip8.pc += 2;
-					break;
+						chip8.pc = chip8.stack[chip8.sp--]; // push PC to top of stack
+						break;
 				}
 				break;
-
-				var x = (opcode & 0x0f00) >> 8;
-				var y = (opcode & 0x00f0) >> 4;
 
 			case 0x1000:
 				chip8.pc = opcode & 0x0fff;
@@ -169,9 +161,7 @@ chip8 = {
 				break;
 
 			case 0x5000:
-				if (v[x] == v[y]) {
-					chip8.pc += 4;
-				} else {
+				if (chip8.v[x] === chip8.v[y]) {
 					chip8.pc += 2;
 				}
 				break;
@@ -194,13 +184,12 @@ chip8 = {
 						break;
 
 					case 0x0001:
-						x = opcode & 0x0f00;
-						chip8.v[x] = chip8.v[x] | chip8.v[y];
+						chip8.v[x] = (chip8.v[x] | chip8.v[y]);
 						chip8.pc += 2;
 						break;
 
 					case 0x0002:
-						chip8.v[x] = chip8.v[x] & chip8.v[y];
+						chip8.v[x] = (chip8.v[x] & chip8.v[y]);
 						chip8.pc += 2;
 						break;
 
@@ -212,8 +201,7 @@ chip8 = {
 					case 0x0004:
 						if (chip8.v[y] > 0xff - chip8.v[x])
 							chip8.v[0xf] = 1; //carry
-						else 
-							chip8.v[0xf] = 0;
+						else chip8.v[0xf] = 0;
 
 						chip8.v[x] += chip8.v[y];
 						chip8.pc += 2;
@@ -232,61 +220,60 @@ chip8 = {
 						break;
 
 					case 0x0006:
-						if (v[(opcode & 0x0100) >> 8] == 1) {
-							v[0xf] = 1;
+						if (chip8.v[x] == 1) {
+							chip8.v[0xf] = 1;
 						} else {
-							v[0xf] = 0;
+							chip8.v[0xf] = 0;
 						}
 
-						v[x] = v[x] >> 1;
-						pc += 2;
+						chip8.v[x] = chip8.v[x] >> 1;
+						chip8.pc += 2;
 						break;
 
 					case 0x0007:
-						if (v[y] > v[x]) {
+						if (chip8.v[y] > chip8.v[x]) {
 							// Vy > Vx
-							v[0xf] = 1;
+							chip8.v[0xf] = 1;
 						} else {
-							v[0xf] = 0;
+							chip8.v[0xf] = 0;
 						}
 
-						v[x] = v[y] - v[x]; // Vx = Vy - Vx
-						pc += 2;
+						chip8.v[x] = chip8.v[y] - chip8.v[x]; // Vx = Vy - Vx
+						chip8.pc += 2;
 						break;
 
 					case 0x000e:
-						if (v[(opcode & 0x0900) >> 11]) {
-							v[0xf] = 1;
-						} else {
-							v[0xf] = 0;
-						}
-
-						v[x] << 1;
-						pc += 2;
+						// if (chip8.v[x] >> 7) {
+						// 	chip8.v[0xf] = 1;
+						// } else {
+						// 	chip8.v[0xf] = 0;
+						// }
+						chip8.v[0xf] = chip8.v[x] >> 7;
+						chip8.v[x] *= 2;
+						chip8.pc += 2;
 						break;
 				}
+			break;
 
 			case 0x9000:
-				if (v[x] != v[y]) {
+				if (chip8.v[x] != chip8.v[y]) {
 					// Vx != Vy ?
-					pc += 4;
-				} else {
-					pc += 2;
+					chip8.pc += 2;
 				}
 				break;
 
 			case 0xa000: // ANNN : Sets I to address NNN
-				i = opcode & 0x0fff; // This case grabs the last 12 bits to analyze
-				pc += 2;
+				chip8.i = opcode & 0x0fff; // This case grabs the last 12 bits to analyze
+				chip8.pc += 2;
 				break;
 
 			case 0xb000:
-				pc = (opcode & 0x0fff) + v[0];
+				chip8.pc = (opcode & 0x0fff) + chip8.v[0];
 				break;
 
 			case 0xc000:
-				v[x] = (Math.random() * 256) & (opcode & 0x00ff);
-				pc += 2;
+				chip8.v[x] = (Math.random() * 256) & (opcode & 0x00ff);
+				chip8.pc += 2;
 				break;
 
 			case 0xd000:
@@ -371,29 +358,28 @@ chip8 = {
 		}
 	}
 
-	//Detects the key pressed
-	keyPress: function(key)
-	{
-		if (key < 16)
-		{
-			keyLog[key] = true;
-			if (keyWait != nil)
-			{
-				keyWait = key;
-				waitFlag = true;
-			}
-		}
+	// //Detects the key pressed
+	// keyPress: function(key)
+	// {
+	// 	if (key < 16)
+	// 	{
+	// 		keyLog[key] = true;
+	// 		if (keyWait != nil)
+	// 		{
+	// 			keyWait = key;
+	// 			waitFlag = true;
+	// 		}
+	// 	}
 
-	},
+	// },
 
-	keyRelease: function(key)
-	{
-		if (key < 16)
-		{
-			keyLog[key] = false;
-		}
-	},
-
+	// keyRelease: function(key)
+	// {
+	// 	if (key < 16)
+	// 	{
+	// 		keyLog[key] = false;
+	// 	}
+	// },
 };
 
 module.exports = chip8; // exporting the chip8 object to run tests with JEST.js
