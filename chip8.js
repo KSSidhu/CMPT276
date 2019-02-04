@@ -72,12 +72,12 @@ chip8 = {
 		// Used to initialize chip8 emulator
 
 		//clear memory
-		chip8.memory = chip8.memory.fill(0);
+		chip8.memory = chip8.memory.map(() => 0);
 
 		// load fontset into memory
-		// for (var i = 0; i < CHIP8_FONTSET.length; i++) {
-		// 	chip8.memory[i] = CHIP8_FONTSET[i];
-		// }
+		for (var i = 0; i < CHIP8_FONTSET.length; i++) {
+			chip8.memory[i] = CHIP8_FONTSET[i];
+		}
 
 		// Clear display
 		chip8.vram = chip8.vram.fill(0);
@@ -276,17 +276,17 @@ chip8 = {
 				var height = opcode & 0x000f; // save nibble
 				var sprite;
 
-				v[0xf] = 0;
+				chip8.v[0xf] = 0;
 
 				for (var ylim = 0; ylim < height; y++) {
-					sprite = v[i + ylim];
+					sprite = chip8.v[i + ylim];
 
 					for (var xlim = 0; xlim < 8; xlim++) {
 						if ((sprite & (0x80 >> xlim)) != 0) {
-							if (vram[v[x] + xlim + (v[y] + ylim) * 64] == 1) { // checks if any sprites currently exist at position
-								v[0xf] = 1;
+							if (chip8.vram[v[x] + xlim + (chip8.v[y] + ylim) * 64] == 1) { // checks if any sprites currently exist at position
+								chip8.v[0xf] = 1;
 							}
-							vram[v[x] + xlim + (v[y] + ylim) * 64] ^= 1; // draw sprite to screen
+							chip8.vram[v[x] + xlim + (chip8.v[y] + ylim) * 64] ^= 1; // draw sprite to screen
 						}
 					}
 				}

@@ -1,5 +1,4 @@
-# CMPT 276: Product Document Release 1
-
+# CMPT 276: Product Document
 
 ## Introduction
 This project is to design a Chip8 Emulator for CMPT 276. It is designed for educational purposes primarily aimed at hobbyists.
@@ -8,7 +7,7 @@ This project is to design a Chip8 Emulator for CMPT 276. It is designed for educ
 - Project Manger: Kirat Sidhu
 - 2 Testers: Adam Tran, Chamodi Basnayake
 - Emulator and Visualizer Designers: James Young, Kirat Sidhu
-- Game Designers: Adam Tran, **Kirat Sidhu, James Young**
+- Game Designers: Adam Tran, Aloshius
 - Chip8 Tool Designer: Chamodi Basnayake
 
 ### Communication Tools
@@ -18,15 +17,11 @@ This project is to design a Chip8 Emulator for CMPT 276. It is designed for educ
 - Git and [Github](https://github.com/KSSidhu/CMPT276)
 
 ### Testing and Quality Assurance Tools
-- **Unit testing will be done using JEST.js**
-- **System testing will be done using Travis CI**
 - Running previously created games
-- **UI testing may be down using Selenium Testing Tool**
+- Using available software to test emulator and Visualizer
+- Selenium Testing Tool
 
 ### Software Methodology
-
-**Implementing incremental development following a schedule of research, design, implement followed by test.**
-
 
 Primarily team members will be testing their own work
 However, when problems arise the creators of said product must return, fix, and retest
@@ -35,13 +30,9 @@ However, when problems arise the creators of said product must return, fix, and 
 |  ----                 | ------                 |
 |Emulator and Visualizer| Kirat and James        |
 |Chip8 Tool             | Chamodi and Aloshius   |
-|Games                  | **Adam, Kirat, James**    |
+|Games                  | Adam, Aloshius, Chamodi|
 
 ## Risk analysis
-
-#### Current Risks:
-- Aloshius dropped the course
-  - Course of Action: Kirat and James will work on games once the emulator and visualizer are finished
 
 ##### Exams and Other Courses:
   - During exam periods work may be postponed or given to other team members who aren't studying for exams.
@@ -55,7 +46,7 @@ However, when problems arise the creators of said product must return, fix, and 
 ## Hardware and software requirements
 
 ### Language and Libraries
-JavaScript, HTML, Travis CI, Jest.js
+JavaScript, Selenium, HTML
 
 ## Work breakdown
 
@@ -71,9 +62,9 @@ Release 1:
 
 Release 2:
 <ol>
-  <li><del>If required, research more on Visualizer</del>
-  <li><del>Research possible useful Chip8 tools, currently considering Plugin for Sublime</del>
-  <li>Design Visualizer, and <del>Select Chip8 Tool to build, depending on what's completed may also select games</del>
+  <li>If required, research more on Visualizer
+  <li>Research possible useful Chip8 tools, currently considering Plugin for Sublime
+  <li>Design Visualizer, and Select Chip8 Tool to build, depending on what's completed may also select Games
   <li>James and Kirat Implement design of Visualizer
   <li>Chamodi and Aloshius begin implementation of Chip8 tool
   <li>Test visualizer with available games and software, and run with created Emulator
@@ -82,10 +73,10 @@ Release 2:
 
 Release 3:
 <ol>
-  <li><del>Select both games if haven't already</del>
+  <li>Select both games if haven't already
   <li>Research possible implementations
-  <li> <strong>Adam works on one game</strong>
-  <li> <strong>James and Kirat, if finished with Emulator and Visualizer, can aid in game development</strong>
+  <li>Adam, Chamodi and Aloshius work on two games
+  <li>James and Kirat, if finished with Emulator and Visualizer, can aid any members
   <li>Test games by running on available emulators and visualizers
   <li>Also test on team's visualizer and emulator
   <li>If problems arise with team's visualizer and emulator, Kirat and James will return to them to improve
@@ -100,7 +91,7 @@ Release 4:
   <li>Designers will test games on our own emulators and visualizers along with publicly available ones
   </ol>
   
-
+a detailed list of all the expected work and deliverables
 ## Project Schedule
 
 ### Meeting Schedule
@@ -108,17 +99,16 @@ Release 4:
 
 ### Project Scheduling
 
-#### Release 1: Chip8 Emulator -> 50 Hrs
- **Actual Time: 40 hrs**
-  > - <del>Research: Jan. 8 - 12</del>
-  > - <del>Design Two Weeks: Jan. 12 - Jan. 26</del>
-  > - <del>Test: Jan. 26 - Feb. 6</del>
-  > - <del>Submit Feb. 6</del>
+##### Release 1: Chip8 Emulator -> 50 Hrs
+  > - Research: Jan. 8 - 12
+  > - Design Two Weeks: Jan. 12 - Jan. 26
+  > - Test: Jan. 26 - Feb. 6
+  > - Submit Feb. 6
 
 ##### Release 2: Chip8 Visualizer -> 50 Hrs
-> - <del>Research: Jan. 14 - 19</del>
-> - Design Two Weeks: **Jan. 20 - Feb. 20**
-> - Test: **Feb. 20 - Feb. 26**
+> - Research: Jan. 14 - 19
+> - Design Two Weeks: Jan. 20 - Feb. 3
+> - Test: Feb. 3 - Feb. 9
 > - Submit Feb. 27
 
 ##### Release 3: Chip8 Plugin -> 60 Hrs
@@ -127,7 +117,7 @@ Release 4:
 > - Test: Mar. 6 - Mar. 12
 > - Submit Mar. 13
 
-##### Release 4: Chip8 Games: Space Invaders, Snake -> 50 Hrs
+##### Release 4: Chip8 Games: Pong, Block Breaker -> 50 Hrs
 > - Research Game Design: Mar. 13 - Mar. 20
 > - Create Presentation: Mar. 20 - Mar. 27
 > - Design Two Weeks: Mar. 20 - Apr. 3
@@ -135,18 +125,8 @@ Release 4:
 > - Submit Apr. 8
 > - Presentation Apr. 8
 
-### Major Features Completed
-- Functioning Chip8 Emulator
-- Runs most opcodes and passes tests
-- Prototype of HTML interface
-
-### Features Not Completed
-- All opcodes apart from ones that interact with the display have been tested
-- Keyboard mapping
-  - Time was spent learning JEST.js, resulting in not enough time to learn and implement the keyboard mapping
-
 ### Major Features For Next Release
-- Release 2: Chip8 Visualizer
+- Release 1: Chip8 Emulator
 
 Chip8 Emulator :
 - Keyboard mapping
