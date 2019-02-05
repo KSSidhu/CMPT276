@@ -159,6 +159,7 @@ Chip8 Visualizer :
 - Keyboard Tracking and Log
 - Integration with Emulator with Memory and Registry displaying on Visualizer
 - Help Button implementation
+- Pause Button implementation
 
 ### Monitoring and reporting mechanisms
 
