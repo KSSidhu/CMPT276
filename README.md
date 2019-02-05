@@ -75,7 +75,7 @@ Release 2:
   <li><del>Research possible useful Chip8 tools, currently considering Plugin for Sublime</del>
   <li>Design Visualizer, and <del>Select Chip8 Tool to build, depending on what's completed may also select games</del>
   <li>James and Kirat Implement design of Visualizer
-  <li>Chamodi and Aloshius begin implementation of Chip8 tool
+  <li>Chamodi begins implementation of Chip8 tool
   <li>Test visualizer with available games and software, and run with created Emulator
   <li>Test tool with Sublime and recreate Emulator to test if runs accordingly
 </ol>
@@ -152,10 +152,13 @@ Chip8 Emulator :
 - Keyboard mapping
 - Opcodes
 - Processor implementation
+- Loading ROMs
 
 Chip8 Visualizer :
-- UI Design
+- Further UI Design
 - Keyboard Tracking and Log
+- Integration with Emulator with Memory and Registry displaying on Visualizer
+- Help Button implementation
 
 ### Monitoring and reporting mechanisms
 
