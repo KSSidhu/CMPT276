@@ -21,7 +21,7 @@ This project is to design a Chip8 Emulator for CMPT 276. It is designed for educ
 - **Unit testing will be done using JEST.js**
 - **System testing will be done using Travis CI**
 - Running previously created games
-- **UI testing may be down using Selenium Testing Tool**
+- **UI testing may be done using Selenium Testing Tool**
 
 ### Software Methodology
 
@@ -34,7 +34,7 @@ However, when problems arise the creators of said product must return, fix, and 
 |Product to be Tested   |Testers                 |
 |  ----                 | ------                 |
 |Emulator and Visualizer| Kirat and James        |
-|Chip8 Tool             | Chamodi and Aloshius   |
+|Chip8 Tool             | Chamodi   |
 |Games                  | **Adam, Kirat, James**    |
 
 ## Risk analysis
