@@ -124,81 +124,95 @@ chip8 = {
 
 		//Decode Opcode
 		switch (opcode & 0xf000) { // Check 4 most significant bits
-			case 0x0000:
+			case 0x0000: 
 				switch (opcode & 0x000f) { // Check least 4 significant bits
-					case 0x0000: //0x000E Clears display
+					case 0x0000: 
 						chip8.vram = chip8.vram.map(() => 0); // clear content of the vram array
 						break;
 					//Case 0x000 is ignored on modern interpreters according to Cowgod's Chip 8 Technical Manual
-
+					
+					//Clear Display
 					case 0x000e:
 						chip8.pc = chip8.stack[chip8.sp--]; // push PC to top of stack
 						break;
 				}
 				break;
 
-			case 0x1000:
+			//Jump to Address, location
+			case 0x1000: 
 				chip8.pc = opcode & 0x0fff;
 				break;
 
-			case 0x2000:
+			//Call Function
+			case 0x2000: 
 				chip8.stack[chip8.sp] = chip8.pc;
 				chip8.sp++;
 				chip8.pc = opcode & 0x0fff;
 				break;
 
-			case 0x3000:
+			//Skip to Next Instruction, vX Equal kk
+			case 0x3000: 
 				if (chip8.v[x] == (opcode & 0x00ff)) {
 					//compare V[x] to last 8 bits
 					chip8.pc += 2;
 				}
 				break;
 
-			case 0x4000:
+			//Skip to Next Instruction, if vX Not Equal kk
+			case 0x4000: 
 				if (chip8.v[x] != (opcode & 0x00ff)) {
 					//compare V[x] to last 8 bits
 					chip8.pc += 2;
 				}
 				break;
 
-			case 0x5000:
+			//Skip to Next Instruction, if vX Equals vY
+			case 0x5000: 
 				if (chip8.v[x] === chip8.v[y]) {
 					chip8.pc += 2;
 				}
 				break;
 
-			case 0x6000:
+			//Set vX to kk
+			case 0x6000: 
 				chip8.v[x] = opcode & 0x00ff;
 				chip8.pc += 2;
 				break;
 
-			case 0x7000:
+			//set vX equal to vX + kk
+			case 0x7000: 
 				chip8.v[x] += opcode & 0x00ff;
 				chip8.pc += 2;
 				break;
 
 			case 0x8000:
 				switch (opcode & 0x000f) {
-					case 0x0000:
+
+					//Store vY in vX
+					case 0x0000: 
 						chip8.v[x] = chip8.v[y];
 						chip8.pc += 2;
 						break;
 
-					case 0x0001:
+					//Set vX equal to vX or vY
+					case 0x0001: 
 						chip8.v[x] = (chip8.v[x] | chip8.v[y]);
 						chip8.pc += 2;
 						break;
 
-					case 0x0002:
+					//Set vX equal to vX and vY
+					case 0x0002: 
 						chip8.v[x] = (chip8.v[x] & chip8.v[y]);
 						chip8.pc += 2;
 						break;
 
+					//Set vX equal to vX XOR vY
 					case 0x0003:
 						chip8.v[x] = chip8.v[x] ^ chip8.v[y];
 						chip8.pc += 2;
 						break;
 
+					//Set vX equal to vX + vY, set vF equal to carry
 					case 0x0004:
 						if (chip8.v[y] > 0xff - chip8.v[x])
 							chip8.v[0xf] = 1; //carry
@@ -208,6 +222,8 @@ chip8 = {
 						chip8.pc += 2;
 						break;
 
+					//set vX equal to vX - vY, set vF equal to NOT borrow
+					//if vX > vY then vF is 1, otherwise 0. Then vX - vY and result stored in vX
 					case 0x0005:
 						if (chip8.v[x] > chip8.v[y]) {
 							// Vx > Vy
@@ -220,6 +236,8 @@ chip8 = {
 						chip8.pc += 2;
 						break;
 
+					//Set vX = vX SHR 1
+					//if least significant bit of vX is 1, then vF is 1, otherwise 0. Then result divided by 2
 					case 0x0006:
 						if (chip8.v[x] == 1) {
 							chip8.v[0xf] = 1;
@@ -231,6 +249,8 @@ chip8 = {
 						chip8.pc += 2;
 						break;
 
+					//Set vX equal to vY - vX, set vF equal to NOT borrow
+					//if vY > vX then vF is set to 1, otherwise 0. Then vX - vY and result stored in vX
 					case 0x0007:
 						if (chip8.v[y] > chip8.v[x]) {
 							// Vy > Vx
@@ -243,6 +263,8 @@ chip8 = {
 						chip8.pc += 2;
 						break;
 
+					//Set vX equal to vX SHL 1
+					//if most significant bit of vX is 1, then vF is set to 1, otherwise 0. Then vX is multiplied by 2.
 					case 0x000e:
 						chip8.v[0xf] = chip8.v[x] >> 7;
 						chip8.v[x] *= 2;
@@ -251,6 +273,7 @@ chip8 = {
 				}
 			break;
 
+			//Skip next instruction if vX is not equal to vY
 			case 0x9000:
 				if (chip8.v[x] != chip8.v[y]) {
 					// Vx != Vy ?
@@ -258,20 +281,24 @@ chip8 = {
 				}
 				break;
 
+			//Set i equal to nnn
 			case 0xa000: // ANNN : Sets I to address NNN
 				chip8.i = opcode & 0x0fff; // This case grabs the last 12 bits to analyze
 				chip8.pc += 2;
 				break;
 
+			//Jump to location v0 + nnn
 			case 0xb000:
 				chip8.pc = (opcode & 0x0fff) + chip8.v[0];
 				break;
 
+			//Set vX equal to random byte AND kk
 			case 0xc000:
 				chip8.v[x] = (Math.random() * 256) & (opcode & 0x00ff);
 				chip8.pc += 2;
 				break;
 
+			//Display n-byte sprite starting at memory location i at (vX, vY), set vF equal to collision
 			case 0xd000:
 				var height = opcode & 0x000f; // save nibble
 				var sprite;
@@ -295,13 +322,14 @@ chip8 = {
 
 			case 0xe000:
 				switch(opcode & 0x00ff) {
+					//Skip next instruction if the key with the value vX is pressed
 					case 0x009e:
 						let index1 = chip8.v[x];
 						if(chip8.buffer[index1] != 0) {
 							chip8.pc += 2;
 						}
 						break;
-
+					//Skip next instruction if the key with the value vX is not pressed
 					case 0x00a1:
 						let index2 = chip8.v[x];
 						if(chip8.buffer[index2] == 0) {
@@ -313,11 +341,14 @@ chip8 = {
 
 			case 0xf000:
 				switch (opcode & 0x00ff) {
+
+					//Place value of DelayTimer in vX
 					case 0x0007:
 						chip8.v[x] = chip8.delayTimer;
 						chip8.pc += 2;
 						break;
 
+					//Wait for keypress, then store it in vX
 					case 0x000a:
 						let keyPress = false;
 						for(let i = 0; i < 16; i++) {
@@ -332,26 +363,31 @@ chip8 = {
 						}
 						break;
 
+					//DelayTimer is set to vX
 					case 0x0015:
 						chip8.delayTimer = chip8.v[x];
 						chip8.pc += 2;
 						break;
 
+					//Set Sound Timer to vX
 					case 0x0018:
 						chip8.soundTimer = chip8.v[x];
 						chip8.pc += 2;
 						break;
 
+					//Set i equal to i + vX
 					case 0x001e:
 						chip8.i += chip8.v[x];
 						chip8.pc += 2;
 						break;
 
+					//Set i equal to location of sprite for digit vX
 					case 0x0029:
 						chip8.i = chip8.v[x] * 5;
 						chip8.pc += 2;
 						break;
 
+					//Store BCD representation of vX in memory location starting at i
 					case 0x0033:
 						//Store binary decimal representation of I
 						chip8.memory[chip8.i] = chip8.v[x] / 100; //Store hundreth's position at location i in memory
@@ -360,12 +396,14 @@ chip8 = {
 						chip8.pc += 2;
 						break;
 
+					//Store registers v0 through vX in memory at i
 					case 0x0055:
 						for(let i = 0; i <= x; i++) {
 							chip8.v[i] = chip8.memory[chip8.i + i];
 						}
 						break;
 
+					//Read registers from v0 through vX at i
 					case 0x0065:
 						for(let i = 0; i <= x; i++) {
 							chip8.v[i] = chip8.memory[chip8.i + i];

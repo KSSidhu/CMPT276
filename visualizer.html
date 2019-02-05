@@ -2,6 +2,9 @@
 <html>
 <head>
 
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  <script src="chip8.js"></script>
+
 	
 <style>
 * {
@@ -141,7 +144,7 @@ input[type="file"] {
 <input type="file" id="file-input" />
 <br>
 <div class="wrapper" id="wrapper">
-	<div class="visualizer" id="visualizer">
+	<div class="visualizer" id="visualizer" >
 	  <div class="row">
 	  	<div class="toolbar" style="background-color:#eee;">
 	  		<label id="loadrom">
@@ -163,28 +166,28 @@ input[type="file"] {
 	  <div class="row">
 	    <div class="logDisplay" style="background-color:#ccc;">
 	      <h2>Log</h2>
-	      <textarea id="logtextarea" rows="10" cols="70" readonly>
+	      <textarea id="logtextarea" rows="10" cols="70" onkeydown="keyPress()" readonly autofocus>
 	      </textarea>
 	    </div>
 	    <div class="keyDisplay" style="background-color:#ddd;">
 	      <h2>Keyboard</h2>
 	      <div class="keys">
-	        <button type="button"> 1 </button>
-	        <button type="button"> 2 </button>
-	        <button type="button"> 3 </button>
-	        <button type="button"> 4 </button>
-	        <button type="button"> Q </button>
-	        <button type="button"> W </button>
-	        <button type="button"> E </button>
-	        <button type="button"> R </button>
-	        <button type="button"> A </button>
-	        <button type="button"> S </button>
-	        <button type="button"> D </button>
-	        <button type="button"> F </button>
-	        <button type="button"> Z </button>
-	        <button type="button"> X </button>
-	        <button type="button"> C </button>
-	        <button type="button"> V </button>
+	        <button name="1" type="button"> 1 </button>
+	        <button name="2" type="button"> 2 </button>
+	        <button name="3" type="button"> 3 </button>
+	        <button name="4" type="button"> 4 </button>
+	        <button name="Q" type="button"> Q </button>
+	        <button name="W" type="button"> W </button>
+	        <button name="E" type="button"> E </button>
+	        <button name="R" type="button"> R </button>
+	        <button name="A" type="button"> A </button>
+	        <button name="S" type="button"> S </button>
+	        <button name="D" type="button"> D </button>
+	        <button name="F" type="button"> F </button>
+	        <button name="Z" type="button"> Z </button>
+	        <button name="X" type="button"> X </button>
+	        <button name="C" type="button"> C </button>
+	        <button name="V" type="button"> V </button>
 	      </div>
 	    </div>
 	  </div>
@@ -211,6 +214,13 @@ function gridView() {
     elements[i].style.width = "50%";
   }
 }
+
+(function()
+{
+	var ch = new chip8;
+	alert("hi)");
+})();
+
 
 </script>
 
