@@ -41,7 +41,7 @@ chip8 = {
 	vram: new Uint8Array(64 * 32),
 
 	//Keyboard Buffer
-	buffer: new Array(16),
+	keyBuffer: new Array(16),
 
 	//Tracks previous keys pressed
 	keyLog: new Array(16),
@@ -67,6 +67,32 @@ chip8 = {
 	//Track if a key is pressed or waiting for key to be pressed
 	keyWait: false,
 
+	// Track if game is loaded
+	gameLoaded: false,
+
+	// The HTML canvas the emulator runs games to
+	canvas: null,
+
+	// Generates random numbers for memory, stack and V registers to 
+	// display on the HTML page
+	generateTestDisplay: function() {
+
+		// Generate random numbers for memory display
+		for(let i = 80; i < chip8.memory.length; i++) {
+			chip8.memory[i] = Math.random() * (255 - 1) + 1;
+		}
+
+		// Generate random numbers for testing
+		for(let i = 0; i < chip8.v.length; i++) {
+			chip8.v[i] = Math.random() * (16 - 1) + 1;
+		}
+
+		// Generate random numbers for testing
+		for(let i = 0; i < chip8.stack.length; i++) {
+			chip8.stack[i] = Math.random() * (255 - 1) + 1;
+		}
+	},
+
 
 	reset: function() {
 		// Used to initialize chip8 emulator
@@ -74,7 +100,7 @@ chip8 = {
 		//clear memory
 		chip8.memory = chip8.memory.map(() => 0);
 
-		// load fontset into memory
+		// // load fontset into memory
 		for (var i = 0; i < CHIP8_FONTSET.length; i++) {
 			chip8.memory[i] = CHIP8_FONTSET[i];
 		}
@@ -83,13 +109,13 @@ chip8 = {
 		chip8.vram = chip8.vram.fill(0);
 
 		// Clear V registers
-		chip8.v = chip8.v.fill(0);
+		chip8.v = chip8.v.map(() => 0);
 
 		// Clear stack
 		chip8.stack = chip8.stack.fill(0);
 
 		// Clear keyboard buffer
-		chip8.buffer = chip8.buffer.fill(0);
+		chip8.keyBuffer = chip8.keyBuffer.fill(0);
 
 		// reset stack pointers
 		chip8.sp = 0;
@@ -104,12 +130,16 @@ chip8 = {
 		chip8.delayTimer = 0;
 		chip8.soundTimer = 0;
 
+		// Grab the canvas element to draw on
+		chip8.canvas = document.getElementById('romDisplay').getContext('2d');
+
 		//reset flags
 		drawFlag = false;
 		loadFlag = false;
 		keyPress = false;
 		keyWait = false;
 	},
+
 
 	//Emulation Cycle
 	runCycle: function(opcode) {
@@ -298,6 +328,10 @@ chip8 = {
 				chip8.pc += 2;
 				break;
 
+	// Still requires testing
+	// ---------------------------------------------------------------------------------------------
+			
+
 			//Display n-byte sprite starting at memory location i at (vX, vY), set vF equal to collision
 			case 0xd000:
 				var height = opcode & 0x000f; // save nibble
@@ -320,19 +354,21 @@ chip8 = {
 
 				break;
 
+	// ---------------------------------------------------------------------------------------------
+
 			case 0xe000:
 				switch(opcode & 0x00ff) {
 					//Skip next instruction if the key with the value vX is pressed
 					case 0x009e:
 						let index1 = chip8.v[x];
-						if(chip8.buffer[index1] != 0) {
+						if(chip8.keyBuffer[index1] != 0) {
 							chip8.pc += 2;
 						}
 						break;
 					//Skip next instruction if the key with the value vX is not pressed
 					case 0x00a1:
 						let index2 = chip8.v[x];
-						if(chip8.buffer[index2] == 0) {
+						if(chip8.keyBuffer[index2] == 0) {
 							chip8.pc += 2;
 						}
 						break;
@@ -352,7 +388,7 @@ chip8 = {
 					case 0x000a:
 						let keyPress = false;
 						for(let i = 0; i < 16; i++) {
-							if(chip8.buffer[i] != 0) { // if key is pressed
+							if(chip8.keyBuffer[i] != 0) { // if key is pressed
 								chip8.v[x] = i; // store the value of the key into V[x]
 								keyPress = true;
 							}
@@ -415,7 +451,30 @@ chip8 = {
 			default:
 				console.log('Unknown Opcode: ' + opcode);
 		}
+	},
+
+	render: function() {
+		// If there's nothing to draw, return
+		if(chip8.drawFlag === false) {
+			return;
+		}
+
+		chip8.canvas.fillStyle = "#aaa";
+		chip8.canvas.fillRect(0, 0, 640, 320);
+		chip8.canvas.fillStyle = "#FF9100";
+
+		for(let i = 0; i < chip8.vram.length; i++) {
+			if(chip8.vram[i] == 1) {
+				let y = i / 64 | 0;
+				let x = i - 64*y;
+			}
+		}
+
+		chip8.drawFlag = false;
 	}
+
+	// Still requires testing
+	// ---------------------------------------------------------------------------------------------
 
 	// //Detects the key pressed
 	// keyPress: function(key)
@@ -440,5 +499,8 @@ chip8 = {
 	// 	}
 	// },
 };
+	
+	// ---------------------------------------------------------------------------------------------
+
 
 module.exports = chip8; // exporting the chip8 object to run tests with JEST.js

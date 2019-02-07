@@ -5,13 +5,32 @@ const chip8 = require('./chip8');
 test('reset function works', () => {
 	chip8.reset();
 
+	let CHIP8_FONTSET =[
+  0xF0, 0x90, 0x90, 0x90, 0xF0, // 0
+  0x20, 0x60, 0x20, 0x20, 0x70, // 1
+  0xF0, 0x10, 0xF0, 0x80, 0xF0, // 2
+  0xF0, 0x10, 0xF0, 0x10, 0xF0, // 3
+  0x90, 0x90, 0xF0, 0x10, 0x10, // 4
+  0xF0, 0x80, 0xF0, 0x10, 0xF0, // 5
+  0xF0, 0x80, 0xF0, 0x90, 0xF0, // 6
+  0xF0, 0x10, 0x20, 0x40, 0x40, // 7
+  0xF0, 0x90, 0xF0, 0x90, 0xF0, // 8
+  0xF0, 0x90, 0xF0, 0x10, 0xF0, // 9
+  0xF0, 0x90, 0xF0, 0x90, 0x90, // A
+  0xE0, 0x90, 0xE0, 0x90, 0xE0, // B
+  0xF0, 0x80, 0x80, 0x80, 0xF0, // C
+  0xE0, 0x90, 0x90, 0x90, 0xE0, // D
+  0xF0, 0x80, 0xF0, 0x80, 0xF0, // E
+  0xF0, 0x80, 0xF0, 0x80, 0x80  // F
+];
+
 	// Check static variables
 	expect(chip8).toMatchObject({pc: 0x200, sp: 0, i: 0, delayTimer: 0, soundTimer: 0});
 	// Check flags
 	expect(chip8).toMatchObject({drawFlag: false, loadFlag: false, keyPress: false, keyWait: false});
 	// Check arrays for memory, registers and vram
-	for(let i = 0; i < chip8.memory.length; i++) {
-		expect(chip8.memory[i]).toEqual(0);
+	for(let i = 0; i < 80; i++) {
+		expect(chip8.memory[i]).toEqual(CHIP8_FONTSET[i]);
 		if(i < 16) {
 			expect(chip8.v[i]).toEqual(0);
 			expect(chip8.stack[i]).toEqual(0);
@@ -20,9 +39,9 @@ test('reset function works', () => {
 		}
 	}
 
-	for(let i = 0; i < chip8.buffer.length; i++) {
+	for(let i = 0; i < chip8.keyBuffer.length; i++) {
 
-			expect(chip8.buffer[i]).toEqual(0);
+			expect(chip8.keyBuffer[i]).toEqual(0);
 	}
 });
 
@@ -231,13 +250,13 @@ test('opcode: 0xc000 is correct', () => {
 test('opcode: 0xe000 is correct', () => {
 	let opcode = 0xe09e;
 	let x = (opcode & 0x0f00) >> 8;
-	chip8.buffer[0] = 1;
+	chip8.keyBuffer[0] = 1;
 
 	chip8.runCycle(opcode);
 	expect(chip8).toMatchObject({pc: 514});
 
 	opcode = 0xe0a1;
-	chip8.buffer[0] = 0;
+	chip8.keyBuffer[0] = 0;
 	chip8.runCycle(opcode);
 	expect(chip8).toMatchObject({pc: 516});
 }); 
