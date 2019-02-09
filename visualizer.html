@@ -53,6 +53,7 @@ html {
 }
 /* Create two equal columns that floats next to each other */
 .toolbar{
+	border-radius: 2px;
 	float: left;
 	width: 100%;
 	height: 10%;
@@ -108,18 +109,13 @@ html {
   clear: both;
 }
 
-button {
-  background-color: #66ccff;
-  border: 1px solid;
-  color: black;
-  height : 60px;
-}
 
 .loadrom {
   color: black;
   height: 20px;
   background-color: #e7e7e7;
-  border: 1px solid;
+  border: 1px solid black;
+  border-radius: 8px;
   padding: 2px;
 }
 
@@ -127,52 +123,100 @@ input[type="file"] {
     display: none;
 }
 
-#toolbarbutton {
+#toolbar-button {
   color: black;
   height: 20px;
   background-color: #e7e7e7;
   border: 1px solid;
   padding: 2px;
 }
-.button:hover {
+
+.toolbar-button-wrapper {
+	position: relative;
+	overflow: hidden;
+}
+
+.toolbar-button-wrapper input[type=file]{
+	position: absolute;
+	left: 0;
+	top: 0;
+	opacity: 0;
+}
+
+button {
+position: relative;
+  background-color: #C7D4F0;
+  border: 1px solid;
+  border-radius: 4px;
+  padding: 4px 4px;
+  outline: none;
+  color: black;
+  height : 60px;
+  text-align: center;
+  -webkit-transition-duration: 0.5s; /* Safari */
+  transition-duration: 0.5s;
+  text-decoration: none;
+  overflow: hidden;
+  cursor: pointer;
+}
+button:hover {
   background-color: #ddd;
+}
+
+button:active{
+	background-color: #ddd;
+}
+
+button:after {
+  content: "";
+  background: #f1f1f1;
+  display: block;
+  position: absolute;
+  padding-top: 300%;
+  padding-left: 350%;
+  margin-left: -20px;
+  margin-top: -120%;
+  opacity: 0;
+  transition: all 0.5s
+}
+
+button:active:after {
+  padding: 0;
+  margin: 0;
+  opacity: 1;
+  transition: 0s
 }
 
 </style>
 </head>
 <body>
-<input type="file" id="file-input" />
 <br>
 <div class="wrapper" id="wrapper">
 	<div class="visualizer" id="visualizer" >
 	  <div class="row">
 	  	<div class="toolbar" style="background-color:#eee;">
-	  		<label id="loadrom">
-   				<input type="file"/>
-   				Load ROM
-			</label>
-	  		<button id="toolbarbutton" type="button"> Help </button>
+	  		<div class="toolbar-button-wrapper">
+	  			<button id="toolbar-button" type="button">
+	  			Load ROM </button>
+	  			<button id="toolbar-button" type="button"> Help </button>
+			</div>
 	  	</div>
-	    <div class="romDisplay" style="background-color:#aaa;">
-	      <h2>ROM</h2>
+	    <div class="romDisplay" style="background-color:#C7D4F0;">
 	      <canvas id="romDisplay" width="640" height="320" ></canvas>
 	    </div>
-	    <div class="memDisplay" style="background-color:#bbb;">
-	      <h2>Memory</h2>
+	    <div class="memDisplay" style="background-color:#7F8BA8;">
 	      <textarea id="memtextarea" rows="10" cols="40" readonly></textarea>
 	    </div>
 	  </div>
 
 	  <div class="row">
-	    <div class="logDisplay" style="background-color:#ccc;">
-	      <h2>Log</h2>
-	      <textarea id="logtextarea" rows="10" cols="70" onkeydown="keyPress()" readonly autofocus>
+	    <div class="logDisplay" style="background-color:#B5C1DF;">
+	      <textarea id="logtextarea" rows="10" cols="70" readonly autofocus>
 	      </textarea>
 	    </div>
-	    <div class="keyDisplay" style="background-color:#ddd;">
-	      <h2>Keyboard</h2>
+	    <div class="keyDisplay" style="background-color:#6D7995;">
 	      <div class="keys">
-	        <button name="1" type="button"> 1 </button>
+	        <button name="1" type="button" onclick="keyPress()"> 1 </button>
 	        <button name="2" type="button"> 2 </button>
 	        <button name="3" type="button"> 3 </button>
 	        <button name="4" type="button"> 4 </button>
@@ -213,12 +257,6 @@ input[type="file"] {
     }
   }
 
-  // (function()
-  // {
-  // 	var chip8 = new chip8;
-  // 	alert("hi)");
-  // })();
-
   chip8.reset();
 
   // chip8.generateTestDisplay();
@@ -247,7 +285,10 @@ input[type="file"] {
       registers = registers + "V" + k + ": " + chip8.v[k] + '\n';
       document.getElementById('logtextarea').value = registers
     }
-
+	function keyPress()
+	{
+		alert("hello");
+	};
   
 
 

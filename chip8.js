@@ -138,6 +138,8 @@ chip8 = {
 		loadFlag = false;
 		keyPress = false;
 		keyWait = false;
+
+
 	},
 
 
@@ -453,6 +455,12 @@ chip8 = {
 		}
 	},
 
+
+	keyPress: function()
+	{
+		alert("Hello");
+	},
+
 	render: function() {
 		// If there's nothing to draw, return
 		if(chip8.drawFlag === false) {
@@ -467,40 +475,58 @@ chip8 = {
 			if(chip8.vram[i] == 1) {
 				let y = i / 64 | 0;
 				let x = i - 64*y;
+				chip8.canvas.fillRect(x*15,y*15,15,15);
 			}
 		}
 
 		chip8.drawFlag = false;
 	}
-
-	// Still requires testing
-	// ---------------------------------------------------------------------------------------------
-
-	// //Detects the key pressed
-	// keyPress: function(key)
-	// {
-	// 	if (key < 16)
-	// 	{
-	// 		keyLog[key] = true;
-	// 		if (keyWait != nil)
-	// 		{
-	// 			keyWait = key;
-	// 			waitFlag = true;
-	// 		}
-	// 	}
-
-	// },
-
-	// keyRelease: function(key)
-	// {
-	// 	if (key < 16)
-	// 	{
-	// 		keyLog[key] = false;
-	// 	}
-	// },
 };
 	
-	// ---------------------------------------------------------------------------------------------
-
 
 module.exports = chip8; // exporting the chip8 object to run tests with JEST.js
+
+/******************************************
+Visualizer UI Scaling
+
+******************************************/
+$vis = $("#visualizer");
+visHeight = $vis.outerHeight();
+visWidth = $vis.outerWidth();
+
+$wrapper = $("#wrapper");
+
+$wrapper.resizable({
+  resize: doResize
+});
+
+function doResize(event, ui) {
+  
+  scale, origin;
+    
+  scale = Math.min(
+    ui.size.width / visWidth,    
+    ui.size.height / visHeight
+  );
+  
+  $vis.css({
+    transform: "translate(-50%, -50%) " + "scale(" + scale + ")"
+  });
+}
+
+starterData = { 
+  size: {
+    width: $wrapper.width(),
+    height: $wrapper.height()
+  }
+}
+doResize(null, starterData);
+//
+
+
+/******************************************
+Keyboard Handling
+
+******************************************/
+
+//
