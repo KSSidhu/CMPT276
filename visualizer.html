@@ -216,7 +216,7 @@ button:active:after {
 	    </div>
 	    <div class="keyDisplay" style="background-color:#6D7995;">
 	      <div class="keys">
-	        <button name="1" type="button" onclick="keyPress()"> 1 </button>
+	        <button name="1" type="button" onclick="chip8.keyPress()"> 1 </button>
 	        <button name="2" type="button"> 2 </button>
 	        <button name="3" type="button"> 3 </button>
 	        <button name="4" type="button"> 4 </button>
@@ -285,10 +285,6 @@ button:active:after {
       registers = registers + "V" + k + ": " + chip8.v[k] + '\n';
       document.getElementById('logtextarea').value = registers
     }
-	function keyPress()
-	{
-		alert("hello");
-	};
   
 
 
