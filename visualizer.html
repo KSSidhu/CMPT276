@@ -109,31 +109,18 @@ html {
   clear: both;
 }
 
-
-.loadrom {
-  color: black;
-  height: 20px;
-  background-color: #e7e7e7;
-  border: 1px solid black;
-  border-radius: 8px;
-  padding: 2px;
+.toolbar-button-wrapper {
+	position: relative;
+	overflow: hidden;
+	display: inline-block;
 }
 
-input[type="file"] {
-    display: none;
-}
-
-#toolbar-button {
+.toolbar-button {
   color: black;
   height: 20px;
   background-color: #e7e7e7;
   border: 1px solid;
   padding: 2px;
-}
-
-.toolbar-button-wrapper {
-	position: relative;
-	overflow: hidden;
 }
 
 .toolbar-button-wrapper input[type=file]{
@@ -196,9 +183,10 @@ button:active:after {
 	  <div class="row">
 	  	<div class="toolbar" style="background-color:#eee;">
 	  		<div class="toolbar-button-wrapper">
-	  			<button id="toolbar-button" type="button">
+	  			<button class="toolbar-button" >
 	  			Load ROM </button>
-	  			<button id="toolbar-button" type="button"> Help </button>
+	  			<input type="file" name="myfile" />
+	  			<button class="toolbar-button" type="button"> Help </button>
 			</div>
 	  	</div>
 	    <div class="romDisplay" style="background-color:#C7D4F0;">
@@ -216,22 +204,22 @@ button:active:after {
 	    </div>
 	    <div class="keyDisplay" style="background-color:#6D7995;">
 	      <div class="keys">
-	        <button name="1" type="button" onclick="chip8.keyPress()"> 1 </button>
-	        <button name="2" type="button"> 2 </button>
-	        <button name="3" type="button"> 3 </button>
-	        <button name="4" type="button"> 4 </button>
-	        <button name="Q" type="button"> Q </button>
-	        <button name="W" type="button"> W </button>
-	        <button name="E" type="button"> E </button>
-	        <button name="R" type="button"> R </button>
-	        <button name="A" type="button"> A </button>
-	        <button name="S" type="button"> S </button>
-	        <button name="D" type="button"> D </button>
-	        <button name="F" type="button"> F </button>
-	        <button name="Z" type="button"> Z </button>
-	        <button name="X" type="button"> X </button>
-	        <button name="C" type="button"> C </button>
-	        <button name="V" type="button"> V </button>
+	        <button name="1" type="button" onclick="chip8.keyPress(49)"> 1 </button>
+	        <button name="2" type="button" onclick="chip8.keyPress(69)"> 2 </button>
+	        <button name="3" type="button" onclick="chip8.keyPress(69)"> 3 </button>
+	        <button name="4" type="button" onclick="chip8.keyPress(69)"> 4 </button>
+	        <button name="Q" type="button" onclick="chip8.keyPress(69)"> Q </button>
+	        <button name="W" type="button" onclick="chip8.keyPress(69)"> W </button>
+	        <button name="E" type="button" onclick="chip8.keyPress(69)"> E </button>
+	        <button name="R" type="button" onclick="chip8.keyPress(69)"> R </button>
+	        <button name="A" type="button" onclick="chip8.keyPress(69)"> A </button>
+	        <button name="S" type="button" onclick="chip8.keyPress(69)"> S </button>
+	        <button name="D" type="button" onclick="chip8.keyPress(69)"> D </button>
+	        <button name="F" type="button" onclick="chip8.keyPress(69)"> F </button>
+	        <button name="Z" type="button" onclick="chip8.keyPress(69)"> Z </button>
+	        <button name="X" type="button" onclick="chip8.keyPress(69)"> X </button>
+	        <button name="C" type="button" onclick="chip8.keyPress(69)"> C </button>
+	        <button name="V" type="button" onclick="chip8.keyPress(69)"> V </button>
 	      </div>
 	    </div>
 	  </div>
