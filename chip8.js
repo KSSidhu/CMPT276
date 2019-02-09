@@ -456,10 +456,7 @@ chip8 = {
 	},
 
 
-	keyPress: function()
-	{
-		alert("Hello");
-	},
+
 
 	render: function() {
 		// If there's nothing to draw, return
@@ -490,11 +487,11 @@ module.exports = chip8; // exporting the chip8 object to run tests with JEST.js
 Visualizer UI Scaling
 
 ******************************************/
-$vis = $("#visualizer");
-visHeight = $vis.outerHeight();
-visWidth = $vis.outerWidth();
+var $vis = $("#visualizer");
+var visHeight = $vis.outerHeight();
+var visWidth = $vis.outerWidth();
 
-$wrapper = $("#wrapper");
+var $wrapper = $("#wrapper");
 
 $wrapper.resizable({
   resize: doResize
@@ -514,7 +511,7 @@ function doResize(event, ui) {
   });
 }
 
-starterData = { 
+var starterData = { 
   size: {
     width: $wrapper.width(),
     height: $wrapper.height()
