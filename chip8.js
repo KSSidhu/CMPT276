@@ -455,39 +455,50 @@ chip8 = {
 		}
 	},
 
+/******************************************
+Keyboard Handling
+
+
+******************************************/
 	keyPress: function(index)
 	{
-		 var translateKeys = {
-	                    49: 0x1,  // 1
-	                    50: 0x2,  // 2
-	                    51: 0x3,  // 3
-	                    52: 0x4,  // 4
-	                    81: 0x5,  // Q
-	                    87: 0x6,  // W
-	                    69: 0x7,  // E
-	                    82: 0x8,  // R
-	                    65: 0x9,  // A
-	                    83: 0xA,  // S
-	                    68: 0xB,  // D
-	                    70: 0xC,  // F
-	                    90: 0xD,  // Z
-	                    88: 0xE,  // X
-	                    67: 0xF,  // C
-	                    86: 0x10  // V
+		 translateKeys = {
+	                    '1': 0x1,  // 1
+	                    '2': 0x2,  // 2
+	                   	'3': 0x3,  // 3
+	                    '4': 0x4,  // 4
+	                    'Q': 0x5,  // Q
+	                    'W': 0x6,  // W
+	                    'E': 0x7,  // E
+	                    'R': 0x8,  // R
+	                    'A': 0x9,  // A
+	                    'S': 0xA,  // S
+	                    'D': 0xB,  // D
+	                    'F': 0xC,  // F
+	                    'Z': 0xD,  // Z
+	                    'X': 0xE,  // X
+	                    'C': 0xF,  // C
+	                    'V': 0x10  // V
 	    }
-	    if(index == 69)
+	    if(index == '2')
 	    {
 	    	alert(translateKeys[index]);
 	    }
-	    chip8.setKey(translateKeys[index.keyCode]);
+	    chip8.setKey(translateKeys[index]);
 	},
 
 	setKey: function(keyCode)
 	{
 		chip8.keyBuffer[keyCode] = true;
 		chip8.keyLog[keyCode] = keyCode;
-	},
+	}, //
 
+
+/******************************************
+Remder/Draw
+
+
+******************************************/
 	render: function() {
 		// If there's nothing to draw, return
 		if(chip8.drawFlag === false) {
@@ -507,22 +518,8 @@ chip8 = {
 		}
 
 		chip8.drawFlag = false;
-	}
+	} //
 };
 	
 
 module.exports = chip8; // exporting the chip8 object to run tests with JEST.js
-
-/******************************************
-Visualizer UI Scaling
-
-******************************************/
-//
-
-
-/******************************************
-Keyboard Handling
-
-******************************************/
-
-//

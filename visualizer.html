@@ -21,10 +21,6 @@ html {
   box-sizing: inherit;
 }
 
-.toolbar{
-
-}
-
 .visualizer {
   border: 1px solid #ccc;
   border-radius: 5px;
@@ -37,6 +33,7 @@ html {
   height: 90%;
 }
 
+/*For UI Scaling*/
 .wrapper{
 	padding: 20px;
 	resize: both;
@@ -75,7 +72,7 @@ html {
 }
 
 #logtextarea {
-  width:  calc(50vw - 20px);      /* calc and viewport to the rescue */
+  width:  calc(50vw - 20px);      
   height: calc(30vh - 20px);
   resize: none;
   max-width: 640px;
@@ -84,7 +81,7 @@ html {
 }
 
 #memtextarea {
-  width:  calc(30vw - 20px);      /* calc and viewport to the rescue */
+  width:  calc(30vw - 20px);      
   height: calc(50vh - 20px);
   resize: none;
   max-height: 320px;
@@ -109,6 +106,7 @@ html {
   clear: both;
 }
 
+/*Tool bar buttons formatting and working Load ROM button*/
 .toolbar-button-wrapper {
 	position: relative;
 	overflow: hidden;
@@ -203,23 +201,25 @@ button:active:after {
 	      </textarea>
 	    </div>
 	    <div class="keyDisplay" style="background-color:#6D7995;">
+
+	    <!-- Set onscreen keyboard to be able to use click and key press -->
 	      <div class="keys">
-	        <button name="1" type="button" onclick="chip8.keyPress(49)"> 1 </button>
-	        <button name="2" type="button" onclick="chip8.keyPress(69)"> 2 </button>
-	        <button name="3" type="button" onclick="chip8.keyPress(69)"> 3 </button>
-	        <button name="4" type="button" onclick="chip8.keyPress(69)"> 4 </button>
-	        <button name="Q" type="button" onclick="chip8.keyPress(69)"> Q </button>
-	        <button name="W" type="button" onclick="chip8.keyPress(69)"> W </button>
-	        <button name="E" type="button" onclick="chip8.keyPress(69)"> E </button>
-	        <button name="R" type="button" onclick="chip8.keyPress(69)"> R </button>
-	        <button name="A" type="button" onclick="chip8.keyPress(69)"> A </button>
-	        <button name="S" type="button" onclick="chip8.keyPress(69)"> S </button>
-	        <button name="D" type="button" onclick="chip8.keyPress(69)"> D </button>
-	        <button name="F" type="button" onclick="chip8.keyPress(69)"> F </button>
-	        <button name="Z" type="button" onclick="chip8.keyPress(69)"> Z </button>
-	        <button name="X" type="button" onclick="chip8.keyPress(69)"> X </button>
-	        <button name="C" type="button" onclick="chip8.keyPress(69)"> C </button>
-	        <button name="V" type="button" onclick="chip8.keyPress(69)"> V </button>
+	        <button name="1" type="button" onkeydown="chip8.keyPress(name)" onclick="chip8.keyPress(name)"> 1 </button>
+	        <button name="2" type="button" onkeydown="chip8.keyPress(name)" onclick="chip8.keyPress(name)"> 2 </button>
+	        <button name="3" type="button" onkeydown="chip8.keyPress(name)" onclick="chip8.keyPress(name)"> 3 </button>
+	        <button name="4" type="button" onkeydown="chip8.keyPress(name)" onclick="chip8.keyPress(name)"> 4 </button>
+	        <button name="Q" type="button" onkeydown="chip8.keyPress(name)" onclick="chip8.keyPress(name)"> Q </button>
+	        <button name="W" type="button" onkeydown="chip8.keyPress(name)" onclick="chip8.keyPress(name)"> W </button>
+	        <button name="E" type="button" onkeydown="chip8.keyPress(name)" onclick="chip8.keyPress(name)"> E </button>
+	        <button name="R" type="button" onkeydown="chip8.keyPress(name)" onclick="chip8.keyPress(name)"> R </button>
+	        <button name="A" type="button" onkeydown="chip8.keyPress(name)" onclick="chip8.keyPress(name)"> A </button>
+	        <button name="S" type="button" onkeydown="chip8.keyPress(name)" onclick="chip8.keyPress(name)"> S </button>
+	        <button name="D" type="button" onkeydown="chip8.keyPress(name)" onclick="chip8.keyPress(name)"> D </button>
+	        <button name="F" type="button" onkeydown="chip8.keyPress(name)" onclick="chip8.keyPress(name)"> F </button>
+	        <button name="Z" type="button" onkeydown="chip8.keyPress(name)" onclick="chip8.keyPress(name)"> Z </button>
+	        <button name="X" type="button" onkeydown="chip8.keyPress(name)" onclick="chip8.keyPress(name)"> X </button>
+	        <button name="C" type="button" onkeydown="chip8.keyPress(name)" onclick="chip8.keyPress(name)"> C </button>
+	        <button name="V" type="button" onkeydown="chip8.keyPress(name)" onclick="chip8.keyPress(name)"> V </button>
 	      </div>
 	    </div>
 	  </div>
@@ -274,7 +274,11 @@ button:active:after {
       document.getElementById('logtextarea').value = registers
     }
   
+	window.addEventListener("keydown", function(event) {
+		var key = event.key;
 
+		chip8.keyPress(event.key);
+	}, true);
 
 
 </script>
