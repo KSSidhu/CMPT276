@@ -27,7 +27,7 @@ test('reset function works', () => {
 	// Check static variables
 	expect(chip8).toMatchObject({pc: 0x200, sp: 0, i: 0, delayTimer: 0, soundTimer: 0});
 	// Check flags
-	expect(chip8).toMatchObject({drawFlag: false, loadFlag: false, keyPressed: false, keyWait: false});
+	expect(chip8).toMatchObject({drawFlag: false, loadFlag: false, keyPress: false, keyWait: false});
 	// Check arrays for memory, registers and vram
 	for(let i = 0; i < 80; i++) {
 		expect(chip8.memory[i]).toEqual(CHIP8_FONTSET[i]);
