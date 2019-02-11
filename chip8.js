@@ -1,3 +1,5 @@
+
+
 // Reference http://www.multigesture.net/articles/how-to-write-an-emulator-chip-8-interpreter/ for chip8 object layout and functions to include
 // Referenced http://devernay.free.fr/hacks/chip8/C8TECH10.HTM#00E0 for opcode instructions
 
@@ -50,7 +52,7 @@ chip8 = {
 	drawFlag: false,
 
 	//Key Press
-	keyPress: false,
+	keyPressed: false,
 
 	// "I" Index Register
 	i: 0,
@@ -130,16 +132,30 @@ chip8 = {
 		chip8.delayTimer = 0;
 		chip8.soundTimer = 0;
 
-		// Grab the canvas element to draw on
-		chip8.canvas = document.getElementById('romDisplay').getContext('2d');
-
 		//reset flags
 		drawFlag = false;
 		loadFlag = false;
-		keyPress = false;
+		keyPressed = false;
 		keyWait = false;
 
 
+	},
+
+
+
+	loadGame: function(file) {
+		let reader = new FileReader();
+		console.log("HELLO FROM LAODGAME");
+
+		reader.addEventListener('loadend', function() {
+			let buffer = new Uint8Array(reader.result);
+			buffer.map((val, index)=> (chip8.memory[index] = buffer[index]) );
+			chip8.pc = 0x200;
+			chip8.gameLoaded = true;
+			console.log("Game is now loaded");
+		});
+
+		reader.readAsArrayBuffer(file);
 	},
 
 
@@ -342,14 +358,14 @@ chip8 = {
 				chip8.v[0xf] = 0;
 
 				for (var ylim = 0; ylim < height; y++) {
-					sprite = chip8.v[i + ylim];
+					sprite = chip8.v[chip8.i + ylim];
 
 					for (var xlim = 0; xlim < 8; xlim++) {
 						if ((sprite & (0x80 >> xlim)) != 0) {
 							if (chip8.vram[v[x] + xlim + (chip8.v[y] + ylim) * 64] == 1) { // checks if any sprites currently exist at position
 								chip8.v[0xf] = 1;
 							}
-							chip8.vram[v[x] + xlim + (chip8.v[y] + ylim) * 64] ^= 1; // draw sprite to screen
+							chip8.vram[chip8.v[x] + xlim + (chip8.v[y] + ylim) * 64] ^= 1; // draw sprite to screen
 						}
 					}
 				}
@@ -388,14 +404,14 @@ chip8 = {
 
 					//Wait for keypress, then store it in vX
 					case 0x000a:
-						let keyPress = false;
+						let keyPressed = false;
 						for(let i = 0; i < 16; i++) {
 							if(chip8.keyBuffer[i] != 0) { // if key is pressed
 								chip8.v[x] = i; // store the value of the key into V[x]
-								keyPress = true;
+								keyPressed = true;
 							}
 
-							if(!keyPress) // if no key is pressed, stop execution until input is given
+							if(!keyPressed) // if no key is pressed, stop execution until input is given
 								return;
 							chip8.pc += 2;
 						}
