@@ -19,8 +19,12 @@ html {
   padding: 0;
   box-sizing: inherit;
 }
+
 .toolbar{
 }
+
+
+
 .visualizer {
   border: 1px solid #ccc;
   border-radius: 5px;
@@ -32,6 +36,11 @@ html {
   width: 90%;
   height: 90%;
 }
+
+
+
+/*For UI Scaling*/
+
 .wrapper{
   padding: 20px;
   resize: both;
@@ -47,10 +56,17 @@ html {
 }
 /* Create two equal columns that floats next to each other */
 .toolbar{
+
   border-radius: 2px;
   float: left;
   width: 100%;
   height: 10%;
+
+	border-radius: 2px;
+	float: left;
+	width: 100%;
+	height: 10%;
+
 }
 .romDisplay {
   float: left;
@@ -68,7 +84,7 @@ html {
   padding: 10px;
 }
 #logtextarea {
-  width:  calc(50vw - 20px);      /* calc and viewport to the rescue */
+  width:  calc(50vw - 20px);      
   height: calc(30vh - 20px);
   resize: none;
   max-width: 640px;
@@ -76,7 +92,7 @@ html {
   min-height: 236px;
 }
 #memtextarea {
-  width:  calc(30vw - 20px);      /* calc and viewport to the rescue */
+  width:  calc(30vw - 20px);      
   height: calc(50vh - 20px);
   resize: none;
   max-height: 320px;
@@ -97,11 +113,22 @@ html {
   display: table;
   clear: both;
 }
+
 .toolbar-button-wrapper {
   position: relative;
   overflow: hidden;
   display: inline-block;
 }
+
+
+/*Tool bar buttons formatting and working Load ROM button*/
+.toolbar-button-wrapper {
+	position: relative;
+	overflow: hidden;
+	display: inline-block;
+}
+
+
 .toolbar-button {
   color: black;
   height: 20px;
@@ -109,12 +136,23 @@ html {
   border: 1px solid;
   padding: 2px;
 }
+
 .toolbar-button-wrapper input[type=file]{
   position: absolute;
   left: 0;
   top: 0;
   opacity: 0;
 }
+
+
+.toolbar-button-wrapper input[type=file]{
+	position: absolute;
+	left: 0;
+	top: 0;
+	opacity: 0;
+}
+
+
 button {
 position: relative;
   background-color: #C7D4F0;
@@ -134,9 +172,17 @@ position: relative;
 button:hover {
   background-color: #ddd;
 }
+
 button:active{
   background-color: #ddd;
 }
+
+
+button:active{
+	background-color: #ddd;
+}
+
+
 button:after {
   content: "";
   background: #f1f1f1;
@@ -149,17 +195,20 @@ button:after {
   opacity: 0;
   transition: all 0.5s
 }
+
 button:active:after {
   padding: 0;
   margin: 0;
   opacity: 1;
   transition: 0s
 }
+
 </style>
 </head>
 <body>
 <br>
 <div class="wrapper" id="wrapper">
+
   <div class="visualizer" id="visualizer" >
     <div class="row">
       <div class="toolbar" style="background-color:#eee;">
@@ -205,6 +254,55 @@ button:active:after {
       </div>
     </div>
   </div>
+
+	<div class="visualizer" id="visualizer" >
+	  <div class="row">
+	  	<div class="toolbar" style="background-color:#eee;">
+	  		<div class="toolbar-button-wrapper">
+	  			<button class="toolbar-button" >
+	  			Load ROM </button>
+	  			<input type="file" name="myfile" />
+	  			<button class="toolbar-button" type="button"> Help </button>
+			</div>
+	  	</div>
+	    <div class="romDisplay" style="background-color:#C7D4F0;">
+	      <canvas id="romDisplay" width="640" height="320" ></canvas>
+	    </div>
+	    <div class="memDisplay" style="background-color:#7F8BA8;">
+	      <textarea id="memtextarea" rows="10" cols="40" readonly></textarea>
+	    </div>
+	  </div>
+
+	  <div class="row">
+	    <div class="logDisplay" style="background-color:#B5C1DF;">
+	      <textarea id="logtextarea" rows="10" cols="70" readonly autofocus>
+	      </textarea>
+	    </div>
+	    <div class="keyDisplay" style="background-color:#6D7995;">
+
+	    <!-- Set onscreen keyboard to be able to use click and key press -->
+	      <div class="keys">
+	        <button name="1" type="button" onkeydown="chip8.keyPress(name)" onclick="chip8.keyPress(name)"> 1 </button>
+	        <button name="2" type="button" onkeydown="chip8.keyPress(name)" onclick="chip8.keyPress(name)"> 2 </button>
+	        <button name="3" type="button" onkeydown="chip8.keyPress(name)" onclick="chip8.keyPress(name)"> 3 </button>
+	        <button name="4" type="button" onkeydown="chip8.keyPress(name)" onclick="chip8.keyPress(name)"> 4 </button>
+	        <button name="Q" type="button" onkeydown="chip8.keyPress(name)" onclick="chip8.keyPress(name)"> Q </button>
+	        <button name="W" type="button" onkeydown="chip8.keyPress(name)" onclick="chip8.keyPress(name)"> W </button>
+	        <button name="E" type="button" onkeydown="chip8.keyPress(name)" onclick="chip8.keyPress(name)"> E </button>
+	        <button name="R" type="button" onkeydown="chip8.keyPress(name)" onclick="chip8.keyPress(name)"> R </button>
+	        <button name="A" type="button" onkeydown="chip8.keyPress(name)" onclick="chip8.keyPress(name)"> A </button>
+	        <button name="S" type="button" onkeydown="chip8.keyPress(name)" onclick="chip8.keyPress(name)"> S </button>
+	        <button name="D" type="button" onkeydown="chip8.keyPress(name)" onclick="chip8.keyPress(name)"> D </button>
+	        <button name="F" type="button" onkeydown="chip8.keyPress(name)" onclick="chip8.keyPress(name)"> F </button>
+	        <button name="Z" type="button" onkeydown="chip8.keyPress(name)" onclick="chip8.keyPress(name)"> Z </button>
+	        <button name="X" type="button" onkeydown="chip8.keyPress(name)" onclick="chip8.keyPress(name)"> X </button>
+	        <button name="C" type="button" onkeydown="chip8.keyPress(name)" onclick="chip8.keyPress(name)"> C </button>
+	        <button name="V" type="button" onkeydown="chip8.keyPress(name)" onclick="chip8.keyPress(name)"> V </button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+
 </div>
 
 
@@ -228,6 +326,7 @@ button:active:after {
     }
   }
 
+
   chip8.canvas = document.querySelector('canvas');
 
   let inputFile = document.getElementById('fileInput');
@@ -236,6 +335,7 @@ button:active:after {
     chip8.reset();
     chip8.loadGame(file);
   });
+
 
 
   setInterval(function() {
@@ -288,8 +388,13 @@ button:active:after {
     //   registers = registers + "V" + k + ": " + chip8.v[k] + '\n';
     //   document.getElementById('logtextarea').value = registers
     // }
-  
 
+  
+	window.addEventListener("keydown", function(event) {
+		var key = event.key;
+
+		chip8.keyPress(event.key);
+	}, true);
 
 
 </script>

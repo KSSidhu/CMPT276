@@ -140,6 +140,7 @@ chip8 = {
 		keyWait = false;
 
 
+
 	},
 
 	loadGame: function(file) {
@@ -155,6 +156,7 @@ chip8 = {
 		});
 
 		reader.readAsArrayBuffer(file);
+
 	},
 
 
@@ -473,11 +475,58 @@ chip8 = {
 		}
 	},
 
+
 	keyPress: function()
 	{
 		alert("Hello");
 	},
 
+
+
+/******************************************
+Keyboard Handling
+
+
+******************************************/
+	keyPress: function(index)
+	{
+		 translateKeys = {
+	                    '1': 0x1,  // 1
+	                    '2': 0x2,  // 2
+	                   	'3': 0x3,  // 3
+	                    '4': 0x4,  // 4
+	                    'Q': 0x5,  // Q
+	                    'W': 0x6,  // W
+	                    'E': 0x7,  // E
+	                    'R': 0x8,  // R
+	                    'A': 0x9,  // A
+	                    'S': 0xA,  // S
+	                    'D': 0xB,  // D
+	                    'F': 0xC,  // F
+	                    'Z': 0xD,  // Z
+	                    'X': 0xE,  // X
+	                    'C': 0xF,  // C
+	                    'V': 0x10  // V
+	    }
+	    if(index == '2')
+	    {
+	    	alert(translateKeys[index]);
+	    }
+	    chip8.setKey(translateKeys[index]);
+	},
+
+	setKey: function(keyCode)
+	{
+		chip8.keyBuffer[keyCode] = true;
+		chip8.keyLog[keyCode] = keyCode;
+	}, //
+
+
+/******************************************
+Remder/Draw
+
+
+******************************************/
 
 	render: function() {
 		// If there's nothing to draw, return
@@ -498,7 +547,11 @@ chip8 = {
 		}
 
 		chip8.drawFlag = false;
+
 	}
+=======
+	} //
+
 };
 	
 
