@@ -480,11 +480,14 @@ Keyboard Handling
 	                    'C': 0xF,  // C
 	                    'V': 0x10  // V
 	    }
-	    if(index == '2')
+	    keyCode = index;
+	    keyIndex = translateKeys[index];
+	    //Testing pressing E
+	    if(index == 'E')
 	    {
-	    	alert(translateKeys[index]);
+	    	alert(keyIndex + index);
 	    }
-	    chip8.setKey(translateKeys[index]);
+	    chip8.setKey(index);
 	},
 
 	setKey: function(keyCode)
@@ -495,7 +498,7 @@ Keyboard Handling
 
 
 /******************************************
-Remder/Draw
+Render/Draw
 
 
 ******************************************/
