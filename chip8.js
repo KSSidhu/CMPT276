@@ -140,7 +140,6 @@ chip8 = {
 		keyWait = false;
 
 
-
 	},
 
 	loadGame: function(file) {
@@ -156,7 +155,6 @@ chip8 = {
 		});
 
 		reader.readAsArrayBuffer(file);
-
 	},
 
 
@@ -475,19 +473,38 @@ chip8 = {
 		}
 	},
 
-
 	keyPress: function()
 	{
 		alert("Hello");
 	},
 
 
+	render: function() {
+		// If there's nothing to draw, return
+		if(chip8.drawFlag === false) {
+			return;
+		}
 
-/******************************************
-Keyboard Handling
+		chip8.canvas.fillStyle = "#aaa";
+		chip8.canvas.fillRect(0, 0, 640, 320);
+		chip8.canvas.fillStyle = "#FF9100";
+
+		for(let i = 0; i < chip8.vram.length; i++) {
+			if(chip8.vram[i] == 1) {
+				let y = i / 64 | 0;
+				let x = i - 64*y;
+				chip8.canvas.fillRect(x*15,y*15,15,15);
+			}
+		}
+
+		chip8.drawFlag = false;
+	},
+
+	/******************************************
+	Keyboard Handling
 
 
-******************************************/
+	******************************************/
 	keyPress: function(index)
 	{
 		 translateKeys = {
@@ -521,52 +538,8 @@ Keyboard Handling
 		chip8.keyLog[keyCode] = keyCode;
 	}, //
 
-
-/******************************************
-Remder/Draw
-
-
-******************************************/
-
-	render: function() {
-		// If there's nothing to draw, return
-		if(chip8.drawFlag === false) {
-			return;
-		}
-
-		chip8.canvas.fillStyle = "#aaa";
-		chip8.canvas.fillRect(0, 0, 640, 320);
-		chip8.canvas.fillStyle = "#FF9100";
-
-		for(let i = 0; i < chip8.vram.length; i++) {
-			if(chip8.vram[i] == 1) {
-				let y = i / 64 | 0;
-				let x = i - 64*y;
-				chip8.canvas.fillRect(x*15,y*15,15,15);
-			}
-		}
-
-		chip8.drawFlag = false;
-
-	}
-=======
-	} //
-
 };
-	
+
+
 
 module.exports = chip8; // exporting the chip8 object to run tests with JEST.js
-
-/******************************************
-Visualizer UI Scaling
-
-******************************************/
-//
-
-
-/******************************************
-Keyboard Handling
-
-******************************************/
-
-//
