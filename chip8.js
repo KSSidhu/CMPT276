@@ -50,7 +50,7 @@ chip8 = {
 	drawFlag: false,
 
 	//Key Press
-	keyPress: false,
+	keyPressed: false,
 
 	// "I" Index Register
 	i: 0,
@@ -131,13 +131,30 @@ chip8 = {
 		chip8.soundTimer = 0;
 
 		// Grab the canvas element to draw on
-		chip8.canvas = document.getElementById('romDisplay').getContext('2d');
+		// chip8.canvas = document.getElementById('romDisplay').getContext('2d');
 
 		//reset flags
 		drawFlag = false;
 		loadFlag = false;
-		keyPress = false;
+		keyPressed = false;
 		keyWait = false;
+
+
+	},
+
+	loadGame: function(file) {
+		let reader = new FileReader();
+		console.log("HELLO FROM LAODGAME");
+
+		reader.addEventListener('loadend', function() {
+			let buffer = new Uint8Array(reader.result);
+			buffer.map((val, index)=> (chip8.memory[index] = buffer[index]) );
+			chip8.pc = 0x200;
+			chip8.gameLoaded = true;
+			console.log("Game is now loaded");
+		});
+
+		reader.readAsArrayBuffer(file);
 	},
 
 
@@ -339,15 +356,18 @@ chip8 = {
 
 				chip8.v[0xf] = 0;
 
+				let v_X = chip8.v[x];
+				let v_Y = chip8.v[y];
+
 				for (var ylim = 0; ylim < height; y++) {
-					sprite = chip8.v[i + ylim];
+					sprite = chip8.v[chip8.i + ylim];
 
 					for (var xlim = 0; xlim < 8; xlim++) {
 						if ((sprite & (0x80 >> xlim)) != 0) {
-							if (chip8.vram[v[x] + xlim + (chip8.v[y] + ylim) * 64] == 1) { // checks if any sprites currently exist at position
+							if (chip8.vram[v_X + xlim + (v_Y + ylim) * 64] == 1) { // checks if any sprites currently exist at position
 								chip8.v[0xf] = 1;
 							}
-							chip8.vram[v[x] + xlim + (chip8.v[y] + ylim) * 64] ^= 1; // draw sprite to screen
+							chip8.vram[v_X + xlim + (v_Y + ylim) * 64] ^= 1; // draw sprite to screen
 						}
 					}
 				}
@@ -435,7 +455,7 @@ chip8 = {
 					//Store registers v0 through vX in memory at i
 					case 0x0055:
 						for(let i = 0; i <= x; i++) {
-							chip8.v[i] = chip8.memory[chip8.i + i];
+							chip8.memory[chip8.i + i] = chip8.v[i];
 						}
 						break;
 
@@ -453,6 +473,12 @@ chip8 = {
 		}
 	},
 
+	keyPress: function()
+	{
+		alert("Hello");
+	},
+
+
 	render: function() {
 		// If there's nothing to draw, return
 		if(chip8.drawFlag === false) {
@@ -467,40 +493,27 @@ chip8 = {
 			if(chip8.vram[i] == 1) {
 				let y = i / 64 | 0;
 				let x = i - 64*y;
+				chip8.canvas.fillRect(x*15,y*15,15,15);
 			}
 		}
 
 		chip8.drawFlag = false;
 	}
-
-	// Still requires testing
-	// ---------------------------------------------------------------------------------------------
-
-	// //Detects the key pressed
-	// keyPress: function(key)
-	// {
-	// 	if (key < 16)
-	// 	{
-	// 		keyLog[key] = true;
-	// 		if (keyWait != nil)
-	// 		{
-	// 			keyWait = key;
-	// 			waitFlag = true;
-	// 		}
-	// 	}
-
-	// },
-
-	// keyRelease: function(key)
-	// {
-	// 	if (key < 16)
-	// 	{
-	// 		keyLog[key] = false;
-	// 	}
-	// },
 };
 	
-	// ---------------------------------------------------------------------------------------------
-
 
 module.exports = chip8; // exporting the chip8 object to run tests with JEST.js
+
+/******************************************
+Visualizer UI Scaling
+
+******************************************/
+//
+
+
+/******************************************
+Keyboard Handling
+
+******************************************/
+
+//
