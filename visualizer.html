@@ -15,11 +15,13 @@ html {
   font-size: 100%;
   box-sizing: border-box;
 }
+
 *, *::before, *::after {
   margin: 0;
   padding: 0;
   box-sizing: inherit;
 }
+
 .visualizer {
   border: 1px solid #ccc;
   border-radius: 5px;
@@ -31,6 +33,7 @@ html {
   width: 90%;
   height: 90%;
 }
+
 /*For UI Scaling*/
 .wrapper{
   padding: 20px;
@@ -38,6 +41,7 @@ html {
   position: relative;
   height: 320px;
 }
+
 .resize-ui{
   width: 10px;
   height: 10px;
@@ -67,6 +71,7 @@ html {
   width: 65%;
   padding: 10px;
 }
+
 #logtextarea {
   width:  calc(50vw - 20px);      
   height: calc(30vh - 20px);
@@ -75,6 +80,7 @@ html {
   max-height: 236px;
   min-height: 236px;
 }
+
 #memtextarea {
   width:  calc(30vw - 20px);      
   height: calc(50vh - 20px);
@@ -82,27 +88,32 @@ html {
   max-height: 320px;
   min-height: 320px;
 }
+
 .keyDisplay {
   float: left;
   width: 35%;
   padding: 10px;
 }
+
 .keys {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
 }
+
 /* Clear floats after the columns */
 .row:after {
   content: "";
   display: table;
   clear: both;
 }
+
 /*Tool bar buttons formatting and working Load ROM button*/
 .toolbar-button-wrapper {
   position: relative;
   overflow: hidden;
   display: inline-block;
 }
+
 .toolbar-button {
   color: black;
   height: 20px;
@@ -110,12 +121,14 @@ html {
   border: 1px solid;
   padding: 2px;
 }
+
 .toolbar-button-wrapper input[type=file]{
   position: absolute;
   left: 0;
   top: 0;
   opacity: 0;
 }
+
 button {
 position: relative;
   background-color: #C7D4F0;
@@ -135,9 +148,11 @@ position: relative;
 button:hover {
   background-color: #ddd;
 }
+
 button:active{
   background-color: #ddd;
 }
+
 button:after {
   content: "";
   background: #f1f1f1;
@@ -150,12 +165,14 @@ button:after {
   opacity: 0;
   transition: all 0.5s
 }
+
 button:active:after {
   padding: 0;
   margin: 0;
   opacity: 1;
   transition: 0s
 }
+
 </style>
 </head>
 <body>
@@ -210,9 +227,7 @@ button:active:after {
   </div>
 </div>
 
-
 <script>
-
   // Get the elements with class="column"
   var elements = document.getElementsByClassName("column");
 
@@ -230,6 +245,8 @@ button:active:after {
       elements[i].style.width = "50%";
     }
   }
+
+
 
   chip8.canvas = document.querySelector('canvas');
 
@@ -274,33 +291,14 @@ button:active:after {
     // }
   }, 16);
 
+  
   window.addEventListener("keydown", function(event) {
     var key = event.key;
+
     chip8.keyPress(event.key);
   }, true);
 
 
-
-
-
-    // let newString = "";
-    // for(let i = 0; i < chip8.memory.length; i++) {
-    // newString = newString + "Memory" + i + ": " + chip8.memory[i] + '\n';
-    // document.getElementById('memtextarea').value = newString;
-    // }
-    
-
-    // let registers = "";
-
-    // for(let k = 0; k < chip8.v.length; k++) {
-    //   registers = registers + "V" + k + ": " + chip8.v[k] + '\n';
-    //   document.getElementById('logtextarea').value = registers
-    // }
-  
-
-
-
 </script>
-
 </body>
 </html>
