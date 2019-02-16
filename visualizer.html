@@ -228,73 +228,55 @@ button:active:after {
     }
   }
 
-  chip8.canvas = document.querySelector('canvas');
-
   let inputFile = document.getElementById('fileInput');
   inputFile.addEventListener('change', function(evt) {
     let file = inputFile.files[0];
     chip8.reset();
+    chip8.drawFlag = true;
+    chip8.generateTestDisplay();
     chip8.loadGame(file);
   });
 
-
-  setInterval(function() {
-    let opcode = (chip8.memory[chip8.pc] << 8) | chip8.memory[chip8.pc + 1];
-    chip8.runCycle(opcode);
-    opcode = (chip8.memory[chip8.pc] << 8) | chip8.memory[chip8.pc + 1];
-    chip8.runCycle(opcode);
-    opcode = (chip8.memory[chip8.pc] << 8) | chip8.memory[chip8.pc + 1];
-    chip8.runCycle(opcode);
-    opcode = (chip8.memory[chip8.pc] << 8) | chip8.memory[chip8.pc + 1];
-    chip8.runCycle(opcode);
-    opcode = (chip8.memory[chip8.pc] << 8) | chip8.memory[chip8.pc + 1];
-    chip8.runCycle(opcode);
-    opcode = (chip8.memory[chip8.pc] << 8) | chip8.memory[chip8.pc + 1];
-    chip8.runCycle(opcode);
+  setInterval(function(){
+    if(chip8.gameLoaded) {
+      chip8.emulate();
+      chip8.emulate();
+      chip8.emulate();
+      chip8.emulate();
+      chip8.emulate();
+      chip8.emulate();
+      chip8.emulate();
+      chip8.emulate();
+    }
   }, 16);
 
-  setInterval(function() {
-    chip8.render();
-    
-    // let newString = "";
-    // for(let i = 0; i < chip8.memory.length; i++) {
-    // newString = newString + "Memory" + i + ": " + chip8.memory[i] + '\n';
-    // document.getElementById('memtextarea').value = newString;
-    // }
-    
 
-    // let registers = "";
-
-    // for(let k = 0; k < chip8.v.length; k++) {
-    //   registers = registers + "V" + k + ": " + chip8.v[k] + '\n';
-    //   document.getElementById('logtextarea').value = registers
-    // }
+  setInterval(function(){
+    if(chip8.gameLoaded) {
+      chip8.render();
+    }
   }, 16);
+
+
+    //   // let newString = "";
+  //   // for(let i = 0; i < chip8.memory.length; i++) {
+  //   // newString = newString + "Memory" + i + ": " + chip8.memory[i] + '\n';
+  //   // document.getElementById('memtextarea').value = newString;
+  //   // }
+    
+
+  //   // let registers = "";
+
+  //   // for(let k = 0; k < chip8.v.length; k++) {
+  //   //   registers = registers + "V" + k + ": " + chip8.v[k] + '\n';
+  //   //   document.getElementById('logtextarea').value = registers
+  //   // }
+
 
   window.addEventListener("keydown", function(event) {
     var key = event.key;
     chip8.keyPress(event.key);
   }, true);
-
-
-
-
-
-    // let newString = "";
-    // for(let i = 0; i < chip8.memory.length; i++) {
-    // newString = newString + "Memory" + i + ": " + chip8.memory[i] + '\n';
-    // document.getElementById('memtextarea').value = newString;
-    // }
-    
-
-    // let registers = "";
-
-    // for(let k = 0; k < chip8.v.length; k++) {
-    //   registers = registers + "V" + k + ": " + chip8.v[k] + '\n';
-    //   document.getElementById('logtextarea').value = registers
-    // }
-  
-
 
 
 </script>
