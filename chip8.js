@@ -520,8 +520,8 @@ Keyboard Handling
 
 	    keyCode = index;
 	    keyIndex = translateKeys[index];
-
-	    if(index == '2')
+	    //Testing pressing E
+	    if(index == 'E')
 	    {
 	    	alert(keyIndex + index);
 	    }
@@ -534,8 +534,9 @@ Keyboard Handling
 		chip8.keyLog[keyCode] = keyCode;
 	}, //
 
-	/******************************************
-Remder/Draw
+
+/******************************************
+Render/Draw
 
 
 ******************************************/
