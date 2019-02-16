@@ -20,7 +20,6 @@ html {
   box-sizing: inherit;
 }
 .visualizer {
-  border: 1px solid #ccc;
   border-radius: 5px;
   position: absolute;
   top: 50%;
@@ -46,6 +45,8 @@ html {
 }
 /* Create two equal columns that floats next to each other */
 .toolbar{
+	  background-image: linear-gradient(-90deg, white, #eee);
+  border: 1px solid #ccc;
   border-radius: 2px;
   float: left;
   width: 100%;
@@ -63,16 +64,30 @@ html {
 }
 .logDisplay {
   float: left;
-  width: 65%;
+  width: 35%;
   padding: 10px;
 }
 #logtextarea {
-  width:  calc(50vw - 20px);      
+  width:  calc(30vw - 20px);    
   height: calc(30vh - 20px);
   resize: none;
-  max-width: 640px;
   max-height: 236px;
   min-height: 236px;
+  display: inline-grid;
+}
+
+.log-button{
+  color: black;
+  height: 20px;
+  background-color: #fff;
+  border: 1px solid;
+  padding: 2px;
+  display: inline-grid;
+  grid-template-columns: repeat(3, 1fr);
+
+    background-image: linear-gradient(to bottom,transparent,transparent 
+  	25%,rgba(0,0,0,.1));
+
 }
 #memtextarea {
   width:  calc(30vw - 20px);      
@@ -82,14 +97,39 @@ html {
   min-height: 320px;
 }
 .keyDisplay {
+
   float: left;
-  width: 35%;
-  padding: 10px;
+  width: 65%;
+  padding: 10px;	  
 }
 .keys {
   display: grid;
+
   grid-template-columns: repeat(4, 1fr);
 }
+
+.key-button
+{
+	background-color: #fff;
+
+}
+
+.key-button:hover{
+
+  background-image: linear-gradient(-27deg, #eee, #eee);
+}
+.controlDisplay
+{
+	grid-column-start: 5;
+	grid-row-start: 1;
+	grid-row-end: 5;
+	height: 100%;
+	padding: 10px;
+	border: 1px solid;
+	border-radius: 4px;
+}
+
+
 /* Clear floats after the columns */
 .row:after {
   content: "";
@@ -105,9 +145,11 @@ html {
 .toolbar-button {
   color: black;
   height: 20px;
-  background-color: #e7e7e7;
+  background-color: #fff;
   border: 1px solid;
   padding: 2px;
+    background-image: linear-gradient(to bottom,transparent,transparent 
+  	25%,rgba(0,0,0,.1));
 }
 .toolbar-button-wrapper input[type=file]{
   position: absolute;
@@ -116,9 +158,10 @@ html {
   opacity: 0;
 }
 button {
+
 position: relative;
   background-color: #C7D4F0;
-  border: 1px solid;
+  border: 1px solid ;
   border-radius: 4px;
   padding: 4px 4px;
   outline: none;
@@ -130,16 +173,20 @@ position: relative;
   text-decoration: none;
   overflow: hidden;
   cursor: pointer;
+    background-image: linear-gradient(to bottom,transparent,transparent 
+  	25%,rgba(0,0,0,.1));
 }
 button:hover {
   background-color: #ddd;
+
+
 }
 button:active{
   background-color: #ddd;
 }
 button:after {
   content: "";
-  background: #f1f1f1;
+  background: #ccc;
   display: block;
   position: absolute;
   padding-top: 300%;
@@ -155,6 +202,30 @@ button:active:after {
   opacity: 1;
   transition: 0s
 }
+
+table.blueTable {
+  border: 1px solid #1C6EA4;
+  background-color: #EEEEEE;
+  text-align: left;
+  border-collapse: collapse;
+  width:  calc(30vw - 20px);    
+  height: calc(30vh - 20px);
+  resize: none;
+  max-height: 240px;
+  min-height: 240px;
+    display: grid;
+
+  grid-template-columns: repeat(4, 1fr);
+
+}
+table.blueTable td, table.blueTable th {
+  border: 1px solid #AAAAAA;
+  padding: 3px 2px;
+}
+table.blueTable tbody td {
+  font-size: 13px;
+}
+
 </style>
 </head>
 <body>
@@ -164,10 +235,10 @@ button:active:after {
     <div class="row">
       <div class="toolbar" style="background-color:#eee;">
         <div class="toolbar-button-wrapper">
-          <button class="toolbar-button" >
-          Load ROM </button>
+          <button class="toolbar-button" > Load ROM </button>
           <input type="file" name="myfile" id="fileInput"/>
-          <button class="toolbar-button" type="button"> Help </button>
+
+          <button class="toolbar-button" type="button" onclick="chip8.help()"> Help </button>
       </div>
       </div>
       <div class="romDisplay" style="background-color:#C7D4F0;">
@@ -179,30 +250,57 @@ button:active:after {
     </div>
 
     <div class="row">
-      <div class="logDisplay" style="background-color:#B5C1DF;">
+    	<div class="keyDisplay" style="background-color:#B5C1DF;">
+        <div class="keys">
+          <button name="1" class="key-button" type="button" onclick="chip8.keyPress(name)"> 1 </button>
+          <button name="2" class="key-button" type="button" onclick="chip8.keyPress(name)"> 2 </button>
+          <button name="3" class="key-button" type="button" onclick="chip8.keyPress(name)"> 3 </button>
+          <button name="4" class="key-button" type="button" onclick="chip8.keyPress(name)"> 4 </button>
+          <button name="q" class="key-button" type="button" onclick="chip8.keyPress(name)"> Q </button>
+          <button name="w" class="key-button" type="button" onclick="chip8.keyPress(name)"> W </button>
+          <button name="e" class="key-button" type="button" onclick="chip8.keyPress(name)"> E </button>
+          <button name="r" class="key-button" type="button" onclick="chip8.keyPress(name)"> R </button>
+          <button name="a" class="key-button" type="button" onclick="chip8.keyPress(name)"> A </button>
+          <button name="s" class="key-button" type="button" onclick="chip8.keyPress(name)"> S </button>
+          <button name="d" class="key-button" type="button" onclick="chip8.keyPress(name)"> D </button>
+          <button name="f" class="key-button" type="button" onclick="chip8.keyPress(name)"> F </button>
+          <button name="z" class="key-button" type="button" onclick="chip8.keyPress(name)"> Z </button>
+          <button name="x" class="key-button" type="button" onclick="chip8.keyPress(name)"> X </button>
+          <button name="c" class="key-button" type="button" onclick="chip8.keyPress(name)"> C </button>
+          <button name="v" class="key-button" type="button" onclick="chip8.keyPress(name)"> V </button>        
+        <div class="controlDisplay" style="background-color:#6D7995;">
+
+	        <button name="backwards" class="log-button" type="button" onclick="chip8.backwards()"> Backwards </button>
+	        <button name="pause" class="log-button" type="button" onclick="chip8.pause()"> Pause </button>
+	        <button name="forwards" class="log-button" type="button" onclick="chip8.forwards()"> Forwards </button>
+     	</div>
+        </div>
+
+      
+      </div>
+
+<!--       <div class="logDisplay" style="background-color:#6D7995;">
+
         <textarea id="logtextarea" rows="10" cols="70" readonly autofocus>
         </textarea>
-      </div>
-      <div class="keyDisplay" style="background-color:#6D7995;">
-        <div class="keys">
-          <button name="1" type="button" onclick="chip8.keyPress(49)"> 1 </button>
-          <button name="2" type="button" onclick="chip8.keyPress(69)"> 2 </button>
-          <button name="3" type="button" onclick="chip8.keyPress(69)"> 3 </button>
-          <button name="4" type="button" onclick="chip8.keyPress(69)"> 4 </button>
-          <button name="Q" type="button" onclick="chip8.keyPress(69)"> Q </button>
-          <button name="W" type="button" onclick="chip8.keyPress(69)"> W </button>
-          <button name="E" type="button" onclick="chip8.keyPress(69)"> E </button>
-          <button name="R" type="button" onclick="chip8.keyPress(69)"> R </button>
-          <button name="A" type="button" onclick="chip8.keyPress(69)"> A </button>
-          <button name="S" type="button" onclick="chip8.keyPress(69)"> S </button>
-          <button name="D" type="button" onclick="chip8.keyPress(69)"> D </button>
-          <button name="F" type="button" onclick="chip8.keyPress(69)"> F </button>
-          <button name="Z" type="button" onclick="chip8.keyPress(69)"> Z </button>
-          <button name="X" type="button" onclick="chip8.keyPress(69)"> X </button>
-          <button name="C" type="button" onclick="chip8.keyPress(69)"> C </button>
-          <button name="V" type="button" onclick="chip8.keyPress(69)"> V </button>
-        </div>
-      </div>
+      </div> -->
+      <div class="logDisplay" style="background-color:#6D7995;">
+	      <table class="blueTable" id="table">
+			<tbody>
+			<tr>
+			<td>cell1_1</td><td>cell2_1</td><td>cell3_1</td><td>cell4_1</td></tr>
+			<tr>
+			<td>cell1_2</td><td>cell2_2</td><td>cell3_2</td><td>cell4_2</td></tr>
+			<tr>
+			<td>cell1_3</td><td>cell2_3</td><td>cell3_3</td><td>cell4_3</td></tr>
+			<tr>
+			<td>cell1_4</td><td>cell2_4</td><td>cell3_4</td><td>cell4_4</td></tr>
+			</tbody>
+			</tr>
+		   </table>
+	  </div>
+
+
     </div>
   </div>
 </div>
@@ -272,27 +370,39 @@ button:active:after {
   }, 16);
 
   window.addEventListener("keydown", function(event) {
-    var key = event.key;
-    chip8.keyPress(event.key);
+    var keyToggle = true;
+    chip8.keyPress(event.key, keyToggle);
+  }, true);
+
+    window.addEventListener("keyup", function(event) {
+    var keyToggle = false;
+    chip8.keyPress(event.key, keyToggle);
   }, true);
 
 
 
 
 
-    // let newString = "";
-    // for(let i = 0; i < chip8.memory.length; i++) {
-    // newString = newString + "Memory" + i + ": " + chip8.memory[i] + '\n';
-    // document.getElementById('memtextarea').value = newString;
-    // }
+    let newString = "";
+    for(let i = 0; i < chip8.memory.length; i++) {
+    newString = newString + "Memory" + i + ": " + chip8.memory[i] + '\n';
+    document.getElementById('memtextarea').value = newString;
+    }
     
 
-    // let registers = "";
+    let registers = "";
 
-    // for(let k = 0; k < chip8.v.length; k++) {
-    //   registers = registers + "V" + k + ": " + chip8.v[k] + '\n';
-    //   document.getElementById('logtextarea').value = registers
-    // }
+    for(let k = 0; k < chip8.v.length; k++) {
+      registers = registers + "V" + k + ": " + chip8.v[k] + '\n';
+      document.getElementById('table').innerHTML = registers;
+    }
+
+    let keyTrack = "";
+
+    for(let j = 0; j < chip8.keyLog.length; j++) {
+      keyTrack = keyTrack + "key: "  + chip8.keyLog[k] + '\n';
+      document.getElementById('logtextarea').value = keyTrack;
+    }
   
 
 

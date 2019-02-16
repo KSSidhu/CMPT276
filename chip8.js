@@ -75,6 +75,9 @@ chip8 = {
 	// The HTML canvas the emulator runs games to
 	canvas: null,
 
+	paused: false,
+	cycles: 0,
+
 	// Generates random numbers for memory, stack and V registers to 
 	// display on the HTML page
 	generateTestDisplay: function() {
@@ -138,6 +141,9 @@ chip8 = {
 		keyPressed = false;
 		keyWait = false;
 
+		//
+		cycles = 0;
+
 
 	},
 
@@ -157,7 +163,6 @@ chip8 = {
 
 		reader.readAsArrayBuffer(file);
 	},
-
 
 	//Emulation Cycle
 	runCycle: function(opcode) {
@@ -476,41 +481,99 @@ Keyboard Handling
 
 
 ******************************************/
-	keyPress: function(index)
+	keyPress: function(index, keyToggle)
 	{
 		 translateKeys = {
 	                    '1': 0x1,  // 1
 	                    '2': 0x2,  // 2
 	                   	'3': 0x3,  // 3
 	                    '4': 0x4,  // 4
-	                    'Q': 0x5,  // Q
-	                    'W': 0x6,  // W
-	                    'E': 0x7,  // E
-	                    'R': 0x8,  // R
-	                    'A': 0x9,  // A
-	                    'S': 0xA,  // S
-	                    'D': 0xB,  // D
-	                    'F': 0xC,  // F
-	                    'Z': 0xD,  // Z
-	                    'X': 0xE,  // X
-	                    'C': 0xF,  // C
-	                    'V': 0x10  // V
+	                    'q': 0x5,  // Q
+	                    'w': 0x6,  // W
+	                    'e': 0x7,  // E
+	                    'r': 0x8,  // R
+	                    'a': 0x9,  // A
+	                    's': 0xA,  // S
+	                    'd': 0xB,  // D
+	                    'f': 0xC,  // F
+	                    'z': 0xD,  // Z
+	                    'x': 0xE,  // X
+	                    'c': 0xF,  // C
+	                    'v': 0x10  // V
 	    }
-	    keyCode = index;
-	    keyIndex = translateKeys[index];
-	    //Testing pressing E
-	    if(index == 'E')
+	    keyPressed = false;
+	    //If keyToggle is null, it means the user clicked on a key, if true then the user is using keyboard
+	    if(keyToggle == null || keyToggle == true)
 	    {
-	    	alert(keyIndex + index);
+	    	keyPressed = true;
 	    }
-	    chip8.setKey(index);
+	    else
+	    {
+	    	keyPressed = false;
+	    }
+
+	    if (keyPressed == true)
+	    {
+		    keyIndex = translateKeys[index];
+		    //Restrict keyboard keys to onscreen key presses
+		    if(keyIndex != null)
+		    {	
+
+		    	//Test pressing keyboard keys + mouse with onscreen keys
+			    alert(index + " " + translateKeys[index]);
+			    chip8.setKey(translateKeys[index]);
+		    }
+		}
+		else
+		{
+			chip8.unsetKey(translateKeys[index]);
+		}
 	},
 
 	setKey: function(keyCode)
 	{
 		chip8.keyBuffer[keyCode] = true;
 		chip8.keyLog[keyCode] = keyCode;
-	}, //
+	},
+
+	unsetKey : function(keyCode)
+	{
+		chip8.keyBuffer[keyCode] = false;
+		delete chip8.keyLog[keyCode];
+	},
+
+/******************************************
+Backwards, Pause, Forwards, Help
+
+
+******************************************/
+	//Step back in emulator one step
+	backwards : function()
+	{
+		chip8.pause();
+	},
+
+	//Stop and pause all operations in emulator
+	pause : function()
+	{
+
+	},
+
+	//Step forward in emulator one step
+	forwards : function()
+	{
+		chip8.pause();
+	},
+
+	help : function()
+	{
+		alert(
+			" F1 | Pause \n F2 | Step Backwards \n F3 | Step Forwards"
+
+
+
+		);
+	},
 
 
 /******************************************
