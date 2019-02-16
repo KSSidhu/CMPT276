@@ -134,6 +134,8 @@ chip8 = {
 		chip8.keyPressed = false;
 		chip8.keyWait = false;
 
+		document.onkeyup = document.onkeydown = chip8.onKey;
+
 		//
 		chip8.cycles = 0;
 
@@ -152,6 +154,27 @@ chip8 = {
 
 	// 	return ("0x" + pad + temp);
 	// },
+
+	onKey: function(evt) {
+		let charStr = String.fromCharCode(evt.which);
+		let val = (evt.type == 'keydown') ? true : false;
+
+		idx =
+		  {
+		    '1': 0x1,'2': 0x2,'3': 0x3,'4': 0x4,
+		    'Q': 0x4,'W':0x5,'E': 0x6,'R': 0xD,
+		    'A': 0x7,'S':0x8,'D': 0x9,'F': 0xE,
+		    'Z': 0xA,'X':0x0,'C': 0xB, 'V':0xF,
+		  }[charStr];
+
+		  if(idx !== undefined)
+		  {
+		    chip8.keyBuffer[idx] = val;
+		  }
+
+  			chip8.keyPressed = chip8.keyBuffer.reduce( ((prevValue,currentValue) => (prevValue | currentValue)) )
+
+	},
 
 	stop: function() {
 		chip8.gameLoaded = true;
@@ -450,7 +473,6 @@ chip8 = {
 								chip8.v[x] = chip8.keyBuffer[i];
 								oldKey = true;
 								chip8.drawFlag = true;
-								// break;
 							}
 						}
 
@@ -520,64 +542,63 @@ Keyboard Handling
 
 
 ******************************************/
-	keyPress: function(index, keyToggle)
-	{
-		 translateKeys = {
-	                    '1': 0x1,  // 1
-	                    '2': 0x2,  // 2
-	                   	'3': 0x3,  // 3
-	                    '4': 0x4,  // 4
-	                    'q': 0x5,  // Q
-	                    'w': 0x6,  // W
-	                    'e': 0x7,  // E
-	                    'r': 0x8,  // R
-	                    'a': 0x9,  // A
-	                    's': 0xA,  // S
-	                    'd': 0xB,  // D
-	                    'f': 0xC,  // F
-	                    'z': 0xD,  // Z
-	                    'x': 0xE,  // X
-	                    'c': 0xF,  // C
-	                    'v': 0x10  // V
-	    }
+	// keyPress: function(index, keyToggle)
+	// {
+	// 	 translateKeys = {
+	//                     '1': 0x1,  // 1
+	//                     '2': 0x2,  // 2
+	//                    	'3': 0x3,  // 3
+	//                     '4': 0x4,  // 4
+	//                     'q': 0x5,  // Q
+	//                     'w': 0x6,  // W
+	//                     'e': 0x7,  // E
+	//                     'r': 0x8,  // R
+	//                     'a': 0x9,  // A
+	//                     's': 0xA,  // S
+	//                     'd': 0xB,  // D
+	//                     'f': 0xC,  // F
+	//                     'z': 0xD,  // Z
+	//                     'x': 0xE,  // X
+	//                     'c': 0xF,  // C
+	//                     'v': 0x10  // V
+	//     }
 
+	//     chip8.keyPressed = false;
+	//     //If keyToggle is null, it means the user clicked on a key, if true then the user is using keyboard
+	//     if(keyToggle == null || keyToggle == true)
+	//     {
+	//     	chip8.keyPressed = true;
+	//     }
 
-	    chip8.keyPressed = false;
-	    //If keyToggle is null, it means the user clicked on a key, if true then the user is using keyboard
-	    if(keyToggle == null || keyToggle == true)
-	    {
-	    	chip8.keyPressed = true;
-	    }
+	//     if (chip8.keyPressed == true)
+	//     {
+	// 	    let keyIndex = translateKeys[index];
+	// 	    //Restrict keyboard keys to onscreen key presses
+	// 	    if(keyIndex != null)
+	// 	    {	
 
-	    if (chip8.keyPressed == true)
-	    {
-		    let keyIndex = translateKeys[index];
-		    //Restrict keyboard keys to onscreen key presses
-		    if(keyIndex != null)
-		    {	
-
-		    	//Test pressing keyboard keys + mouse with onscreen keys
+	// 	    	//Test pressing keyboard keys + mouse with onscreen keys
 			    // alert(index + " " + translateKeys[index]);
-			    chip8.setKey(translateKeys[index]);
-		    }
-		}
-		else
-		{
-			chip8.unsetKey(translateKeys[index]);
-		}
-	},
+	// 		    chip8.setKey(translateKeys[index]);
+	// 	    }
+	// 	}
+	// 	else
+	// 	{
+	// 		chip8.unsetKey(translateKeys[index]);
+	// 	}
+	// },
 
-	setKey: function(keyCode) {
-		chip8.keyBuffer[keyCode] = keyCode;
-		// chip8.keyLog[keyCode] = keyCode;
-	},
+	// setKey: function(keyCode) {
+	// 	chip8.keyBuffer[keyCode] = keyCode;
+	// 	// chip8.keyLog[keyCode] = keyCode;
+	// },
 
-	unsetKey : function(keyCode)
-	{
+	// unsetKey : function(keyCode)
+	// {
 
-		delete chip8.keyBuffer[keyCode];
-		// delete chip8.keyLog[keyCode];
-	},
+	// 	delete chip8.keyBuffer[keyCode];
+	// 	// delete chip8.keyLog[keyCode];
+	// },
 
 /******************************************
 Backwards, Pause, Forwards, Help
