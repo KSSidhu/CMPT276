@@ -112,6 +112,8 @@ chip8 = {
 		// Clear keyboard buffer
 		chip8.keyBuffer = chip8.keyBuffer.map(() => 0);
 
+		chip8.keyLog = chip8.keyLog.map(() => 0);
+
 		// reset stack pointers
 		chip8.sp = 0;
 
@@ -128,14 +130,14 @@ chip8 = {
 		chip8.canvas = document.querySelector('canvas');
 
 		//reset flags
-		drawFlag = false;
-		keyPressed = false;
-		keyWait = false;
+		chip8.drawFlag = false;
+		chip8.keyPressed = false;
+		chip8.keyWait = false;
 
 		//
-		cycles = 0;
+		chip8.cycles = 0;
 
-		gameLoaded = false;
+		// chip8.gameLoaded = false;
 
 		console.log('ALL RESET');
 	},
@@ -151,9 +153,20 @@ chip8 = {
 	// 	return ("0x" + pad + temp);
 	// },
 
+	stop: function() {
+		chip8.gameLoaded = true;
+	},
+
+	begin: function() {
+		chip8.gameLoaded = false;
+	},
+
 	emulate: function() {
-		let opcode = chip8.memory[chip8.pc] << 8 | chip8.memory[chip8.pc + 1];
-		chip8.runCycle(opcode);
+		// chip8.gameLoaded = true
+		if(chip8.gameLoaded == true) {
+			let opcode = chip8.memory[chip8.pc] << 8 | chip8.memory[chip8.pc + 1];
+			chip8.runCycle(opcode);
+		}
 	},
 
 	loadGame: function(file) {
@@ -383,9 +396,8 @@ chip8 = {
 
 					for (var xlim = 0; xlim < 8; xlim++) {
 						if ((sprite & (0x80 >> xlim)) != 0) {
-							if (chip8.vram[v_X + xlim + (v_Y + ylim) * 64] == 1) {
+							if (chip8.vram[v_X + xlim + ((v_Y + ylim) * 64)] == 1) {
 								// checks if any sprites currently exist at position
-								console.log("FLAG SET TO 1");
 								chip8.v[0xf] = 1;
 							}
 
@@ -405,14 +417,14 @@ chip8 = {
 					//Skip next instruction if the key with the value vX is pressed
 					case 0x009e:
 						console.log('HELLO FROM 0xe09e');
-						if (chip8.keyBuffer[chip8.v[x]] != 0) {
+						if (chip8.keyBuffer[chip8.v[x]]) {
 							chip8.pc += 2;
 						}
 						break;
 					//Skip next instruction if the key with the value vX is not pressed
 					case 0x00a1:
 						console.log('HELLO FROM 0xf0a1');
-						if (chip8.keyBuffer[chip8.v[x]] == 0) {
+						if (!chip8.keyBuffer[chip8.v[x]]) {
 							chip8.pc += 2;
 						}
 						break;
@@ -430,18 +442,20 @@ chip8 = {
 					//Wait for keypress, then store it in vX
 					case 0x000a:
 						console.log('HELLO FROM 0xf00a');
-						let pressedKey = false;
-						for (let i = 0; i < 16; i++) {
-							if (chip8.keyBuffer[i] != 0) {
-								// if key is pressed
-								chip8.v[x] = i; // store the value of the key into V[x]
-								pressedKey = true;
-							}
+						let oldKey = false;
 
-							if (
-								!pressedKey // if no key is pressed, stop execution until input is given
-							)
-								return;
+						for(let i = 0; i < 16; i++) {
+							if(chip8.keyBuffer[i] != 0) {
+								// alert(i);
+								chip8.v[x] = chip8.keyBuffer[i];
+								oldKey = true;
+								chip8.drawFlag = true;
+								// break;
+							}
+						}
+
+						if(!oldKey) {
+							chip8.pc -= 2;
 						}
 						break;
 
@@ -526,22 +540,24 @@ Keyboard Handling
 	                    'c': 0xF,  // C
 	                    'v': 0x10  // V
 	    }
-	    keyPressed = false;
+
+
+	    chip8.keyPressed = false;
 	    //If keyToggle is null, it means the user clicked on a key, if true then the user is using keyboard
 	    if(keyToggle == null || keyToggle == true)
 	    {
-	    	keyPressed = true;
+	    	chip8.keyPressed = true;
 	    }
 
-	    if (keyPressed == true)
+	    if (chip8.keyPressed == true)
 	    {
-		    keyIndex = translateKeys[index];
+		    let keyIndex = translateKeys[index];
 		    //Restrict keyboard keys to onscreen key presses
 		    if(keyIndex != null)
 		    {	
 
 		    	//Test pressing keyboard keys + mouse with onscreen keys
-			    alert(index + " " + translateKeys[index]);
+			    // alert(index + " " + translateKeys[index]);
 			    chip8.setKey(translateKeys[index]);
 		    }
 		}
@@ -553,14 +569,14 @@ Keyboard Handling
 
 	setKey: function(keyCode) {
 		chip8.keyBuffer[keyCode] = keyCode;
-		//chip8.keyLog[keyCode] = keyCode;
+		// chip8.keyLog[keyCode] = keyCode;
 	},
 
 	unsetKey : function(keyCode)
 	{
 
 		delete chip8.keyBuffer[keyCode];
-		//delete chip8.keyLog[keyCode];
+		// delete chip8.keyLog[keyCode];
 	},
 
 /******************************************
