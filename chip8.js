@@ -552,14 +552,15 @@ Keyboard Handling
 	},
 
 	setKey: function(keyCode) {
-		chip8.keyBuffer[keyCode] = true;
-		chip8.keyLog[keyCode] = keyCode;
+		chip8.keyBuffer[keyCode] = keyCode;
+		//chip8.keyLog[keyCode] = keyCode;
 	},
 
 	unsetKey : function(keyCode)
 	{
-		chip8.keyBuffer[keyCode] = false;
-		delete chip8.keyLog[keyCode];
+
+		delete chip8.keyBuffer[keyCode];
+		//delete chip8.keyLog[keyCode];
 	},
 
 /******************************************
