@@ -1,4 +1,5 @@
 // Reference http://www.multigesture.net/articles/how-to-write-an-emulator-chip-8-interpreter/ for chip8 object layout and functions to include
+// Refernce https://github.com/reu/chip8.js for emulation render cycle
 // Referenced http://devernay.free.fr/hacks/chip8/C8TECH10.HTM#00E0 for opcode instructions
 
 let chip8 = {
@@ -31,9 +32,6 @@ let chip8 = {
 
 	//Tracks previous keys pressed
 	keyLog: new Uint8Array(16),
-
-	// Draw Operation Flag
-	drawFlag: false,
 
 	//Key Press
 	keyPressed: false,
@@ -93,7 +91,7 @@ let chip8 = {
 
 		let location;
 
-		if(x > 64) {
+		if(x > 64 - 1) {
 			while(x > 64 - 1) {
 				x -= 64;
 			}
@@ -103,7 +101,7 @@ let chip8 = {
 			}
 		}
 
-		if( y > 32) {
+		if( y > 32 - 1) {
 			while( y > 32 - 1 ) {
 				y -= 32;
 			}
@@ -184,7 +182,6 @@ let chip8 = {
 		chip8.canvas = document.querySelector('canvas');
 
 		//reset flags
-		chip8.drawFlag = false;
 		chip8.keyPressed = false;
 		chip8.keyWait = false;
 		chip8.paused = false;
@@ -480,8 +477,6 @@ let chip8 = {
 								// checks if any sprites currently exist at position
 								chip8.v[0xf] = 1;
 							}
-
-							// chip8.vram[v_X + xlim + (v_Y + ylim) * 64] ^= 1; // draw sprite to screen
 						}
 
 						sprite <= 1;
@@ -657,6 +652,8 @@ Backwards, Pause, Forwards, Help
 	backwards : function()
 	{
 		chip8.pause();
+		chip8.paused = true;
+		chip8.pc -= 2;
 	},
 
 	//Stop and pause all operations in emulator
@@ -675,6 +672,8 @@ Backwards, Pause, Forwards, Help
 	forwards : function()
 	{
 		chip8.pause();
+		chip8.paused = true;
+		chip8.pc += 2;
 	},
 
 	help : function()
@@ -710,14 +709,6 @@ Render/Draw
 				ctx.fillRect(x * SCALE, y * SCALE, SCALE, SCALE);
 			}
 		}
-
-		// for(let y = 0; y < 32; y++) {
-		// 	for(let x = 0; x < 64; x++) {
-		// 		if(chip8.vram[x + y * 64] != 0x0) {
-		// 			ctx.fillRect(x * SCALE, y * SCALE, SCALE, SCALE);
-		// 		}
-		// 	}
-		// }
 	}
 };
 
