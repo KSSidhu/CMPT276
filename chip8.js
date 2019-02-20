@@ -229,6 +229,10 @@ let chip8 = {
 
 	},
 
+	stop: function() {
+		cancelAnimationFrame(loop);
+	},
+
 	start: function() {
 		loop = requestAnimationFrame(function step() {
 		step = chip8.emulate();
@@ -421,8 +425,8 @@ let chip8 = {
 					//if most significant bit of vX is 1, then vF is set to 1, otherwise 0. Then vX is multiplied by 2.
 					case 0x000e:
 						console.log('HELLO FROM 0x800e');
-						chip8.v[0xf] = +(chip8.v[x] & 0x80);
-						chip8.v[x] <<= 1;
+						chip8.v[0xf] = chip8.v[x] >> 7;
+						chip8.v[x] = chip8.v[x] << 1;
 						break;
 				}
 				break;
@@ -518,25 +522,11 @@ let chip8 = {
 					//Wait for keypress, then store it in vX
 					case 0x000a:
 						console.log('HELLO FROM 0xf00a');
-						// let oldKey = false;
-
-						// for(let i = 0; i < 16; i++) {
-						// 	if(chip8.keyBuffer[i] != 0) {
-						// 		// alert(i);
-						// 		chip8.v[x] = chip8.keyBuffer[i];
-						// 		oldKey = true;
-						// 		chip8.drawFlag = true;
-						// 	}
-						// }
 						chip8.paused = true;
 						chip8.onNextKeyPress = function(key) {
 							chip8.v[x] = key;
 							chip8.paused = false;
 						}.bind(chip8);
-
-						// if(!oldKey) {
-						// 	chip8.pc -= 2;
-						// }
 						return;
 
 					//DelayTimer is set to vX
@@ -672,11 +662,12 @@ Backwards, Pause, Forwards, Help
 	//Stop and pause all operations in emulator
 	pause : function()
 	{
-		chip8.paused = false ? true: false;
-		if(chip8.paused) {
-			chip8.loop = cancelAnimationFrame(chip8.loop);
+		if(!chip8.paused) {
+			chip8.stop();
+			chip8.paused = true;
 		} else {
-			chip8.loop = requestAnimationFrame(chip8.loop)
+			chip8.paused = false;
+			chip8.start();
 		}
 	},
 
