@@ -279,7 +279,7 @@ table.blueTable tbody td {
       
       </div>
 
-<!--       <div class="logDisplay" style="background-color:#6D7995;">
+     <!--  <div class="logDisplay" style="background-color:#6D7995;">
 
         <textarea id="logtextarea" rows="10" cols="70" readonly autofocus>
         </textarea>
@@ -330,58 +330,25 @@ table.blueTable tbody td {
   inputFile.addEventListener('change', function(evt) {
     let file = inputFile.files[0];
     chip8.reset();
-    chip8.drawFlag = true;
-    chip8.generateTestDisplay();
+    // chip8.drawFlag = true;
+    // chip8.generateTestDisplay();
     chip8.loadGame(file);
+    chip8.start();
+
   });
 
-  setInterval(function(){
-    if(chip8.gameLoaded) {
-      chip8.emulate();
-      chip8.emulate();
-      chip8.emulate();
-      chip8.emulate();
-      chip8.emulate();
-      chip8.emulate();
-      chip8.emulate();
-      chip8.emulate();
-    }
-  }, 16);
 
+  // document.addEventListener("keydown", function(event) {
+  //   var keyToggle = true;
+  //   chip8.keyPress(event.key, keyToggle);
+  // }, true);
 
-  setInterval(function(){
-    if(chip8.gameLoaded) {
-      chip8.render();
-    }
-  }, 16);
+  //   document.addEventListener("keyup", function(event) {
+  //   var keyToggle = false;
+  //   chip8.keyPress(event.key, keyToggle);
+  // }, true);
 
-
-    //   // let newString = "";
-  //   // for(let i = 0; i < chip8.memory.length; i++) {
-  //   // newString = newString + "Memory" + i + ": " + chip8.memory[i] + '\n';
-  //   // document.getElementById('memtextarea').value = newString;
-  //   // }
-    
-
-  //   // let registers = "";
-
-  //   // for(let k = 0; k < chip8.v.length; k++) {
-  //   //   registers = registers + "V" + k + ": " + chip8.v[k] + '\n';
-  //   //   document.getElementById('logtextarea').value = registers
-  //   // }
-
-
-  window.addEventListener("keydown", function(event) {
-    var keyToggle = true;
-    chip8.keyPress(event.key, keyToggle);
-  }, true);
-
-    window.addEventListener("keyup", function(event) {
-    var keyToggle = false;
-    chip8.keyPress(event.key, keyToggle);
-  }, true);
-
-
+   
     let newString = "";
     for(let i = 0; i < chip8.memory.length; i++) {
     newString = newString + "Memory" + i + ": " + chip8.memory[i] + '\n';
@@ -396,12 +363,12 @@ table.blueTable tbody td {
       document.getElementById('table').innerHTML = registers;
     }
 
-    let keyTrack = "";
+    // let keyTrack = "";
 
-    for(let j = 0; j < chip8.keyLog.length; j++) {
-      keyTrack = keyTrack + "key: "  + chip8.keyLog[k] + '\n';
-      document.getElementById('logtextarea').value = keyTrack;
-    }
+    // for(let j = 0; j < chip8.keyLog.length; j++) {
+    //   keyTrack = keyTrack + "key: "  + chip8.keyLog[j] + '\n';
+    //   document.getElementById('logtextarea').value = keyTrack;
+    // }
   
 
 

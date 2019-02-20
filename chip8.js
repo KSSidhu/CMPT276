@@ -1,27 +1,13 @@
 // Reference http://www.multigesture.net/articles/how-to-write-an-emulator-chip-8-interpreter/ for chip8 object layout and functions to include
 // Referenced http://devernay.free.fr/hacks/chip8/C8TECH10.HTM#00E0 for opcode instructions
 
-let CHIP8_FONTSET =[
-  0xF0, 0x90, 0x90, 0x90, 0xF0, // 0
-  0x20, 0x60, 0x20, 0x20, 0x70, // 1
-  0xF0, 0x10, 0xF0, 0x80, 0xF0, // 2
-  0xF0, 0x10, 0xF0, 0x10, 0xF0, // 3
-  0x90, 0x90, 0xF0, 0x10, 0x10, // 4
-  0xF0, 0x80, 0xF0, 0x10, 0xF0, // 5
-  0xF0, 0x80, 0xF0, 0x90, 0xF0, // 6
-  0xF0, 0x10, 0x20, 0x40, 0x40, // 7
-  0xF0, 0x90, 0xF0, 0x90, 0xF0, // 8
-  0xF0, 0x90, 0xF0, 0x10, 0xF0, // 9
-  0xF0, 0x90, 0xF0, 0x90, 0x90, // A
-  0xE0, 0x90, 0xE0, 0x90, 0xE0, // B
-  0xF0, 0x80, 0x80, 0x80, 0xF0, // C
-  0xE0, 0x90, 0x90, 0x90, 0xE0, // D
-  0xF0, 0x80, 0xF0, 0x80, 0xF0, // E
-  0xF0, 0x80, 0xF0, 0x80, 0x80  // F
-];
-//comment for test
+let chip8 = {
 
-chip8 = {
+	loop: null,
+
+	// timer refresh rate
+	timerRefreshRate: 16,
+
 	// Program Counter
 	pc: 0,
 
@@ -61,14 +47,18 @@ chip8 = {
 	//Sound Timer
 	soundTimer: 0,
 
-	// Track if game is loaded
-	gameLoaded: false,
-
 	// The HTML canvas the emulator runs games to
 	canvas: null,
 
+	interval: null,
+
 	paused: false,
+
 	cycles: 0,
+
+	step: null,
+
+	loop: null,
 
 	// Generates random numbers for memory, stack and V registers to 
 	// display on the HTML page
@@ -89,7 +79,66 @@ chip8 = {
 		}
 	},
 
+	updateTimers: function() {
+		if(chip8.delayTimer > 0) {
+			chip8.delayTimer--;
+		}
+
+		if (chip8.soundTimer > 0) {
+			chip8.soundTimer--;
+		}
+	},
+
+	checkPixels: function(x, y) {
+
+		let location;
+
+		if(x > 64) {
+			while(x > 64 - 1) {
+				x -= 64;
+			}
+		} else if (x < 0) {
+			while(x < 0) {
+				x += 64;
+			}
+		}
+
+		if( y > 32) {
+			while( y > 32 - 1 ) {
+				y -= 32;
+			}
+		} else if (y < 0) {
+			while(y < 0) {
+				y += 32;
+			}
+		}
+
+		location = x + (y * 64);
+		chip8.vram[location] ^= 1;
+
+		return !chip8.vram[location];
+	},
+
 	reset: function() {
+
+		let CHIP8_FONTSET =[
+		  0xF0, 0x90, 0x90, 0x90, 0xF0, // 0
+		  0x20, 0x60, 0x20, 0x20, 0x70, // 1
+		  0xF0, 0x10, 0xF0, 0x80, 0xF0, // 2
+		  0xF0, 0x10, 0xF0, 0x10, 0xF0, // 3
+		  0x90, 0x90, 0xF0, 0x10, 0x10, // 4
+		  0xF0, 0x80, 0xF0, 0x10, 0xF0, // 5
+		  0xF0, 0x80, 0xF0, 0x90, 0xF0, // 6
+		  0xF0, 0x10, 0x20, 0x40, 0x40, // 7
+		  0xF0, 0x90, 0xF0, 0x90, 0xF0, // 8
+		  0xF0, 0x90, 0xF0, 0x10, 0xF0, // 9
+		  0xF0, 0x90, 0xF0, 0x90, 0x90, // A
+		  0xE0, 0x90, 0xE0, 0x90, 0xE0, // B
+		  0xF0, 0x80, 0x80, 0x80, 0xF0, // C
+		  0xE0, 0x90, 0x90, 0x90, 0xE0, // D
+		  0xF0, 0x80, 0xF0, 0x80, 0xF0, // E
+		  0xF0, 0x80, 0xF0, 0x80, 0x80  // F
+		];
 		// Used to initialize chip8 emulator
 
 		//clear memory
@@ -126,6 +175,11 @@ chip8 = {
 		// Reset timers
 		chip8.delayTimer = 0;
 		chip8.soundTimer = 0;
+		if(chip8.interval != null) {
+			console.log("INTERVAL IS SET");
+			clearInterval(chip8.interval);
+			chip8.interval = setInterval(chip8.updateTimers, chip8.timerRefreshRate);
+		}
 
 		chip8.canvas = document.querySelector('canvas');
 
@@ -133,13 +187,12 @@ chip8 = {
 		chip8.drawFlag = false;
 		chip8.keyPressed = false;
 		chip8.keyWait = false;
+		chip8.paused = false;
 
 		document.onkeyup = document.onkeydown = chip8.onKey;
 
 		//
 		chip8.cycles = 0;
-
-		// chip8.gameLoaded = false;
 
 		console.log('ALL RESET');
 	},
@@ -176,20 +229,27 @@ chip8 = {
 
 	},
 
-	stop: function() {
-		chip8.gameLoaded = true;
-	},
-
-	begin: function() {
-		chip8.gameLoaded = false;
+	start: function() {
+		loop = requestAnimationFrame(function step() {
+		step = chip8.emulate();
+		loop = requestAnimationFrame(step);
+	});
 	},
 
 	emulate: function() {
 		// chip8.gameLoaded = true
-		if(chip8.gameLoaded == true) {
-			let opcode = chip8.memory[chip8.pc] << 8 | chip8.memory[chip8.pc + 1];
+		if(!chip8.paused) {
+			for(let i = 0; i < 10; i++) {
+				let opcode = chip8.memory[chip8.pc] << 8 | chip8.memory[chip8.pc + 1];
 			chip8.runCycle(opcode);
+			}
 		}
+
+		if(!chip8.paused) {
+			chip8.updateTimers();
+		}
+
+		chip8.render();
 	},
 
 	loadGame: function(file) {
@@ -200,7 +260,7 @@ chip8 = {
 			let buffer = new Uint8Array(reader.result);
 			buffer.map((val, index) => (chip8.memory[index + 512] = buffer[index]));
 			chip8.pc = 0x200;
-			chip8.gameLoaded = true;
+			// chip8.gameLoaded = true;
 			console.log('Game is now loaded');
 		});
 
@@ -221,7 +281,8 @@ chip8 = {
 			case 0x0000:
 				switch (opcode & 0x00ff) { // Check least 4 significant bits
 					case 0x00e0:
-						console.log('HELLO FROM 0x00e0');
+						// console.log('HELLO FROM 0x00e0');
+						// chip8.drawFlag = true;
 						chip8.vram = chip8.vram.map(() => 0); // clear content of the vram array
 						break;
 					//Case 0x000 is ignored on modern interpreters according to Cowgod's Chip 8 Technical Manual
@@ -283,13 +344,7 @@ chip8 = {
 			//set vX equal to vX + kk
 			case 0x7000:
 				console.log('HELLO FROM 0x7000');
-				// chip8.v[x] += opcode & 0x00ff;
-				let val = (opcode & 0x00ff) + chip8.v[x];
-				if (val > 255) {
-					val -= 256;
-				}
-
-				chip8.v[x] = val;
+				chip8.v[x] += opcode & 0x00ff;
 				break;
 
 			case 0x8000:
@@ -321,11 +376,15 @@ chip8 = {
 					//Set vX equal to vX + vY, set vF equal to carry
 					case 0x0004:
 						console.log('HELLO FROM 0x8004');
-						chip8.v[x] += chip8.v[y];
-						chip8.v[0xf] = +(chip8.v[x] > 255);
-						if (chip8.v[x] > 255) {
-							chip8.v[x] -= 256;
+						let val = chip8.v[x] + chip8.v[y];
+
+						if(val > 0xff) {
+							chip8.v[0xf] = 1;
+						} else {
+							chip8.v[0xf] = 0;
 						}
+
+						chip8.v[x] = val;
 						break;
 
 					//set vX equal to vX - vY, set vF equal to NOT borrow
@@ -334,9 +393,6 @@ chip8 = {
 						console.log('HELLO FROM 0x8005');
 						chip8.v[0xf] = +(chip8.v[x] > chip8.v[y]);
 						chip8.v[x] -= chip8.v[y]; //Vx = Vx - Vy
-						if (chip8.v[x] > 255) {
-							chip8.v[x] -= 256;
-						}
 						break;
 
 					//Set vX = vX SHR 1
@@ -359,17 +415,14 @@ chip8 = {
 						}
 
 						chip8.v[x] = chip8.v[y] - chip8.v[x]; // Vx = Vy - Vx
-						if (chip8.v[x] > 255) {
-							chip8.v[x] -= 256;
-						}
 						break;
 
 					//Set vX equal to vX SHL 1
 					//if most significant bit of vX is 1, then vF is set to 1, otherwise 0. Then vX is multiplied by 2.
 					case 0x000e:
 						console.log('HELLO FROM 0x800e');
-						chip8.v[0xf] = chip8.v[x] >> 7;
-						chip8.v[x] *= 2;
+						chip8.v[0xf] = +(chip8.v[x] & 0x80);
+						chip8.v[x] <<= 1;
 						break;
 				}
 				break;
@@ -419,17 +472,17 @@ chip8 = {
 
 					for (var xlim = 0; xlim < 8; xlim++) {
 						if ((sprite & (0x80 >> xlim)) != 0) {
-							if (chip8.vram[v_X + xlim + ((v_Y + ylim) * 64)] == 1) {
+							if (chip8.checkPixels(v_X + xlim, v_Y + ylim)) {
 								// checks if any sprites currently exist at position
 								chip8.v[0xf] = 1;
 							}
 
-							chip8.vram[v_X + xlim + (v_Y + ylim) * 64] ^= 1; // draw sprite to screen
+							// chip8.vram[v_X + xlim + (v_Y + ylim) * 64] ^= 1; // draw sprite to screen
 						}
+
+						sprite <= 1;
 					}
 				}
-
-				chip8.drawFlag == true;
 
 				break;
 
@@ -465,21 +518,26 @@ chip8 = {
 					//Wait for keypress, then store it in vX
 					case 0x000a:
 						console.log('HELLO FROM 0xf00a');
-						let oldKey = false;
+						// let oldKey = false;
 
-						for(let i = 0; i < 16; i++) {
-							if(chip8.keyBuffer[i] != 0) {
-								// alert(i);
-								chip8.v[x] = chip8.keyBuffer[i];
-								oldKey = true;
-								chip8.drawFlag = true;
-							}
-						}
+						// for(let i = 0; i < 16; i++) {
+						// 	if(chip8.keyBuffer[i] != 0) {
+						// 		// alert(i);
+						// 		chip8.v[x] = chip8.keyBuffer[i];
+						// 		oldKey = true;
+						// 		chip8.drawFlag = true;
+						// 	}
+						// }
+						chip8.paused = true;
+						chip8.onNextKeyPress = function(key) {
+							chip8.v[x] = key;
+							chip8.paused = false;
+						}.bind(chip8);
 
-						if(!oldKey) {
-							chip8.pc -= 2;
-						}
-						break;
+						// if(!oldKey) {
+						// 	chip8.pc -= 2;
+						// }
+						return;
 
 					//DelayTimer is set to vX
 					case 0x0015:
@@ -533,7 +591,7 @@ chip8 = {
 				break;
 
 			default:
-				console.log('Unknown Opcode: ' + opcode);
+				console.log('Unknown Opcode: ' + opcode.toString(16));
 		}
 	},
 
@@ -614,7 +672,12 @@ Backwards, Pause, Forwards, Help
 	//Stop and pause all operations in emulator
 	pause : function()
 	{
-
+		chip8.paused = false ? true: false;
+		if(chip8.paused) {
+			chip8.loop = cancelAnimationFrame(chip8.loop);
+		} else {
+			chip8.loop = requestAnimationFrame(chip8.loop)
+		}
 	},
 
 	//Step forward in emulator one step
@@ -642,19 +705,28 @@ Render/Draw
 	render: function() {
 		let SCALE = 10;
 		let ctx = chip8.canvas.getContext('2d');
+		ctx.clearRect(0, 0, 64, 32);
 		ctx.fillStyle = '#000000';
 		ctx.fillRect(0, 0, chip8.canvas.width, chip8.canvas.height);
 
 
 		ctx.fillStyle = '#ffffff';
 
-		for(let y = 0; y < 32; y++) {
-			for(let x = 0; x < 64; x++) {
-				if(chip8.vram[x + y * 64] != 0x0) {
-					ctx.fillRect(x * SCALE, y * SCALE, SCALE, SCALE);
-				}
+		for(let i = 0; i < chip8.vram.length; i++) {
+			if(chip8.vram[i]) {
+				let y = (i / 64) | 0;
+				let x = i - (64 * y);
+				ctx.fillRect(x * SCALE, y * SCALE, SCALE, SCALE);
 			}
 		}
+
+		// for(let y = 0; y < 32; y++) {
+		// 	for(let x = 0; x < 64; x++) {
+		// 		if(chip8.vram[x + y * 64] != 0x0) {
+		// 			ctx.fillRect(x * SCALE, y * SCALE, SCALE, SCALE);
+		// 		}
+		// 	}
+		// }
 	}
 };
 
