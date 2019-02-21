@@ -27,7 +27,7 @@ test('reset function works', () => {
 	// Check static variables
 	expect(chip8).toMatchObject({pc: 0x200, sp: 0, i: 0, delayTimer: 0, soundTimer: 0});
 	// Check flags
-	expect(chip8).toMatchObject({drawFlag: false,keyPressed: false});
+	expect(chip8).toMatchObject({paused: false, keyPressed: false});
 	// Check arrays for memory, registers and vram
 	for(let i = 0; i < 80; i++) {
 		expect(chip8.memory[i]).toEqual(CHIP8_FONTSET[i]);
@@ -48,6 +48,21 @@ test('reset function works', () => {
 // Rest the chip8 object prior to running any test
 beforeEach(() => {
 	chip8.reset();
+});
+
+test('Emulator paused', () => {
+
+	chip8.start(); // Begin emulation cycle
+
+	expect(chip8.paused).toEqual(false); // should not be paused
+
+	chip8.pause(); // simulated clicking pause
+
+	expect(chip8.paused).toEqual(true);
+
+	chip8.pause(); // simulated unclicking pause
+
+	expect(chip8.paused).toEqual(false);
 });
 
 test('opcode: 0x00e0 is correct', () => {
@@ -245,6 +260,47 @@ test('opcode: 0xc000 is correct', () => {
 	// expect(chip8.v[x]).not.toBe(0);
 	expect(chip8).toMatchObject({pc: 514});
 }); 
+
+// ------------------------------------------------------------------------------------------------------------------------------------
+
+
+describe('opcode: 0xd000 is correct', () => {
+	beforeEach(() => {
+		chip8.i = 0;
+		for(let i = 0; i < chip8.vram.length; i++) {
+			for(let j = 0; j < chip8.vram.length; j++) {
+				chip8.memory[i + j] = 0x80;
+			}
+		}
+
+		let opcode = 0xd112;
+		let x = (opcode & 0x0f00) >> 8;
+		let y = (opcode & 0x00f0) >> 4;
+	});
+
+	test('draws a sprite at (vx, vy', (done) => {
+		let count = 0;
+		let opcode = 0xd112;
+		let x = (opcode & 0x0f00) >> 8;
+		let y = (opcode & 0x00f0) >> 4;
+
+		
+			if(count === 0) {
+				expect(chip8.v[x]).toEqual(5);
+				expect(chip8.v[y]).toEqual(8);
+
+				done();
+				count++;
+			}
+
+		chip8.v[x] = 5;
+		chip8.v[y] = 8;
+
+		chip8.runCycle(opcode);
+	})
+});
+
+// ------------------------------------------------------------------------------------------------------------------------------------
 
 
 test('opcode: 0xe000 is correct', () => {
