@@ -174,15 +174,15 @@ position: relative;
   overflow: hidden;
   cursor: pointer;
     background-image: linear-gradient(to bottom,transparent,transparent 
-  	25%,rgba(0,0,0,.1));
+  	25%,rgba(0,0,0,.15));
 }
 button:hover {
-  background-color: #ddd;
+  background-color: #eee;
 
 
 }
 button:active{
-  background-color: #ddd;
+  background-color: #eee;
 }
 button:after {
   content: "";
@@ -252,22 +252,22 @@ table.blueTable tbody td {
     <div class="row">
     	<div class="keyDisplay" style="background-color:#B5C1DF;">
         <div class="keys">
-          <button name="1" class="key-button" type="button" onclick="chip8.keyPress(name)"> 1 </button>
-          <button name="2" class="key-button" type="button" onclick="chip8.keyPress(name)"> 2 </button>
-          <button name="3" class="key-button" type="button" onclick="chip8.keyPress(name)"> 3 </button>
-          <button name="4" class="key-button" type="button" onclick="chip8.keyPress(name)"> 4 </button>
-          <button name="q" class="key-button" type="button" onclick="chip8.keyPress(name)"> Q </button>
-          <button name="w" class="key-button" type="button" onclick="chip8.keyPress(name)"> W </button>
-          <button name="e" class="key-button" type="button" onclick="chip8.keyPress(name)"> E </button>
-          <button name="r" class="key-button" type="button" onclick="chip8.keyPress(name)"> R </button>
-          <button name="a" class="key-button" type="button" onclick="chip8.keyPress(name)"> A </button>
-          <button name="s" class="key-button" type="button" onclick="chip8.keyPress(name)"> S </button>
-          <button name="d" class="key-button" type="button" onclick="chip8.keyPress(name)"> D </button>
-          <button name="f" class="key-button" type="button" onclick="chip8.keyPress(name)"> F </button>
-          <button name="z" class="key-button" type="button" onclick="chip8.keyPress(name)"> Z </button>
-          <button name="x" class="key-button" type="button" onclick="chip8.keyPress(name)"> X </button>
-          <button name="c" class="key-button" type="button" onclick="chip8.keyPress(name)"> C </button>
-          <button name="v" class="key-button" type="button" onclick="chip8.keyPress(name)"> V </button>        
+          <button name="1" class="key-button" type="button" onclick="chip8.onKey(event, name)"> 1 </button>
+          <button name="2" class="key-button" type="button" onclick="chip8.onKey(event, name)"> 2 </button>
+          <button name="3" class="key-button" type="button" onclick="chip8.onKey(event, name)"> 3 </button>
+          <button name="4" class="key-button" type="button" onclick="chip8.onKey(event, name)"> 4 </button>
+          <button name="Q" class="key-button" type="button" onclick="chip8.onKey(event, name)"> Q </button>
+          <button name="W" class="key-button" type="button" onclick="chip8.onKey(event, name)"> W </button>
+          <button name="E" class="key-button" type="button" onclick="chip8.onKey(event, name)"> E </button>
+          <button name="R" class="key-button" type="button" onclick="chip8.onKey(event, name)"> R </button>
+          <button name="A" class="key-button" type="button" onclick="chip8.onKey(event, name)"> A </button>
+          <button name="S" class="key-button" type="button" onclick="chip8.onKey(event, name)"> S </button>
+          <button name="D" class="key-button" type="button" onclick="chip8.onKey(event, name)"> D </button>
+          <button name="F" class="key-button" type="button" onclick="chip8.onKey(event, name)"> F </button>
+          <button name="Z" class="key-button" type="button" onclick="chip8.onKey(event, name)"> Z </button>
+          <button name="X" class="key-button" type="button" onclick="chip8.onKey(event, name)"> X </button>
+          <button name="C" class="key-button" type="button" onclick="chip8.onKey(event, name)"> C </button>
+          <button name="V" class="key-button" type="button" onclick="chip8.onKey(event, name)"> V </button>        
         <div class="controlDisplay" style="background-color:#6D7995;">
 
 	        <button name="backwards" class="log-button" type="button" onclick="chip8.backwards()"> Backwards </button>
@@ -308,26 +308,8 @@ table.blueTable tbody td {
 
 <script>
 
-  // Get the elements with class="column"
-  var elements = document.getElementsByClassName("column");
-
-
-  // List View
-  function listView() {
-    for (let i = 0; i < elements.length; i++) {
-      elements[i].style.width = "100%";
-    }
-  }
-
-  // Grid View
-  function gridView() {
-    for (let i = 0; i < elements.length; i++) {
-      elements[i].style.width = "50%";
-    }
-  }
-
   let inputFile = document.getElementById('fileInput');
-  inputFile.addEventListener('change', function(evt) {
+  inputFile.addEventListener('change', function(event, name) {
     let file = inputFile.files[0];
     chip8.reset();
     chip8.drawFlag = true;
@@ -372,13 +354,11 @@ table.blueTable tbody td {
 
 
   window.addEventListener("keydown", function(event) {
-    var keyToggle = true;
-    chip8.keyPress(event.key, keyToggle);
+    chip8.onKey(event, null);
   }, true);
 
-    window.addEventListener("keyup", function(event) {
-    var keyToggle = false;
-    chip8.keyPress(event.key, keyToggle);
+    window.addEventListener("keyup", function(event, name) {
+    chip8.onKey(event, null);
   }, true);
 
 
@@ -396,12 +376,12 @@ table.blueTable tbody td {
       document.getElementById('table').innerHTML = registers;
     }
 
-    let keyTrack = "";
+    // let keyTrack = "";
 
-    for(let j = 0; j < chip8.keyLog.length; j++) {
-      keyTrack = keyTrack + "key: "  + chip8.keyLog[k] + '\n';
-      document.getElementById('logtextarea').value = keyTrack;
-    }
+    // for(let j = 0; j < chip8.keyLog.length; j++) {
+    //   keyTrack = keyTrack + "key: "  + chip8.keyLog[k] + '\n';
+    //   document.getElementById('logtextarea').value = keyTrack;
+    // }
   
 
 

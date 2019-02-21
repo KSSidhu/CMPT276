@@ -134,7 +134,7 @@ chip8 = {
 		chip8.keyPressed = false;
 		chip8.keyWait = false;
 
-		document.onkeyup = document.onkeydown = chip8.onKey;
+		document.onkeyup = document.onkeydown = chip8.keyPress;
 
 		//
 		chip8.cycles = 0;
@@ -155,22 +155,40 @@ chip8 = {
 	// 	return ("0x" + pad + temp);
 	// },
 
-	onKey: function(evt) {
+	keyPress: function(evt, name) {
 		let charStr = String.fromCharCode(evt.which);
-		let val = (evt.type == 'keydown') ? true : false;
-
-		idx =
-		  {
-		    '1': 0x1,'2': 0x2,'3': 0x3,'4': 0x4,
-		    'Q': 0x4,'W':0x5,'E': 0x6,'R': 0xD,
-		    'A': 0x7,'S':0x8,'D': 0x9,'F': 0xE,
-		    'Z': 0xA,'X':0x0,'C': 0xB, 'V':0xF,
-		  }[charStr];
-
-		  if(idx !== undefined)
-		  {
-		    chip8.keyBuffer[idx] = val;
-		  }
+		let val = false;
+		if (evt.type == 'keydown')
+		{
+			val = true;
+		}
+		else if(evt.type == 'click')
+		{
+			val = true;
+			charStr = name;
+		}
+			translateKeys = {
+		                '1': 0x1,  // 1
+			            '2': 0x2,  // 2
+			            '3': 0x3,  // 3
+	                    '4': 0x4,  // 4
+	                    'Q': 0x5,  // Q
+	                    'W': 0x6,  // W
+	                    'E': 0x7,  // E
+	                    'R': 0x8,  // R
+	                    'A': 0x9,  // A
+	                    'S': 0xA,  // S
+	                    'D': 0xB,  // D
+	                    'F': 0xC,  // F
+	                    'Z': 0xD,  // Z
+	                    'X': 0xE,  // X
+	                    'C': 0xF,  // C
+	                    'V': 0x10  // V
+	    }[charStr];
+		if(translateKeys !== undefined)
+	    {
+		    chip8.keyBuffer[translateKeys] = val;
+  	    }
 
   			chip8.keyPressed = chip8.keyBuffer.reduce( ((prevValue,currentValue) => (prevValue | currentValue)) )
 
@@ -634,6 +652,8 @@ Backwards, Pause, Forwards, Help
 	},
 
 
+
+
 /******************************************
 Render/Draw
 
@@ -659,3 +679,30 @@ Render/Draw
 };
 
 module.exports = chip8; // exporting the chip8 object to run tests with JEST.js
+
+/******************************************
+Display Registers, Memory, Instructions 
+
+
+******************************************/
+
+function Debugger(chip8)
+{
+	this.chip8 = chip8;
+	this.dumpMemory();
+	this.initRegisters();
+}
+
+Debugger.prototype.dumpMemory = function() {
+	$tbody = $("#memtextarea").find("tbody");
+	$tbody.find("tr").remove();
+	var memory = this.chip8.memory;
+
+	var maxZeroInstructions = 10;
+
+	var zeroInstructions = 0;
+};
+
+Debugger.prototype.initRegisters = function() {
+	
+};
