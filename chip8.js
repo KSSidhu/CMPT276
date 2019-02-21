@@ -205,7 +205,7 @@ let chip8 = {
 	// 	return ("0x" + pad + temp);
 	// },
 
-	keyPress: function(evt, name) {
+	onKey: function(evt, name) {
 		let charStr = String.fromCharCode(evt.which);
 		let val = false;
 		if (evt.type == 'keydown')
@@ -472,8 +472,6 @@ let chip8 = {
 				chip8.v[x] = Math.floor(Math.random() * 0x00ff) & (opcode & 0x00ff);
 				break;
 
-			// Still requires testing
-			// ---------------------------------------------------------------------------------------------
 
 			case 0xd000:
 				console.log('HELLO FROM 0xd000');
@@ -486,24 +484,23 @@ let chip8 = {
 
 				chip8.v[0xf] = 0;
 
-				for (var ylim = 0; ylim < height; ylim++) {
+				for (let ylim = 0; ylim < height; ylim++) {
 					sprite = chip8.memory[chip8.i + ylim];
 
-					for (var xlim = 0; xlim < 8; xlim++) {
-						if ((sprite & (0x80 >> xlim)) != 0) {
+					for (let xlim = 0; xlim < 8; xlim++) {
+						if ((sprite & 0x80) > 0) {
 							if (chip8.checkPixels(v_X + xlim, v_Y + ylim)) {
 								// checks if any sprites currently exist at position
 								chip8.v[0xf] = 1;
 							}
 						}
 
-						sprite <= 1;
+						sprite = sprite << 1;
 					}
 				}
 
 				break;
 
-			// ---------------------------------------------------------------------------------------------
 
 			case 0xe000:
 				switch (opcode & 0x00ff) {
@@ -599,69 +596,6 @@ let chip8 = {
 	},
 
 /******************************************
-Keyboard Handling
-
-
-******************************************/
-	// keyPress: function(index, keyToggle)
-	// {
-	// 	 translateKeys = {
-	//                     '1': 0x1,  // 1
-	//                     '2': 0x2,  // 2
-	//                    	'3': 0x3,  // 3
-	//                     '4': 0x4,  // 4
-	//                     'q': 0x5,  // Q
-	//                     'w': 0x6,  // W
-	//                     'e': 0x7,  // E
-	//                     'r': 0x8,  // R
-	//                     'a': 0x9,  // A
-	//                     's': 0xA,  // S
-	//                     'd': 0xB,  // D
-	//                     'f': 0xC,  // F
-	//                     'z': 0xD,  // Z
-	//                     'x': 0xE,  // X
-	//                     'c': 0xF,  // C
-	//                     'v': 0x10  // V
-	//     }
-
-	//     chip8.keyPressed = false;
-	//     //If keyToggle is null, it means the user clicked on a key, if true then the user is using keyboard
-	//     if(keyToggle == null || keyToggle == true)
-	//     {
-	//     	chip8.keyPressed = true;
-	//     }
-
-	//     if (chip8.keyPressed == true)
-	//     {
-	// 	    let keyIndex = translateKeys[index];
-	// 	    //Restrict keyboard keys to onscreen key presses
-	// 	    if(keyIndex != null)
-	// 	    {	
-
-	// 	    	//Test pressing keyboard keys + mouse with onscreen keys
-			    // alert(index + " " + translateKeys[index]);
-	// 		    chip8.setKey(translateKeys[index]);
-	// 	    }
-	// 	}
-	// 	else
-	// 	{
-	// 		chip8.unsetKey(translateKeys[index]);
-	// 	}
-	// },
-
-	// setKey: function(keyCode) {
-	// 	chip8.keyBuffer[keyCode] = keyCode;
-	// 	// chip8.keyLog[keyCode] = keyCode;
-	// },
-
-	// unsetKey : function(keyCode)
-	// {
-
-	// 	delete chip8.keyBuffer[keyCode];
-	// 	// delete chip8.keyLog[keyCode];
-	// },
-
-/******************************************
 Backwards, Pause, Forwards, Help
 
 
@@ -724,9 +658,9 @@ Render/Draw
 
 		for(let i = 0; i < chip8.vram.length; i++) {
 			if(chip8.vram[i]) {
-				let y = (i / 64) | 0;
-				let x = i - (64 * y);
-				ctx.fillRect(x * SCALE, y * SCALE, SCALE, SCALE);
+				let x = (i % 64) * SCALE;
+				let y = Math.floor(i / 64) * SCALE;
+				ctx.fillRect(x, y, SCALE, SCALE);
 			}
 		}
 	}

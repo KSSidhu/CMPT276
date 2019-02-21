@@ -1,6 +1,14 @@
 const chip8 = require('./chip8');
 // import chip8 from './chip8';
 
+let didIncrementPC = function(opcode) {
+	test('incremented the PC', () => {
+		chip8.pc = 10;
+		chip8.runCycle(opcode);
+		expect(chip8.pc).toEqual(12);
+	});
+}
+
 // test reset function
 test('reset function works', () => {
 	chip8.reset();
@@ -274,30 +282,66 @@ describe('opcode: 0xd000 is correct', () => {
 		}
 
 		let opcode = 0xd112;
-		let x = (opcode & 0x0f00) >> 8;
-		let y = (opcode & 0x00f0) >> 4;
+		// let x = (opcode & 0x0f00) >> 8;
+		// let y = (opcode & 0x00f0) >> 4;
 	});
 
-	test('draws a sprite at (vx, vy', (done) => {
-		let count = 0;
-		let opcode = 0xd112;
-		let x = (opcode & 0x0f00) >> 8;
-		let y = (opcode & 0x00f0) >> 4;
+	test('draws a sprite at (vx, vy)', (done) => {
 
-		
-			if(count === 0) {
-				expect(chip8.v[x]).toEqual(5);
-				expect(chip8.v[y]).toEqual(8);
+		let count = 0;
+
+		chip8.checkPixels = function(x, y) {
+			if(count == 0) {
+				expect(x).toEqual(5);
+				expect(y).toEqual(8);
 
 				done();
 				count++;
 			}
+		}
 
-		chip8.v[x] = 5;
-		chip8.v[y] = 8;
+		chip8.v[1] = 5;
+		chip8.v[2] = 8;
 
-		chip8.runCycle(opcode);
-	})
+		chip8.runCycle(0xd122);
+	});
+
+	test('draws an N pixel wide sprite', () => {
+		let ys = [];
+
+		chip8.checkPixels = function(x, y) {
+			ys.push(y);
+
+			if(ys.length == 3 * 8) {
+				let height = ys[ys.length - 1] - ys[0];
+				expect(height).toEqual(3);
+				done();
+			}
+		}
+
+		chip8.v[1] = 5;
+		chip8.v[2] = 8;
+
+		chip8.runCycle(0xd112);
+	});
+
+	test('sets VF to 1 if pixels are flipped', () => {
+		chip8.checkPixels = function() {
+			return true;
+		}
+
+		chip8.runCycle(0xd112);
+	});
+
+	test('sets VF to 0 if pixels are not flipped', () => {
+		chip8.checkPixels = function() {
+			return false;
+		}
+
+		chip8.runCycle(0xd112);
+	});	
+
+	didIncrementPC(0xd122);
 });
 
 // ------------------------------------------------------------------------------------------------------------------------------------
