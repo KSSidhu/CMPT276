@@ -2,6 +2,8 @@
 // Refernce https://github.com/reu/chip8.js for emulation render cycle
 // Referenced http://devernay.free.fr/hacks/chip8/C8TECH10.HTM#00E0 for opcode instructions
 
+let debug = false;
+
 let chip8 = {
 
 	loop: null,
@@ -58,6 +60,8 @@ let chip8 = {
 
 	loop: null,
 
+	breakPoint: false,
+
 	// Generates random numbers for memory, stack and V registers to 
 	// display on the HTML page
 	generateTestDisplay: function() {
@@ -91,8 +95,8 @@ let chip8 = {
 
 		let location;
 
-		if(x > 64 - 1) {
-			while(x > 64 - 1) {
+		if(x > 64) {
+			while(x > 64) {
 				x -= 64;
 			}
 		} else if (x < 0) {
@@ -101,8 +105,8 @@ let chip8 = {
 			}
 		}
 
-		if( y > 32 - 1) {
-			while( y > 32 - 1 ) {
+		if( y > 32) {
+			while( y > 32) {
 				y -= 32;
 			}
 		} else if (y < 0) {
@@ -260,7 +264,7 @@ let chip8 = {
 		if(!chip8.paused) {
 			for(let i = 0; i < 10; i++) {
 				let opcode = chip8.memory[chip8.pc] << 8 | chip8.memory[chip8.pc + 1];
-			chip8.runCycle(opcode);
+				chip8.runCycle(opcode);
 			}
 		}
 
@@ -277,7 +281,10 @@ let chip8 = {
 
 		reader.addEventListener('loadend', function() {
 			let buffer = new Uint8Array(reader.result);
-			buffer.map((val, index) => (chip8.memory[index + 512] = buffer[index]));
+			// buffer.map((val, index) => (chip8.memory[index + 512] = buffer[index]));
+			for(let i = 0; i < buffer.length; i++) {
+				chip8.memory[i + 0x200] = buffer[i];
+			}
 			chip8.pc = 0x200;
 			// chip8.gameLoaded = true;
 			console.log('Game is now loaded');
@@ -308,7 +315,8 @@ let chip8 = {
 
 					//Clear Display
 					case 0x00ee:
-						console.log('HELLO FROM 0x00ee');
+						if(debug)
+							console.log('HELLO FROM 0x00ee');
 						chip8.pc = chip8.stack[--chip8.sp]; // push PC to top of stack
 						break;
 				}
@@ -316,13 +324,15 @@ let chip8 = {
 
 			//Jump to Address, location
 			case 0x1000:
-				console.log('HELLO FROM 0x1000');
+				if(debug)
+					console.log('HELLO FROM 0x1000');
 				chip8.pc = opcode & 0x0fff;
 				break;
 
 			//Call Function
 			case 0x2000:
-				console.log('HELLO FROM 0x2000');
+				if(debug)
+					console.log('HELLO FROM 0x2000');
 				chip8.stack[chip8.sp] = chip8.pc;
 				chip8.sp++;
 				chip8.pc = opcode & 0x0fff;
@@ -330,7 +340,8 @@ let chip8 = {
 
 			//Skip to Next Instruction, vX Equal kk
 			case 0x3000:
-				console.log('HELLO FROM 0x3000');
+				if(debug)
+					console.log('HELLO FROM 0x3000');
 				if (chip8.v[x] === (opcode & 0x00ff)) {
 					//compare V[x] to last 8 bits
 					chip8.pc += 2;
@@ -339,7 +350,8 @@ let chip8 = {
 
 			//Skip to Next Instruction, if vX Not Equal kk
 			case 0x4000:
-				console.log('HELLO FROM 0x4000');
+				if(debug)
+					console.log('HELLO FROM 0x4000');
 				if (chip8.v[x] != (opcode & 0x00ff)) {
 					//compare V[x] to last 8 bits
 					chip8.pc += 2;
@@ -348,7 +360,8 @@ let chip8 = {
 
 			//Skip to Next Instruction, if vX Equals vY
 			case 0x5000:
-				console.log('HELLO FROM 0x5000');
+				if(debug)
+					console.log('HELLO FROM 0x5000');
 				if (chip8.v[x] === chip8.v[y]) {
 					chip8.pc += 2;
 				}
@@ -356,13 +369,15 @@ let chip8 = {
 
 			//Set vX to kk
 			case 0x6000:
-				console.log('HELLO FROM 0x6000');
+				if(debug)
+					console.log('HELLO FROM 0x6000');
 				chip8.v[x] = opcode & 0x00ff;
 				break;
 
 			//set vX equal to vX + kk
 			case 0x7000:
-				console.log('HELLO FROM 0x7000');
+				if(debug)
+					console.log('HELLO FROM 0x7000');
 				chip8.v[x] += opcode & 0x00ff;
 				break;
 
@@ -370,31 +385,36 @@ let chip8 = {
 				switch (opcode & 0x000f) {
 					//Store vY in vX
 					case 0x0000:
-						console.log('HELLO FROM 0x8000');
+						if(debug)
+							console.log('HELLO FROM 0x8000');
 						chip8.v[x] = chip8.v[y];
 						break;
 
 					//Set vX equal to vX or vY
 					case 0x0001:
-						console.log('HELLO FROM 0x8001');
+						if(debug)
+							console.log('HELLO FROM 0x8001');
 						chip8.v[x] = chip8.v[x] | chip8.v[y];
 						break;
 
 					//Set vX equal to vX and vY
 					case 0x0002:
-						console.log('HELLO FROM 0x8002');
+						if(debug)
+							console.log('HELLO FROM 0x8002');
 						chip8.v[x] = chip8.v[x] & chip8.v[y];
 						break;
 
 					//Set vX equal to vX XOR vY
 					case 0x0003:
-						console.log('HELLO FROM 0x8003');
+						if(debug)
+							console.log('HELLO FROM 0x8003');
 						chip8.v[x] = chip8.v[x] ^ chip8.v[y];
 						break;
 
 					//Set vX equal to vX + vY, set vF equal to carry
 					case 0x0004:
-						console.log('HELLO FROM 0x8004');
+						if(debug)
+							console.log('HELLO FROM 0x8004');
 						let val = chip8.v[x] + chip8.v[y];
 
 						if(val > 0xff) {
@@ -409,7 +429,8 @@ let chip8 = {
 					//set vX equal to vX - vY, set vF equal to NOT borrow
 					//if vX > vY then vF is 1, otherwise 0. Then vX - vY and result stored in vX
 					case 0x0005:
-						console.log('HELLO FROM 0x8005');
+						if(debug)
+							console.log('HELLO FROM 0x8005');
 						chip8.v[0xf] = +(chip8.v[x] > chip8.v[y]);
 						chip8.v[x] -= chip8.v[y]; //Vx = Vx - Vy
 						break;
@@ -417,7 +438,8 @@ let chip8 = {
 					//Set vX = vX SHR 1
 					//if least significant bit of vX is 1, then vF is 1, otherwise 0. Then result divided by 2
 					case 0x0006:
-						console.log('HELLO FROM 0x8006');
+						if(debug)
+							console.log('HELLO FROM 0x8006');
 						chip8.v[0xf] = chip8.v[x] & 0x1;
 						chip8.v[x] = chip8.v[x] >> 1;
 						break;
@@ -425,7 +447,8 @@ let chip8 = {
 					//Set vX equal to vY - vX, set vF equal to NOT borrow
 					//if vY > vX then vF is set to 1, otherwise 0. Then vX - vY and result stored in vX
 					case 0x0007:
-						console.log('HELLO FROM 0xf00x8007');
+						if(debug)
+							console.log('HELLO FROM 0xf00x8007');
 						if (chip8.v[y] > chip8.v[x]) {
 							// Vy > Vx
 							chip8.v[0xf] = 1;
@@ -439,7 +462,8 @@ let chip8 = {
 					//Set vX equal to vX SHL 1
 					//if most significant bit of vX is 1, then vF is set to 1, otherwise 0. Then vX is multiplied by 2.
 					case 0x000e:
-						console.log('HELLO FROM 0x800e');
+						if(debug)
+							console.log('HELLO FROM 0x800e');
 						chip8.v[0xf] = chip8.v[x] >> 7;
 						chip8.v[x] = chip8.v[x] << 1;
 						break;
@@ -448,7 +472,8 @@ let chip8 = {
 
 			//Skip next instruction if vX is not equal to vY
 			case 0x9000:
-				console.log('HELLO FROM 0x9000');
+				if(debug)
+					console.log('HELLO FROM 0x9000');
 				if (chip8.v[x] != chip8.v[y]) {
 					chip8.pc += 2;
 				}
@@ -456,25 +481,29 @@ let chip8 = {
 
 			//Set i equal to nnn
 			case 0xa000: // ANNN : Sets I to address NNN
-				console.log('HELLO FROM 0xa000');
+				if(debug)
+					console.log('HELLO FROM 0xa000');
 				chip8.i = opcode & 0x0fff; // This case grabs the last 12 bits to analyze
 				break;
 
 			//Jump to location v0 + nnn
 			case 0xb000:
-				console.log('HELLO FROM 0xb000');
+				if(debug)
+					console.log('HELLO FROM 0xb000');
 				chip8.pc = (opcode & 0x0fff) + chip8.v[0];
 				break;
 
 			//Set vX equal to random byte AND kk
 			case 0xc000:
-				console.log('HELLO FROM 0xc000');
-				chip8.v[x] = Math.floor(Math.random() * 0x00ff) & (opcode & 0x00ff);
+				if(debug)
+					console.log('HELLO FROM 0xc000');
+				chip8.v[x] = Math.floor(Math.random() * 256) & (opcode & 0x00ff);
 				break;
 
 
 			case 0xd000:
-				console.log('HELLO FROM 0xd000');
+				if(debug)
+					console.log('HELLO FROM 0xd000');
 				//Display n-byte sprite starting at memory location i at (vX, vY), set vF equal to collis
 				let height = opcode & 0x000f; // save nibble
 				let sprite;
@@ -506,14 +535,16 @@ let chip8 = {
 				switch (opcode & 0x00ff) {
 					//Skip next instruction if the key with the value vX is pressed
 					case 0x009e:
-						console.log('HELLO FROM 0xe09e');
+						if(debug)
+							console.log('HELLO FROM 0xe09e');
 						if (chip8.keyBuffer[chip8.v[x]]) {
 							chip8.pc += 2;
 						}
 						break;
 					//Skip next instruction if the key with the value vX is not pressed
 					case 0x00a1:
-						console.log('HELLO FROM 0xf0a1');
+						if(debug)
+							console.log('HELLO FROM 0xf0a1');
 						if (!chip8.keyBuffer[chip8.v[x]]) {
 							chip8.pc += 2;
 						}
@@ -525,13 +556,15 @@ let chip8 = {
 				switch (opcode & 0x00ff) {
 					//Place value of DelayTimer in vX
 					case 0x0007:
-						console.log('HELLO FROM 0xf007');
+						if(debug)
+							console.log('HELLO FROM 0xf007');
 						chip8.v[x] = chip8.delayTimer;
 						break;
 
 					//Wait for keypress, then store it in vX
 					case 0x000a:
-						console.log('HELLO FROM 0xf00a');
+						if(debug)
+							console.log('HELLO FROM 0xf00a');
 						chip8.paused = true;
 						chip8.onNextKeyPress = function(key) {
 							chip8.v[x] = key;
@@ -541,31 +574,36 @@ let chip8 = {
 
 					//DelayTimer is set to vX
 					case 0x0015:
-						console.log('HELLO FROM 0xf015');
+						if(debug)
+							console.log('HELLO FROM 0xf015');
 						chip8.delayTimer = chip8.v[x];
 						break;
 
 					//Set Sound Timer to vX
 					case 0x0018:
-						console.log('HELLO FROM 0xf018');
+						if(debug)
+							console.log('HELLO FROM 0xf018');
 						chip8.soundTimer = chip8.v[x];
 						break;
 
 					//Set i equal to i + vX
 					case 0x001e:
-						console.log('HELLO FROM 0xf01e');
+						if(debug)
+							console.log('HELLO FROM 0xf01e');
 						chip8.i += chip8.v[x];
 						break;
 
 					//Set i equal to location of sprite for digit vX
 					case 0x0029:
-						console.log('HELLO FROM 0xf029 ');
+						if(debug)
+							console.log('HELLO FROM 0xf029 ');
 						chip8.i = chip8.v[x] * 5;
 						break;
 
 					//Store BCD representation of vX in memory location starting at i
 					case 0x0033:
-						console.log('HELLO FROM 0xf033');
+						if(debug)
+							console.log('HELLO FROM 0xf033');
 						// Store binary decimal representation of I
 						chip8.memory[chip8.i] = chip8.v[x] / 100; //Store hundreth's position at location i in memory
 						chip8.memory[chip8.i + 1] = (chip8.v[x] / 10) % 10; // Store tens digit into location i + 1 in memory
@@ -574,7 +612,8 @@ let chip8 = {
 
 					//Store registers v0 through vX in memory at i
 					case 0x0055:
-						console.log('HELLO FROM 0xf055');
+						if(debug)
+							console.log('HELLO FROM 0xf055');
 						for (let i = 0; i <= x; i++) {
 							chip8.memory[chip8.i + i] = chip8.v[i];
 						}
@@ -582,7 +621,8 @@ let chip8 = {
 
 					//Read registers from v0 through vX at i
 					case 0x0065:
-						console.log('HELLO FROM 0xf065');
+						if(debug)
+							console.log('HELLO FROM 0xf065');
 						for (let i = 0; i <= x; i++) {
 							chip8.v[i] = chip8.memory[chip8.i + i];
 						}
@@ -603,9 +643,18 @@ Backwards, Pause, Forwards, Help
 	//Step back in emulator one step
 	backwards : function()
 	{
-		chip8.pause();
-		chip8.paused = true;
+		// chip8.stop();
+		// chip8.paused = true;
+		// chip8.pc -= 2;
+		// let opcode = chip8.memory[chip8.pc] << 8 | chip8.memory[chip8.pc + 1];
+		// chip8.runCycle(opcode);
+		// chip8.render();
+		// chip8.pause();
 		chip8.pc -= 2;
+		chip8.stop();
+		chip8.start();
+		chip8.pause();
+		
 	},
 
 	//Stop and pause all operations in emulator
@@ -623,9 +672,11 @@ Backwards, Pause, Forwards, Help
 	//Step forward in emulator one step
 	forwards : function()
 	{
-		chip8.pause();
 		chip8.paused = true;
 		chip8.pc += 2;
+		let opcode = chip8.memory[chip8.pc] << 8 | chip8.memory[chip8.pc + 1];
+		chip8.runCycle(opcode);
+		chip8.render();
 	},
 
 	help : function()
