@@ -271,7 +271,6 @@ let chip8 = {
 	//Emulation Cycle
 	runCycle: function(opcode) {
 		//Calculate x and y indicies
-		// console.log("OPCODE RUNNING");
 		var x = (opcode & 0x0f00) >> 8;
 		var y = (opcode & 0x00f0) >> 4;
 
@@ -611,7 +610,7 @@ let chip8 = {
 				break;
 
 			default:
-				console.log('Unknown Opcode: ' + opcode.toString(16));
+				console.log('Unknown Opcode: 0x' + opcode.toString(16));
 		}
 	},
 
@@ -623,13 +622,6 @@ Backwards, Pause, Forwards, Help
 	//Step back in emulator one step
 	backwards : function()
 	{
-		// chip8.stop();
-		// chip8.paused = true;
-		// chip8.pc -= 2;
-		// let opcode = chip8.memory[chip8.pc] << 8 | chip8.memory[chip8.pc + 1];
-		// chip8.runCycle(opcode);
-		// chip8.render();
-		// chip8.pause();
 		chip8.pc -= 2;
 		chip8.stop();
 		chip8.start();
@@ -688,11 +680,11 @@ Render/Draw
 		ctx.fillStyle = '#ffffff';
 
 		for(let i = 0; i < chip8.vram.length; i++) {
-			if(chip8.vram[i]) {
-				let x = (i % 64) * SCALE;
-				let y = Math.floor(i / 64) * SCALE;
+			let x = (i % 64) * SCALE;
+			let y = Math.floor(i / 64) * SCALE;
+			if(chip8.vram[i]) 
 				ctx.fillRect(x, y, SCALE, SCALE);
-			}
+		
 		}
 	}
 };
