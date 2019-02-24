@@ -312,11 +312,10 @@ table.blueTable tbody td {
   inputFile.addEventListener('change', function(event, name) {
     let file = inputFile.files[0];
     chip8.reset();
-    // chip8.drawFlag = true;
     // chip8.generateTestDisplay();
     chip8.loadGame(file);
     chip8.start();
-
+    
   });
 
   window.addEventListener("keydown", function(event) {

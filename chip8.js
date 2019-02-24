@@ -32,9 +32,6 @@ let chip8 = {
 	//Keyboard Buffer
 	keyBuffer: new Uint8Array(16),
 
-	//Tracks previous keys pressed
-	keyLog: new Uint8Array(16),
-
 	//Key Press
 	keyPressed: false,
 
@@ -94,28 +91,30 @@ let chip8 = {
 	checkPixels: function(x, y) {
 
 		let location;
+		let width = 64;
+		let height = 32;
 
-		if(x > 64) {
-			while(x > 64) {
-				x -= 64;
-			}
-		} else if (x < 0) {
-			while(x < 0) {
-				x += 64;
-			}
+		if(x > width) {
+			while(x > width)
+				x -= width;
 		}
 
-		if( y > 32) {
-			while( y > 32) {
-				y -= 32;
-			}
-		} else if (y < 0) {
-			while(y < 0) {
-				y += 32;
-			}
+		if (x < 0) {
+			while(x < 0)
+				x += width;
 		}
 
-		location = x + (y * 64);
+		if( y > height) {
+			while(y > height)
+				y -= height;
+		} 
+
+		if (y < 0) {
+			while(y < 0)
+				y += height;
+		}
+
+		location = x + (y * width);
 		chip8.vram[location] ^= 1;
 
 		return !chip8.vram[location];
@@ -163,8 +162,6 @@ let chip8 = {
 		// Clear keyboard buffer
 		chip8.keyBuffer = chip8.keyBuffer.map(() => 0);
 
-		chip8.keyLog = chip8.keyLog.map(() => 0);
-
 		// reset stack pointers
 		chip8.sp = 0;
 
@@ -177,11 +174,6 @@ let chip8 = {
 		// Reset timers
 		chip8.delayTimer = 0;
 		chip8.soundTimer = 0;
-		if(chip8.interval != null) {
-			console.log("INTERVAL IS SET");
-			clearInterval(chip8.interval);
-			chip8.interval = setInterval(chip8.updateTimers, chip8.timerRefreshRate);
-		}
 
 		chip8.canvas = document.querySelector('canvas');
 
@@ -190,12 +182,12 @@ let chip8 = {
 		chip8.keyWait = false;
 		chip8.paused = false;
 
-		document.onkeyup = document.onkeydown = chip8.keyPress;
+		document.onkeyup = document.onkeydown = chip8.onKey;
 
 		//
 		chip8.cycles = 0;
-
-		console.log('ALL RESET');
+		if(debug)
+			console.log('ALL RESET');
 	},
 
 	// hexConverter: function(opcode) {
@@ -211,34 +203,16 @@ let chip8 = {
 
 	onKey: function(evt, name) {
 		let charStr = String.fromCharCode(evt.which);
-		let val = false;
-		if (evt.type == 'keydown')
-		{
-			val = true;
-		}
-		else if(evt.type == 'click')
-		{
-			val = true;
-			charStr = name;
-		}
-			translateKeys = {
-		                '1': 0x1,  // 1
-			            '2': 0x2,  // 2
-			            '3': 0x3,  // 3
-	                    '4': 0x4,  // 4
-	                    'Q': 0x5,  // Q
-	                    'W': 0x6,  // W
-	                    'E': 0x7,  // E
-	                    'R': 0x8,  // R
-	                    'A': 0x9,  // A
-	                    'S': 0xA,  // S
-	                    'D': 0xB,  // D
-	                    'F': 0xC,  // F
-	                    'Z': 0xD,  // Z
-	                    'X': 0xE,  // X
-	                    'C': 0xF,  // C
-	                    'V': 0x10  // V
+		let val = (evt.type === 'keydown') ? true : false;
+		
+		
+		translateKeys = {
+            '1': 0x1,'2': 0x2,'3': 0x3,'4': 0xC,
+  			'Q': 0x4,'W':0x5,'E': 0x6,'R': 0xD,
+  			'A': 0x7,'S':0x8,'D': 0x9,'F': 0xE,
+  			'Z': 0xA,'X':0x0,'C': 0xB, 'V':0xF,
 	    }[charStr];
+
 		if(translateKeys !== undefined)
 	    {
 		    chip8.keyBuffer[translateKeys] = val;
@@ -283,12 +257,13 @@ let chip8 = {
 			let buffer = new Uint8Array(reader.result);
 			// buffer.map((val, index) => (chip8.memory[index + 512] = buffer[index]));
 			for(let i = 0; i < buffer.length; i++) {
-				chip8.memory[i + 0x200] = buffer[i];
+				chip8.memory[i + 512] = buffer[i];
 			}
-			chip8.pc = 0x200;
-			// chip8.gameLoaded = true;
-			console.log('Game is now loaded');
+			chip8.pc = 512;
+			if(debug)
+				console.log('Game is now loaded');
 		});
+		
 
 		reader.readAsArrayBuffer(file);
 	},
@@ -317,7 +292,8 @@ let chip8 = {
 					case 0x00ee:
 						if(debug)
 							console.log('HELLO FROM 0x00ee');
-						chip8.pc = chip8.stack[--chip8.sp]; // push PC to top of stack
+						chip8.sp--;
+						chip8.pc = chip8.stack[chip8.sp]; // push PC to top of stack
 						break;
 				}
 				break;
@@ -565,12 +541,16 @@ let chip8 = {
 					case 0x000a:
 						if(debug)
 							console.log('HELLO FROM 0xf00a');
-						chip8.paused = true;
-						chip8.onNextKeyPress = function(key) {
-							chip8.v[x] = key;
-							chip8.paused = false;
-						}.bind(chip8);
-						return;
+						let keyPress = false;
+						for(let i = 0; i < chip8.keyBuffer.length; i++) {
+							if(chip8.keyBuffer[i]) {
+								chip8.v[x] = i;
+								keyPress = true;
+							}
+						}
+
+						if(!keyPress)
+							chip8.pc -= 2;
 
 					//DelayTimer is set to vX
 					case 0x0015:

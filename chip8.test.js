@@ -346,23 +346,57 @@ describe('opcode: 0xd000 is correct', () => {
 
 // ------------------------------------------------------------------------------------------------------------------------------------
 
+describe('opcode: 0xe09e is correct', () => {
 
-test('opcode: 0xe000 is correct', () => {
-	let opcode = 0xe09e;
-	let x = (opcode & 0x0f00) >> 8;
-	chip8.keyBuffer[0] = 1;
+	test('skip next instruction if key in v[x] is pressed', () => {
+		chip8.pc = 0;
+		let opcode = 0xe19e;
+		chip8.v[1] = 2;
+		chip8.keyBuffer[chip8.v[1]] = true;
 
-	chip8.runCycle(opcode);
-	expect(chip8).toMatchObject({pc: 516});
+		chip8.runCycle(opcode);
+		expect(chip8.pc).toEqual(4);
+	});
 
-	opcode = 0xe0a1;
-	chip8.keyBuffer[0] = 0;
-	chip8.runCycle(opcode);
-	expect(chip8).toMatchObject({pc: 520});
-}); 
+	test('Don\'t skip next instruction if key isn\'t pressed', () => {
+		chip8.pc = 0;
+		let opcode = 0xe29e;
+		chip8.v[2] = 2;
+
+		chip8.keyBuffer[chip8.v[2]] = false;
+
+		chip8.runCycle(opcode);
+		expect(chip8.pc).toEqual(2);
+	});
+});
+
+describe('opcode: 0xe0a1 is correct', () => {
+	test('skip next instruction if key in v[x] isn\'t pressed', () => {
+		chip8.pc = 0;
+		let opcode = 0xe3a1;
+		chip8.v[3] = 2;
+
+		chip8.keyBuffer[chip8.v[3]] = false;
+
+		chip8.runCycle(0xe3a1);
+		expect(chip8.pc).toEqual(4);
+	});
+
+	test('Don\'t skip next instruction if key is pressed', () => {
+		chip8.pc = 0;
+		let opcode = 0xe4a1;
+		chip8.v[4] = 2;
+
+		chip8.keyBuffer[chip8.v[4]] = true;
+
+		chip8.runCycle(opcode);
+		expect(chip8.pc).toEqual(2);
+	});
+});
 
 
 test('opcode: 0xf000 is correct', () => {
+
 	let opcode = 0xf007;
 	let x = (opcode & 0x0f00) >> 8;
 	chip8.delayTimer = 12;
