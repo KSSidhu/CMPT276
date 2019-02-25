@@ -277,10 +277,7 @@ let chip8 = {
 		let x = (opcode & 0x0f00) >> 8;
 		let y = (opcode & 0x00f0) >> 4;
 
-		let v_x = chip8.v[x];
-		let v_y = chip8.v[y];
-
-
+		// Increment Program Counter
 		chip8.pc += 2;
 
 		//Decode Opcode
@@ -461,6 +458,7 @@ let chip8 = {
 					case 0x000a:
 						if (debug) console.log('HELLO FROM 0xf00a');
 						waitAndStoreKeyPressInVx(x);
+						
 
 					//DelayTimer is set to vX
 					case 0x0015:
