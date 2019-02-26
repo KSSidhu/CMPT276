@@ -186,6 +186,9 @@ let chip8 = {
 		chip8.keyWait = false;
 		chip8.paused = false;
 
+		//Display memory
+		chip8.initRegisters();
+
 		document.onkeyup = document.onkeydown = chip8.keyPress;
 
 		//
@@ -194,56 +197,133 @@ let chip8 = {
 		console.log('ALL RESET');
 	},
 
-	// hexConverter: function(opcode) {
-	// 	let temp = (opcode).toString(16).toUpperCase();
-	// 	let pad = "";
+	//Convert opcode to hex
+	hexConverter: function(opcode) {
+		let temp = (opcode).toString(16).toUpperCase();
+		let pad = "";
 
-	// 	for(let i = 0; i < 4-temp.length; i++) {
-	// 		pad = pad + "0";
-	// 	}
-
-	// 	return ("0x" + pad + temp);
-	// },
-
-	keyPress: function(evt, name) {
-		let charStr = String.fromCharCode(evt.which);
-		let val = false;
-		if (evt.type == 'keydown')
-		{
-			val = true;
+		for(let i = 0; i < 4-temp.length; i++) {
+			pad = pad + "0";
 		}
-		else if(evt.type == 'click')
-		{
+
+		return ("0x" + pad + temp);
+	},
+
+	//Handle key presses
+	onKey: function(evt, name) {
+		let val = false;
+		let charStr = String.fromCharCode(evt.which);
+		if (evt.type == 'keydown') {
+			val = true;
+		} else if (evt.type == 'click') {
 			val = true;
 			charStr = name;
 		}
-			translateKeys = {
-		                '1': 0x1,  // 1
-			            '2': 0x2,  // 2
-			            '3': 0x3,  // 3
-	                    '4': 0x4,  // 4
-	                    'Q': 0x5,  // Q
-	                    'W': 0x6,  // W
-	                    'E': 0x7,  // E
-	                    'R': 0x8,  // R
-	                    'A': 0x9,  // A
-	                    'S': 0xA,  // S
-	                    'D': 0xB,  // D
-	                    'F': 0xC,  // F
-	                    'Z': 0xD,  // Z
-	                    'X': 0xE,  // X
-	                    'C': 0xF,  // C
-	                    'V': 0x10  // V
-	    }[charStr];
-		if(translateKeys !== undefined)
-	    {
-		    chip8.keyBuffer[translateKeys] = val;
-  	    }
 
-  			chip8.keyPressed = chip8.keyBuffer.reduce( ((prevValue,currentValue) => (prevValue | currentValue)) )
+		translateKeys = {
+			'1': 0x1,
+			'2': 0x2,
+			'3': 0x3,
+			'4': 0xc,
+			'Q': 0x4,
+			'W': 0x5,
+			'E': 0x6,
+			'R': 0xd,
+			'A': 0x7,
+			'S': 0x8,
+			'D': 0x9,
+			'F': 0xe,
+			'Z': 0xa,
+			'X': 0x0,
+			'C': 0xb,
+			'V': 0xf
+		}[charStr];
+
+		if (translateKeys !== undefined) {
+			chip8.keyBuffer[translateKeys] = val;
+		}
+
+		chip8.keyPressed = chip8.keyBuffer.reduce((prevValue, currentValue) => prevValue | currentValue);
+	},
+/******************************************
+Display Registers, Memory, Instructions 
+
+
+******************************************/
+
+	initRegisters: function() {
+		var table = document.getElementById('regTable');
+		var tbody = document.createElement('tbody');
+		var tr = document.createElement('tr');
+		table.appendChild(tbody);
+
+		tbody.appendChild(tr);
+
+		var heading = ["Register", "Value", "Register", "Value"];
+		var tableBuffer = 8;
+
+		for(var col = 0; col < heading.length; col++)
+		{
+			var th = document.createElement('TH');
+			th.width = '75';
+			th.appendChild(document.createTextNode(heading[col]));
+			tr.appendChild(th);
+
+
+
+		}		 
+		for (var f = 0; f < tableBuffer; f++)
+		{
+		  	var tr = document.createElement('TR'); 
+		    var td1 = document.createElement('TD');
+		    var td2 = document.createElement('TD');
+		    var td3 = document.createElement('TD');
+		    var td4 = document.createElement('TD');
+
+		    var att = document.createAttribute("id");
+		    att.value = "reg-V" + f;
+		    td2.setAttributeNode(att);
+
+		    var att4 = document.createAttribute("id")
+		   	att4.value = "reg-V" + (f + tableBuffer);
+		    td4.setAttributeNode(att4);
+
+		    td1.appendChild(document.createTextNode("V" + f));
+		    td2.appendChild(document.createTextNode(chip8.v[f]));
+
+	        td3.appendChild(document.createTextNode("V" + (f + tableBuffer)));
+            td4.appendChild(document.createTextNode(chip8.v[f + tableBuffer]));
+
+	        tr.appendChild(td1);
+	        tr.appendChild(td2);
+
+		    tr.appendChild(td3);
+		    tr.appendChild(td4);
+		    tbody.appendChild(tr);
+		}		
+
 
 	},
 
+	updateRegisters: function()
+	{
+		if(chip8.paused)
+		{
+			return;
+		}
+
+		for(var i = 0; i < 16; i++)
+		{
+			$("#reg-V" + i).text(chip8.hexConverter(chip8.v[i]));
+		}
+	},
+
+
+/******************************************
+Stop/Start Emulator
+
+
+******************************************/
 	stop: function() {
 		cancelAnimationFrame(loop);
 	},
@@ -596,6 +676,7 @@ let chip8 = {
 			default:
 				console.log('Unknown Opcode: ' + opcode.toString(16));
 		}
+		chip8.updateRegisters();
 	},
 
 /******************************************
@@ -683,6 +764,7 @@ Backwards, Pause, Forwards, Help
 		} else {
 			chip8.paused = false;
 			chip8.start();
+			document.getElementId()
 		}
 	},
 
@@ -696,12 +778,13 @@ Backwards, Pause, Forwards, Help
 
 	help : function()
 	{
-		alert(
-			" F1 | Pause \n F2 | Step Backwards \n F3 | Step Forwards"
-
-
-
-		);
+		var urlk = window.location.href='https://github.com/KSSidhu';
+		var urlj = window.location.href='https://github.com/leafittome';
+		var urla = window.location.href='https://github.com/adamx37';
+		var urlc = window.location.href='https://github.com/chamodib';
+		confirm(
+			"Chip 8 Emulator \n\n Created by: \n Kirat Sidhu " + urlk + " \n James Young " + urlj + " \n Adam Tran " + urla + " \n Chamodi Basnayake " + urlc
+			);
 	},
 
 
@@ -733,30 +816,3 @@ Render/Draw
 };
 
 module.exports = chip8; // exporting the chip8 object to run tests with JEST.js
-
-/******************************************
-Display Registers, Memory, Instructions 
-
-
-******************************************/
-
-function Debugger(chip8)
-{
-	this.chip8 = chip8;
-	this.dumpMemory();
-	this.initRegisters();
-}
-
-Debugger.prototype.dumpMemory = function() {
-	$tbody = $("#memtextarea").find("tbody");
-	$tbody.find("tr").remove();
-	var memory = this.chip8.memory;
-
-	var maxZeroInstructions = 10;
-
-	var zeroInstructions = 0;
-};
-
-Debugger.prototype.initRegisters = function() {
-	
-};
