@@ -1,5 +1,44 @@
-const chip8 = require('./chip8');
-// import chip8 from './chip8';
+// const ops = require('./ops');
+// const chip8 = require('./chip8');
+
+let chip8 = require('./chip8.js');
+// import {
+// 	clearScreen,
+// returnFromSubroutine,
+// jmpToLocation,
+// callAddress,
+// skipInstruction_VxEqKk,
+// skipInstruction_VxNeqKk,
+// skipInstruction_VxEqVy,
+// setVxTonn,
+// addnnToVx,
+// setVxToVy,
+// setVxToVxOrVy,
+// setVxToVxAndVy,
+// setVxToVxXorVy,
+// addVyToVx,
+// subVyFromVx,
+// shiftVxRight,
+// setVxToVyMinVx,
+// shiftVxLeft,
+// skipInstructionIfVxNeqVy,
+// setITonnn,
+// jmpToV0Plusnnn,
+// setVxRandomByte,
+// drawSprite,
+// skipInstructionIfVxKeyPressed,
+// skipInstructionIfVxKeyNotPressed,
+// setVxToDelayTimer,
+// waitAndStoreKeyPressInVx,
+// setDelayTimerToVx,
+// setSoundTimerToVx,
+// setIToIPlusVx,
+// setIToLocationOfSpriteFromVx,
+// storeBCDOfVxInI,
+// storeV0ToVxInMemory,
+// storeMemoryInVRegisters
+// } from "./ops.js";
+require('./ops.js');
 
 let didIncrementPC = function(opcode) {
 	test('incremented the PC', () => {
@@ -7,49 +46,112 @@ let didIncrementPC = function(opcode) {
 		chip8.runCycle(opcode);
 		expect(chip8.pc).toEqual(12);
 	});
-}
+};
 
 // test reset function
 test('reset function works', () => {
 	chip8.reset();
 
-	let CHIP8_FONTSET =[
-  0xF0, 0x90, 0x90, 0x90, 0xF0, // 0
-  0x20, 0x60, 0x20, 0x20, 0x70, // 1
-  0xF0, 0x10, 0xF0, 0x80, 0xF0, // 2
-  0xF0, 0x10, 0xF0, 0x10, 0xF0, // 3
-  0x90, 0x90, 0xF0, 0x10, 0x10, // 4
-  0xF0, 0x80, 0xF0, 0x10, 0xF0, // 5
-  0xF0, 0x80, 0xF0, 0x90, 0xF0, // 6
-  0xF0, 0x10, 0x20, 0x40, 0x40, // 7
-  0xF0, 0x90, 0xF0, 0x90, 0xF0, // 8
-  0xF0, 0x90, 0xF0, 0x10, 0xF0, // 9
-  0xF0, 0x90, 0xF0, 0x90, 0x90, // A
-  0xE0, 0x90, 0xE0, 0x90, 0xE0, // B
-  0xF0, 0x80, 0x80, 0x80, 0xF0, // C
-  0xE0, 0x90, 0x90, 0x90, 0xE0, // D
-  0xF0, 0x80, 0xF0, 0x80, 0xF0, // E
-  0xF0, 0x80, 0xF0, 0x80, 0x80  // F
-];
+	let CHIP8_FONTSET = [
+		0xf0,
+		0x90,
+		0x90,
+		0x90,
+		0xf0, // 0
+		0x20,
+		0x60,
+		0x20,
+		0x20,
+		0x70, // 1
+		0xf0,
+		0x10,
+		0xf0,
+		0x80,
+		0xf0, // 2
+		0xf0,
+		0x10,
+		0xf0,
+		0x10,
+		0xf0, // 3
+		0x90,
+		0x90,
+		0xf0,
+		0x10,
+		0x10, // 4
+		0xf0,
+		0x80,
+		0xf0,
+		0x10,
+		0xf0, // 5
+		0xf0,
+		0x80,
+		0xf0,
+		0x90,
+		0xf0, // 6
+		0xf0,
+		0x10,
+		0x20,
+		0x40,
+		0x40, // 7
+		0xf0,
+		0x90,
+		0xf0,
+		0x90,
+		0xf0, // 8
+		0xf0,
+		0x90,
+		0xf0,
+		0x10,
+		0xf0, // 9
+		0xf0,
+		0x90,
+		0xf0,
+		0x90,
+		0x90, // A
+		0xe0,
+		0x90,
+		0xe0,
+		0x90,
+		0xe0, // B
+		0xf0,
+		0x80,
+		0x80,
+		0x80,
+		0xf0, // C
+		0xe0,
+		0x90,
+		0x90,
+		0x90,
+		0xe0, // D
+		0xf0,
+		0x80,
+		0xf0,
+		0x80,
+		0xf0, // E
+		0xf0,
+		0x80,
+		0xf0,
+		0x80,
+		0x80 // F
+	];
 
 	// Check static variables
-	expect(chip8).toMatchObject({pc: 0x200, sp: 0, i: 0, delayTimer: 0, soundTimer: 0});
+	expect(chip8).toMatchObject({ pc: 0x200, sp: 0, i: 0, delayTimer: 0, soundTimer: 0 });
 	// Check flags
-	expect(chip8).toMatchObject({paused: false, keyPressed: false});
+	expect(chip8).toMatchObject({ paused: false, keyPressed: false });
 	// Check arrays for memory, registers and vram
-	for(let i = 0; i < 80; i++) {
+	for (let i = 0; i < 80; i++) {
 		expect(chip8.memory[i]).toEqual(CHIP8_FONTSET[i]);
-		if(i < 16) {
+		if (i < 16) {
 			expect(chip8.v[i]).toEqual(0);
 			expect(chip8.stack[i]).toEqual(0);
 		} else if (i < 2048) {
-			expect(chip8.vram[i]).toEqual(0)
+			expect(chip8.vram[i]).toEqual(0);
 		}
 	}
 
-	for(let i = 0; i < chip8.keyBuffer.length; i++) {
-
-			expect(chip8.keyBuffer[i]).toEqual(0);
+	for (let i = 0; i < chip8.keyBuffer.length; i++) {
+		expect(chip8.keyBuffer[i]).toEqual(0);
 	}
 });
 
@@ -59,7 +161,6 @@ beforeEach(() => {
 });
 
 test('Emulator paused', () => {
-
 	chip8.start(); // Begin emulation cycle
 
 	expect(chip8.paused).toEqual(false); // should not be paused
@@ -76,7 +177,7 @@ test('Emulator paused', () => {
 test('opcode: 0x00e0 is correct', () => {
 	let opcode = 0x00e0;
 	chip8.runCycle(opcode);
-	for(let i = 0; i < chip8.vram.length; i++) {
+	for (let i = 0; i < chip8.vram.length; i++) {
 		expect(chip8.vram[i]).toEqual(0);
 	}
 });
@@ -184,69 +285,65 @@ test('opcode: 0x8000 is correct', () => {
 	let y = (opcode & 0x00f0) >> 4;
 	let x = (opcode & 0x0f00) >> 8;
 
-
 	chip8.v[y] = 17;
 	chip8.runCycle(opcode);
-	expect(chip8).toMatchObject({pc: 514});
+	expect(chip8).toMatchObject({ pc: 514 });
 	expect(chip8.v[x]).toEqual(17);
 
 	chip8.v[x] = 0;
 	chip8.runCycle(0x8121);
 	expect(chip8.v[x]).toEqual(17);
-	expect(chip8).toMatchObject({pc: 516});
+	expect(chip8).toMatchObject({ pc: 516 });
 
-	chip8.v[x] = 0
+	chip8.v[x] = 0;
 	chip8.runCycle(0x8122);
 	expect(chip8.v[x]).toEqual(0);
-	expect(chip8).toMatchObject({pc: 518});
+	expect(chip8).toMatchObject({ pc: 518 });
 
 	chip8.v[x] = 0;
 	chip8.runCycle(0x8123);
 	expect(chip8.v[x]).toEqual(17);
-	expect(chip8).toMatchObject({pc: 520});
+	expect(chip8).toMatchObject({ pc: 520 });
 
 	chip8.v[x] = 0;
 	chip8.runCycle(0x8124);
 	expect(chip8.v[x]).toEqual(17);
 	expect(chip8.v[0xf]).toEqual(0);
-	expect(chip8).toMatchObject({pc: 522});
+	expect(chip8).toMatchObject({ pc: 522 });
 
 	chip8.v[x] = 0;
 	chip8.runCycle(0x8125);
 	expect(chip8.v[0xf]).toEqual(0);
-	expect(chip8).toMatchObject({pc: 524});
+	expect(chip8).toMatchObject({ pc: 524 });
 
 	chip8.v[x] = 1;
 	chip8.runCycle(0x8126);
 	expect(chip8.v[0xf]).toEqual(1);
 	expect(chip8.v[x]).toEqual(0);
-	expect(chip8).toMatchObject({pc: 526});
+	expect(chip8).toMatchObject({ pc: 526 });
 
 	chip8.reset();
 	chip8.v[x] = 0;
 	chip8.runCycle(0x8127);
 	expect(chip8.v[0xf]).toEqual(0);
 	expect(chip8.v[x]).toEqual(0);
-	expect(chip8).toMatchObject({pc: 514});
-
+	expect(chip8).toMatchObject({ pc: 514 });
 });
-
 
 test('opcode: 0x9000 is correct', () => {
 	let opcode = 0x9140;
 
 	chip8.runCycle(opcode);
-	expect(chip8).toMatchObject({pc: 514});
-}); 
-
+	expect(chip8).toMatchObject({ pc: 514 });
+});
 
 test('opcode: 0xa000 is correct', () => {
 	let opcode = 0xa140;
 
 	chip8.runCycle(opcode);
 	expect(chip8.i).toEqual(0x0140);
-	expect(chip8).toMatchObject({pc: 514});
-}); 
+	expect(chip8).toMatchObject({ pc: 514 });
+});
 
 test('opcode: 0xb000 is correct', () => {
 	let opcode = 0xb123;
@@ -254,9 +351,8 @@ test('opcode: 0xb000 is correct', () => {
 	chip8.v[0] = 12;
 
 	chip8.runCycle(opcode);
-	expect(chip8).toMatchObject({pc: 0x0123 + 12});
+	expect(chip8).toMatchObject({ pc: 0x0123 + 12 });
 });
-
 
 test('opcode: 0xc000 is correct', () => {
 	let opcode = 0xc123;
@@ -266,17 +362,16 @@ test('opcode: 0xc000 is correct', () => {
 
 	chip8.runCycle(opcode);
 	// expect(chip8.v[x]).not.toBe(0);
-	expect(chip8).toMatchObject({pc: 514});
-}); 
+	expect(chip8).toMatchObject({ pc: 514 });
+});
 
 // ------------------------------------------------------------------------------------------------------------------------------------
-
 
 describe('opcode: 0xd000 is correct', () => {
 	beforeEach(() => {
 		chip8.i = 0;
-		for(let i = 0; i < chip8.vram.length; i++) {
-			for(let j = 0; j < chip8.vram.length; j++) {
+		for (let i = 0; i < chip8.vram.length; i++) {
+			for (let j = 0; j < chip8.vram.length; j++) {
 				chip8.memory[i + j] = 0x80;
 			}
 		}
@@ -287,18 +382,17 @@ describe('opcode: 0xd000 is correct', () => {
 	});
 
 	test('draws a sprite at (vx, vy)', (done) => {
-
 		let count = 0;
 
 		chip8.checkPixels = function(x, y) {
-			if(count == 0) {
+			if (count == 0) {
 				expect(x).toEqual(5);
 				expect(y).toEqual(8);
 
 				done();
 				count++;
 			}
-		}
+		};
 
 		chip8.v[1] = 5;
 		chip8.v[2] = 8;
@@ -312,12 +406,12 @@ describe('opcode: 0xd000 is correct', () => {
 		chip8.checkPixels = function(x, y) {
 			ys.push(y);
 
-			if(ys.length == 3 * 8) {
+			if (ys.length == 3 * 8) {
 				let height = ys[ys.length - 1] - ys[0];
 				expect(height).toEqual(3);
 				done();
 			}
-		}
+		};
 
 		chip8.v[1] = 5;
 		chip8.v[2] = 8;
@@ -328,7 +422,7 @@ describe('opcode: 0xd000 is correct', () => {
 	test('sets VF to 1 if pixels are flipped', () => {
 		chip8.checkPixels = function() {
 			return true;
-		}
+		};
 
 		chip8.runCycle(0xd112);
 	});
@@ -336,10 +430,10 @@ describe('opcode: 0xd000 is correct', () => {
 	test('sets VF to 0 if pixels are not flipped', () => {
 		chip8.checkPixels = function() {
 			return false;
-		}
+		};
 
 		chip8.runCycle(0xd112);
-	});	
+	});
 
 	didIncrementPC(0xd122);
 });
@@ -347,7 +441,6 @@ describe('opcode: 0xd000 is correct', () => {
 // ------------------------------------------------------------------------------------------------------------------------------------
 
 describe('opcode: 0xe09e is correct', () => {
-
 	test('skip next instruction if key in v[x] is pressed', () => {
 		chip8.pc = 0;
 		let opcode = 0xe19e;
@@ -358,7 +451,7 @@ describe('opcode: 0xe09e is correct', () => {
 		expect(chip8.pc).toEqual(4);
 	});
 
-	test('Don\'t skip next instruction if key isn\'t pressed', () => {
+	test("Don't skip next instruction if key isn't pressed", () => {
 		chip8.pc = 0;
 		let opcode = 0xe29e;
 		chip8.v[2] = 2;
@@ -371,7 +464,7 @@ describe('opcode: 0xe09e is correct', () => {
 });
 
 describe('opcode: 0xe0a1 is correct', () => {
-	test('skip next instruction if key in v[x] isn\'t pressed', () => {
+	test("skip next instruction if key in v[x] isn't pressed", () => {
 		chip8.pc = 0;
 		let opcode = 0xe3a1;
 		chip8.v[3] = 2;
@@ -382,7 +475,7 @@ describe('opcode: 0xe0a1 is correct', () => {
 		expect(chip8.pc).toEqual(4);
 	});
 
-	test('Don\'t skip next instruction if key is pressed', () => {
+	test("Don't skip next instruction if key is pressed", () => {
 		chip8.pc = 0;
 		let opcode = 0xe4a1;
 		chip8.v[4] = 2;
@@ -394,33 +487,31 @@ describe('opcode: 0xe0a1 is correct', () => {
 	});
 });
 
-
 test('opcode: 0xf000 is correct', () => {
-
 	let opcode = 0xf007;
 	let x = (opcode & 0x0f00) >> 8;
 	chip8.delayTimer = 12;
 	chip8.runCycle(opcode);
 
-	expect(chip8).toMatchObject({pc: 514});
+	expect(chip8).toMatchObject({ pc: 514 });
 	expect(chip8.v[x]).toEqual(12);
 
-	chip8.v[x] = 11
+	chip8.v[x] = 11;
 	opcode = 0xf015;
 	chip8.runCycle(opcode);
-	expect(chip8).toMatchObject({pc: 516, delayTimer: 11});
+	expect(chip8).toMatchObject({ pc: 516, delayTimer: 11 });
 
 	opcode = 0xf018;
 	chip8.runCycle(opcode);
-	expect(chip8).toMatchObject({pc: 518, soundTimer: 11});
+	expect(chip8).toMatchObject({ pc: 518, soundTimer: 11 });
 
 	opcode = 0xf01e;
 	chip8.runCycle(opcode);
-	expect(chip8).toMatchObject({pc: 520, i: 11});
+	expect(chip8).toMatchObject({ pc: 520, i: 11 });
 
 	opcode = 0xf029;
 	chip8.runCycle(opcode);
-	expect(chip8).toMatchObject({pc: 522, i: 55});
+	expect(chip8).toMatchObject({ pc: 522, i: 55 });
 
 	opcode = 0xf033;
 	chip8.v[x] = 101;
@@ -430,5 +521,4 @@ test('opcode: 0xf000 is correct', () => {
 	expect(chip8.memory[chip8.i]).toEqual(1);
 	expect(chip8.memory[chip8.i + 1]).toEqual(0);
 	expect(chip8.memory[chip8.i + 2]).toEqual(1);
-
 });

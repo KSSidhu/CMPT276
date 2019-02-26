@@ -6,8 +6,6 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
   <script src="chip8.js"></script>
   <script src="ops.js"></script>
-
-  
 <style>
 * {
   box-sizing: border-box;
@@ -328,19 +326,19 @@ table.blueTable tbody td {
   }, true);
 
    
-    let newString = "";
-    for(let i = 0; i < chip8.memory.length; i++) {
-    newString = newString + "Memory" + i + ": " + chip8.memory[i] + '\n';
-    document.getElementById('memtextarea').value = newString;
-    }
+    // let newString = "";
+    // for(let i = 0; i < chip8.memory.length; i++) {
+    // newString = newString + "Memory" + i + ": " + chip8.memory[i] + '\n';
+    // document.getElementById('memtextarea').value = newString;
+    // }
     
 
-    let registers = "";
+    // let registers = "";
 
-    for(let k = 0; k < chip8.v.length; k++) {
-      registers = registers + "V" + k + ": " + chip8.v[k] + '\n';
-      document.getElementById('table').innerHTML = registers;
-    }
+    // for(let k = 0; k < chip8.v.length; k++) {
+    //   registers = registers + "V" + k + ": " + chip8.v[k] + '\n';
+    //   document.getElementById('table').innerHTML = registers;
+    // }
 
     // let keyTrack = "";
 

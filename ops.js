@@ -44,7 +44,7 @@ function skipInstruction_VxNeqKk(opcode, x) {
 
 // case 0x5000
 //Skip to Next Instruction, if vX Equals vY
-function skipInstruction_VxEqVy(v, y) {
+function skipInstruction_VxEqVy(x, y) {
 	if (chip8.v[x] === chip8.v[y]) {
 		chip8.pc += 2;
 	}

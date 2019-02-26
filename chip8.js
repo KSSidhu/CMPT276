@@ -5,6 +5,7 @@
 let debug = false;
 
 let chip8 = {
+
 	loop: null,
 
 	// timer refresh rate
@@ -273,6 +274,7 @@ let chip8 = {
 
 	//Emulation Cycle
 	runCycle: function(opcode) {
+
 		//Calculate x and y indicies
 		let x = (opcode & 0x0f00) >> 8;
 		let y = (opcode & 0x00f0) >> 4;
@@ -325,7 +327,7 @@ let chip8 = {
 			//Skip to Next Instruction, if vX Equals vY
 			case 0x5000:
 				if (debug) console.log('HELLO FROM 0x5000');
-				skipInstruction_VxEqVy(v, y);
+				skipInstruction_VxEqVy(x, y);
 				break;
 
 			//Set vX to kk
@@ -568,8 +570,6 @@ Render/Draw
 	}
 };
 
-module.exports = chip8; // exporting the chip8 object to run tests with JEST.js
-
 /******************************************
 Display Registers, Memory, Instructions 
 
@@ -593,3 +593,5 @@ Debugger.prototype.dumpMemory = function() {
 };
 
 Debugger.prototype.initRegisters = function() {};
+
+module.exports = chip8; // exporting the chip8 object to run tests with JEST.js
