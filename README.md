@@ -52,7 +52,7 @@ This project is to design a Chip8 Emulator for CMPT 276. It is designed for educ
 - Running previously created games
 - UI testing may be done using Selenium Testing Tool
 
-> ## Software Methodology
+## Software Methodology
 
 Implementing incremental development following a schedule of research, design, implement followed by test.
 
