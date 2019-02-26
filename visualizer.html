@@ -2,6 +2,7 @@
 <html>
 <head>
 
+  <title>Team 7 Chip 8 Emulator</title>
   <script src = "https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
   <link href = "https://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css"
          rel = "stylesheet">
@@ -353,11 +354,9 @@ table.regTable tbody td {
   inputFile.addEventListener('change', function(event, name) {
     let file = inputFile.files[0];
     chip8.reset();
-    // chip8.drawFlag = true;
-    // chip8.generateTestDisplay();
     chip8.loadGame(file);
     chip8.start();
-
+    
   });
 
   window.addEventListener("keydown", function(event, name) {
@@ -376,6 +375,7 @@ table.regTable tbody td {
     
 
     // let registers = "";
+
     // for(let k = 0; k < chip8.v.length; k++) {
     //   registers = registers + "V" + k + ": " + chip8.v[k] + '\n';
     //   document.getElementById('table').innerHTML = registers;
