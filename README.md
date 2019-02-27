@@ -7,14 +7,16 @@
 - Finalized design of HTML interface
 - Draws to the HTML canvas
 - Loads files
-- Keyboard Mapping
+- Keyboard Mapping (both mouse click and keyboard)
 - Pause Button
+- Register Display and automatic updating
 - Altered Testing: Not using Jest.js for this release, instead using separate Javascript and HTML file
 
 > ### Features Not Completed
 - Emulator cannot run all ROMS and still has issues drawing some
 - Not all memory and registers are displayed
 - Forwards/Backwards buttons
+- Mouse click is not responsive
 
 ## Major Features For Next Release
 - Release 3: Chip8 Tool
@@ -28,6 +30,7 @@ Chip8 Emulator :
 Chip8 Visualizer :
 - Integration with Emulator with Memory and Registry displaying on Visualizer
 - Forwards and backwards button implementation
+- Improve mouse input
 
 
 ## Introduction
@@ -69,6 +72,9 @@ However, when problems arise the creators of said product must return, fix, and 
 ## Risk analysis
 
 ### Current Risks:
+- <strong>Feature estimation has been inaccurate and the group has fallen behihnd schedule.</strong>
+
+### Release 1 Risks:
 - <strong>Weather
   - Due to extreme weather, the group was not able to make every meeting
   - We had an extra meeting during the week in case we couldn't make the weekend meeting</strong>
