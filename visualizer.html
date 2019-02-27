@@ -9,7 +9,7 @@
   <script src = "https://code.jquery.com/jquery-1.10.2.js"></script>
   <script src = "https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
   <script src = "chip8.js"></script>
-
+  <script src="ops.js"></script>
   
 <style>
 * {
@@ -352,10 +352,10 @@ table.regTable tbody td {
 
   let inputFile = document.getElementById('fileInput');
   inputFile.addEventListener('change', function(event, name) {
-    let file = inputFile.files[0];
-    chip8.reset();
-    chip8.loadGame(file);
-    chip8.start();
+      let file = inputFile.files[0];
+      chip8.reset();
+      chip8.loadGame(file);
+      chip8.start();
     
   });
 
@@ -367,11 +367,11 @@ table.regTable tbody td {
     chip8.onKey(event, null);
   }, true);
    
-    let newString = "";
-    for(let i = 0; i < chip8.memory.length; i++) {
-    newString = newString + "Memory" + i + ": " + chip8.memory[i] + '\n';
-    document.getElementById('memTable').value = newString;
-    };
+    // let newString = "";
+    // for(let i = 0; i < chip8.memory.length; i++) {
+    // newString = newString + "Memory" + i + ": " + chip8.memory[i] + '\n';
+    // document.getElementById('memTable').value = newString;
+    // };
     
 
     // let registers = "";

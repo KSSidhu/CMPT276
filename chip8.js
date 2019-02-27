@@ -47,6 +47,8 @@ let chip8 = {
 	// The HTML canvas the emulator runs games to
 	canvas: null,
 
+	registerFlag: false,
+
 	interval: null,
 
 	paused: false,
@@ -243,54 +245,58 @@ Display Registers, Memory, Instructions
 
 	initRegisters: function() {
 		var table = document.getElementById('regTable');
-		var tbody = document.createElement('tbody');
-		var tr = document.createElement('tr');
-		table.appendChild(tbody);
-
-		tbody.appendChild(tr);
-
-		var heading = ["Register", "Value", "Register", "Value"];
-		var tableBuffer = 8;
-
-		for(var col = 0; col < heading.length; col++)
+		if(!chip8.registerFlag)
 		{
-			var th = document.createElement('TH');
-			th.width = '75';
-			th.appendChild(document.createTextNode(heading[col]));
-			tr.appendChild(th);
+			var tbody = document.createElement('tbody');
+			var tr = document.createElement('tr');
+			table.appendChild(tbody);
+
+			tbody.appendChild(tr);
+
+			var heading = ["Register", "Value", "Register", "Value"];
+			var tableBuffer = 8;
+
+			for(var col = 0; col < heading.length; col++)
+			{
+				var th = document.createElement('TH');
+				th.width = '75';
+				th.appendChild(document.createTextNode(heading[col]));
+				tr.appendChild(th);
 
 
 
-		}		 
-		for (var f = 0; f < tableBuffer; f++)
-		{
-		  	var tr = document.createElement('TR'); 
-		    var td1 = document.createElement('TD');
-		    var td2 = document.createElement('TD');
-		    var td3 = document.createElement('TD');
-		    var td4 = document.createElement('TD');
+			}		 
+			for (var f = 0; f < tableBuffer; f++)
+			{
+			  	var tr = document.createElement('TR'); 
+			    var td1 = document.createElement('TD');
+			    var td2 = document.createElement('TD');
+			    var td3 = document.createElement('TD');
+			    var td4 = document.createElement('TD');
 
-		    var att = document.createAttribute("id");
-		    att.value = "reg-V" + f;
-		    td2.setAttributeNode(att);
+			    var att = document.createAttribute("id");
+			    att.value = "reg-V" + f;
+			    td2.setAttributeNode(att);
 
-		    var att4 = document.createAttribute("id")
-		   	att4.value = "reg-V" + (f + tableBuffer);
-		    td4.setAttributeNode(att4);
+			    var att4 = document.createAttribute("id")
+			   	att4.value = "reg-V" + (f + tableBuffer);
+			    td4.setAttributeNode(att4);
 
-		    td1.appendChild(document.createTextNode("V" + f));
-		    td2.appendChild(document.createTextNode(chip8.v[f]));
+			    td1.appendChild(document.createTextNode("V" + f));
+			    td2.appendChild(document.createTextNode(chip8.v[f]));
 
-	        td3.appendChild(document.createTextNode("V" + (f + tableBuffer)));
-            td4.appendChild(document.createTextNode(chip8.v[f + tableBuffer]));
+		        td3.appendChild(document.createTextNode("V" + (f + tableBuffer)));
+	            td4.appendChild(document.createTextNode(chip8.v[f + tableBuffer]));
 
-	        tr.appendChild(td1);
-	        tr.appendChild(td2);
+		        tr.appendChild(td1);
+		        tr.appendChild(td2);
 
-		    tr.appendChild(td3);
-		    tr.appendChild(td4);
-		    tbody.appendChild(tr);
-		}		
+			    tr.appendChild(td3);
+			    tr.appendChild(td4);
+			    tbody.appendChild(tr);
+			}
+			chip8.registerFlag = true;
+		}
 
 
 	},
@@ -640,7 +646,7 @@ Backwards, Pause, Forwards, Help
 			);
 	},
 
-	/******************************************
+/******************************************
 Render/Draw
 
 
