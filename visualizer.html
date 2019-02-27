@@ -91,10 +91,10 @@ html {
 
 .log-button{
   color: black;
-  height: 20px;
+  height: 40px;
   background-color: #fff;
   border: 1px solid;
-  padding: 2px;
+  padding: 5px;
   display: inline-grid;
   grid-template-columns: repeat(3, 1fr);
 
@@ -221,7 +221,7 @@ button:active:after {
   transition: 0s
 }
 
-table.memTable {
+table.instrTable {
   border: 1px solid #1C6EA4;
   background-color: #EEEEEE;
   text-align: left;
@@ -236,12 +236,12 @@ table.memTable {
 
 }
 
-table.memTable td, table.memTable th {
+table.instrTable td, table.instrTable th {
   border: 1px solid #AAAAAA;
   padding: 3px 2px;
 }
 
-table.memTable tbody td {
+table.instrTable tbody td {
   font-size: 13px;
 }
 
@@ -261,7 +261,7 @@ table.regTable {
 
 table.regTable td, table.regTable th {
   border: 1px solid #AAAAAA;
-  padding: 9px 2px;
+  padding: 7.5px 2px;
 }
 
 table.regTable tbody td {
@@ -299,22 +299,22 @@ table.regTable tbody td {
     <div class="row">
     	<div class="keyDisplay" style="background-color:#B5C1DF;">
         <div class="keys">
-          <button name="1" class="key-button" type="button" onmousedown="chip8.onKey(event, name)"> 1 </button>
-          <button name="2" class="key-button" type="button" onmousedown="chip8.onKey(event, name)"> 2 </button>
-          <button name="3" class="key-button" type="button" onmousedown="chip8.onKey(event, name)"> 3 </button>
-          <button name="4" class="key-button" type="button" onmousedown="chip8.onKey(event, name)"> 4 </button>
-          <button name="Q" class="key-button" type="button" onmousedown="chip8.onKey(event, name)"> Q </button>
-          <button name="W" class="key-button" type="button" onmousedown="chip8.onKey(event, name)"> W </button>
-          <button name="E" class="key-button" type="button" onmousedown="chip8.onKey(event, name)"> E </button>
-          <button name="R" class="key-button" type="button" onmousedown="chip8.onKey(event, name)"> R </button>
-          <button name="A" class="key-button" type="button" onmousedown="chip8.onKey(event, name)"> A </button>
-          <button name="S" class="key-button" type="button" onmousedown="chip8.onKey(event, name)"> S </button>
-          <button name="D" class="key-button" type="button" onmousedown="chip8.onKey(event, name)"> D </button>
-          <button name="F" class="key-button" type="button" onmousedown="chip8.onKey(event, name)"> F </button>
-          <button name="Z" class="key-button" type="button" onmousedown="chip8.onKey(event, name)"> Z </button>
-          <button name="X" class="key-button" type="button" onmousedown="chip8.onKey(event, name)"> X </button>
-          <button name="C" class="key-button" type="button" onmousedown="chip8.onKey(event, name)"> C </button>
-          <button name="V" class="key-button" type="button" onmousedown="chip8.onKey(event, name)"> V </button>        
+          <button name="1" class="key-button" type="button" onclick="chip8.onKey(event, name)"> 1 </button>
+          <button name="2" class="key-button" type="button" onclick="chip8.onKey(event, name)"> 2 </button>
+          <button name="3" class="key-button" type="button" onclick="chip8.onKey(event, name)"> 3 </button>
+          <button name="4" class="key-button" type="button" onclick="chip8.onKey(event, name)"> 4 </button>
+          <button name="Q" class="key-button" type="button" onclick="chip8.onKey(event, name)"> Q </button>
+          <button name="W" class="key-button" type="button" onclick="chip8.onKey(event, name)"> W </button>
+          <button name="E" class="key-button" type="button" onclick="chip8.onKey(event, name)"> E </button>
+          <button name="R" class="key-button" type="button" onclick="chip8.onKey(event, name)"> R </button>
+          <button name="A" class="key-button" type="button" onclick="chip8.onKey(event, name)"> A </button>
+          <button name="S" class="key-button" type="button" onclick="chip8.onKey(event, name)"> S </button>
+          <button name="D" class="key-button" type="button" onclick="chip8.onKey(event, name)"> D </button>
+          <button name="F" class="key-button" type="button" onclick="chip8.onKey(event, name)"> F </button>
+          <button name="Z" class="key-button" type="button" onclick="chip8.onKey(event, name)"> Z </button>
+          <button name="X" class="key-button" type="button" onclick="chip8.onKey(event, name)"> X </button>
+          <button name="C" class="key-button" type="button" onclick="chip8.onKey(event, name)"> C </button>
+          <button name="V" class="key-button" type="button" onclick="chip8.onKey(event, name)"> V </button>        
         <div class="controlDisplay" style="background-color:#6D7995;">
 
 	        <button name="backwards" id="backwards" class="log-button" type="button" onclick="chip8.backwards()"> Backwards </button>
@@ -336,7 +336,7 @@ table.regTable tbody td {
         </textarea>
       </div> -->
       <div class="logDisplay" style="background-color:#6D7995;">
-	      <table class="memTable" id="memTable">
+	      <table class="instrTable" id="instrTable">
 			   <tbody>
 			   </tbody>
 		    </table>

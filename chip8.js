@@ -49,6 +49,8 @@ let chip8 = {
 
 	registerFlag: false,
 
+	instructionFlag: false,
+
 	interval: null,
 
 	paused: false,
@@ -265,36 +267,74 @@ Display Registers, Memory, Instructions
 
 
 
-			}		 
+			}
+
 			for (var f = 0; f < tableBuffer; f++)
 			{
 			  	var tr = document.createElement('TR'); 
-			    var td1 = document.createElement('TD');
-			    var td2 = document.createElement('TD');
-			    var td3 = document.createElement('TD');
-			    var td4 = document.createElement('TD');
+			    var regCol1 = document.createElement('TD');
+			    var regVal1 = document.createElement('TD');
+			    var regCol2 = document.createElement('TD');
+			    var regVal2 = document.createElement('TD');
 
-			    var att = document.createAttribute("id");
-			    att.value = "reg-V" + f;
-			    td2.setAttributeNode(att);
+			    var regID1 = document.createAttribute("id");
+			    regID1.value = "reg-V" + f;
+			    regVal1.setAttributeNode(regID1);
 
-			    var att4 = document.createAttribute("id")
-			   	att4.value = "reg-V" + (f + tableBuffer);
-			    td4.setAttributeNode(att4);
+			    var regID2 = document.createAttribute("id");
+			   	regID2.value = "reg-V" + (f + tableBuffer);
+			    regVal2.setAttributeNode(regID2);
 
-			    td1.appendChild(document.createTextNode("V" + f));
-			    td2.appendChild(document.createTextNode(chip8.v[f]));
+			    regCol1.appendChild(document.createTextNode("V" + f));
+			    regVal1.appendChild(document.createTextNode(chip8.v[f]));
 
-		        td3.appendChild(document.createTextNode("V" + (f + tableBuffer)));
-	            td4.appendChild(document.createTextNode(chip8.v[f + tableBuffer]));
+		        regCol2.appendChild(document.createTextNode("V" + (f + tableBuffer)));
+	            regVal2.appendChild(document.createTextNode(chip8.v[f + tableBuffer]));
 
-		        tr.appendChild(td1);
-		        tr.appendChild(td2);
 
-			    tr.appendChild(td3);
-			    tr.appendChild(td4);
+		        tr.appendChild(regCol1);
+		        tr.appendChild(regVal1);
+
+			    tr.appendChild(regCol2);
+			    tr.appendChild(regVal2);
+
+			    tbody.appendChild(tr);
+	            if(f == tableBuffer - 1)
+	            {  
+	            	tr = document.createElement('TR');
+
+	            	//"I" Register 
+	            	var iReg = document.createElement('TD');
+			   		var iRegVal = document.createElement('TD');
+			   		//PC Register
+					var pcReg = document.createElement('TD');
+			   		var pcRegVal = document.createElement('TD');
+
+			   		//"I" id for updating value
+				    var iID = document.createAttribute("id");
+				    iID.value = "reg-I";
+				    iRegVal.setAttributeNode(iID);
+				    //PC id for updating value
+				    var pcID = document.createAttribute("id");
+				    pcID.value = "reg-PC";
+				    pcRegVal.setAttributeNode(pcID);
+
+				    //Append the "I" register
+					iReg.appendChild(document.createTextNode("I"));
+					iRegVal.appendChild(document.createTextNode(chip8.i));
+
+					pcReg.appendChild(document.createTextNode("PC"));
+					pcRegVal.appendChild(document.createTextNode(chip8.pc));
+
+					tr.appendChild(iReg);
+					tr.appendChild(iRegVal);
+					tr.appendChild(pcReg);
+					tr.appendChild(pcRegVal);
+	            }
 			    tbody.appendChild(tr);
 			}
+
+
 			chip8.registerFlag = true;
 		}
 
@@ -312,8 +352,66 @@ Display Registers, Memory, Instructions
 		{
 			$("#reg-V" + i).text(chip8.hexConverter(chip8.v[i]));
 		}
+		$("#reg-I").text(chip8.hexConverter(chip8.i));
+		$("#reg-PC").text(chip8.hexConverter(chip8.pc));
 	},
 
+	// initInstructions: function()
+	// {
+	// 	var table = document.getElementById('instrTable');
+	// 	if(!chip8.instructionFlag)
+	// 	{
+	// 		var tbody = document.createElement('tbody');
+	// 		var tr = document.createElement('tr');
+	// 		table.appendChild(tbody);
+
+	// 		tbody.appendChild(tr);
+
+	// 		var heading = ["Instruction", "Value",];
+	// 		var tableBuffer = 8;
+
+	// 		for(var col = 0; col < heading.length; col++)
+	// 		{
+	// 			var th = document.createElement('TH');
+	// 			th.width = '75';
+	// 			th.appendChild(document.createTextNode(heading[col]));
+	// 			tr.appendChild(th);
+
+
+
+	// 		}		 
+	// 		for (var f = 0; f < tableBuffer; f++)
+	// 		{
+	// 		  	var tr = document.createElement('TR'); 
+	// 		    var regCol1 = document.createElement('TD');
+	// 		    var regVal1 = document.createElement('TD');
+	// 		    var regCol2 = document.createElement('TD');
+	// 		    var regVal2 = document.createElement('TD');
+
+	// 		    var regID1 = document.createAttribute("id");
+	// 		    regID1.value = "reg-V" + f;
+	// 		    regVal1.setAttributeNode(regID1);
+
+	// 		    var regID2 = document.createAttribute("id")
+	// 		   	regID2.value = "reg-V" + (f + tableBuffer);
+	// 		    regVal2.setAttributeNode(regID2);
+
+	// 		    regCol1.appendChild(document.createTextNode("V" + f));
+	// 		    regVal1.appendChild(document.createTextNode(chip8.v[f]));
+
+	// 	        regCol2.appendChild(document.createTextNode("V" + (f + tableBuffer)));
+	//             regVal2.appendChild(document.createTextNode(chip8.v[f + tableBuffer]));
+
+	// 	        tr.appendChild(regCol1);
+	// 	        tr.appendChild(regVal1);
+
+	// 		    tr.appendChild(regCol2);
+	// 		    tr.appendChild(regVal2);
+	// 		    tbody.appendChild(tr);
+	// 		}
+	// 		chip8.registerFlag = true;
+	// 	}
+	// },
 
 /******************************************
 Stop/Start Emulator
@@ -637,10 +735,10 @@ Backwards, Pause, Forwards, Help
 
 	help : function()
 	{
-		var urlk = window.location.href='https://github.com/KSSidhu';
-		var urlj = window.location.href='https://github.com/leafittome';
-		var urla = window.location.href='https://github.com/adamx37';
-		var urlc = window.location.href='https://github.com/chamodib';
+		var urlk = 'https://github.com/KSSidhu';
+		var urlj = 'https://github.com/leafittome';
+		var urla = 'https://github.com/adamx37';
+		var urlc = 'https://github.com/chamodib';
 		confirm(
 			"Chip 8 Emulator \n\n Created by: \n Kirat Sidhu " + urlk + " \n James Young " + urlj + " \n Adam Tran " + urla + " \n Chamodi Basnayake " + urlc
 			);
