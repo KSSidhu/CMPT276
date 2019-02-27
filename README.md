@@ -72,7 +72,7 @@ However, when problems arise the creators of said product must return, fix, and 
 ## Risk analysis
 
 ### Current Risks:
-- <strong>Feature estimation has been inaccurate and the group has fallen behihnd schedule.</strong>
+- <strong>Feature implementaion estimate has been inaccurate and the group has fallen behind schedule.</strong>
 
 ### Release 1 Risks:
 - <strong>Weather
