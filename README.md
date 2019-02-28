@@ -73,11 +73,12 @@ However, when problems arise the creators of said product must return, fix, and 
 
 ### Current Risks:
 - <strong>Feature implementaion estimate has been inaccurate and the group has fallen behind schedule.</strong>
+- <strong>SOLUTION: We've worked over the reading break to fix bugs and will continue working on the emulator and visualizer into next release. </strong>
 
 ### Release 1 Risks:
 - <strong>Weather
   - Due to extreme weather, the group was not able to make every meeting
-  - We had an extra meeting during the week in case we couldn't make the weekend meeting</strong>
+  - SOLUTION: We had an extra meeting during the week in case we couldn't make the weekend meeting</strong>
 
 ### Exams and Other Courses:
   - During exam periods work may be postponed or given to other team members who aren't studying for exams.

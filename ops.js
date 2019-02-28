@@ -167,7 +167,7 @@ function setVxRandomByte(opcode, x) {
 // case 0xd000
 function drawSprite(opcode, x, y) {
 	//Display n-byte sprite starting at memory location i at (vX, vY), set vF equal to collis
-	let height = opcode & 0x000f; // save nibble
+	let height = opcode & 0x000f; // save nibble for height of pixel
 	let sprite;
 
 	let v_X = chip8.v[x];

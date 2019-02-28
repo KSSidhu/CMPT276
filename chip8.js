@@ -6,6 +6,10 @@ let debug = false;
 
 let chip8 = {
 
+	debug: false,
+
+	test: false,
+
 	loop: null,
 
 	// timer refresh rate
@@ -98,22 +102,22 @@ let chip8 = {
 		let height = 32;
 
 		if (x > width) {
-			while (x > width) x -= width;
+			while(x > width) x -= width;
 		}
 
 		if (x < 0) {
-			while (x < 0) x += width;
+			while(x < 0) x += width;
 		}
 
 		if (y > height) {
-			while (y > height) y -= height;
+			while(y > height) y -= height;
 		}
 
 		if (y < 0) {
-			while (y < 0) y += height;
+			while(y < 0) y += height;
 		}
 
-		location = x + y * width;
+		location = x + (y * width);
 		chip8.vram[location] ^= 1;
 
 		return !chip8.vram[location];
@@ -182,7 +186,8 @@ let chip8 = {
 		chip8.paused = false;
 
 		//Display memory
-		chip8.initRegisters();
+		if(!chip8.test)
+			chip8.initRegisters();
 
 		document.onkeyup = document.onkeydown = chip8.keyPress;
 
@@ -246,7 +251,8 @@ Display Registers, Memory, Instructions
 ******************************************/
 
 	initRegisters: function() {
-		var table = document.getElementById('regTable');
+		if(!chip8.test){
+			var table = document.getElementById('regTable');
 		if(!chip8.registerFlag)
 		{
 			var tbody = document.createElement('tbody');
@@ -337,13 +343,16 @@ Display Registers, Memory, Instructions
 
 			chip8.registerFlag = true;
 		}
+		}
+		
 
 
 	},
 
 	updateRegisters: function()
 	{
-		if(chip8.paused)
+		if(!chip8.test) {
+			if(chip8.paused)
 		{
 			return;
 		}
@@ -354,6 +363,8 @@ Display Registers, Memory, Instructions
 		}
 		$("#reg-I").text(chip8.hexConverter(chip8.i));
 		$("#reg-PC").text(chip8.hexConverter(chip8.pc));
+		}
+		
 	},
 
 	// initInstructions: function()
@@ -430,7 +441,6 @@ Stop/Start Emulator
 	},
 
 	emulate: function() {
-		// chip8.gameLoaded = true
 		if (!chip8.paused) {
 			for (let i = 0; i < 10; i++) {
 				let opcode = (chip8.memory[chip8.pc] << 8) | chip8.memory[chip8.pc + 1];
@@ -721,16 +731,18 @@ Backwards, Pause, Forwards, Help
 		} else {
 			chip8.paused = false;
 			chip8.start();
-			document.getElementId()
+			if(!chip8.test)
+				document.getElementId();
 		}
 	},
 
 	//Step forward in emulator one step
 	forwards: function() {
+		chip8.paused = false;
 		chip8.stop();
-		chip8.pc += 2;
+		chip8.emulate();
 		chip8.start();
-		chip8.paused = true;
+		chip8.pause();
 	},
 
 	help : function()
@@ -752,9 +764,9 @@ Render/Draw
 	render: function() {
 		let SCALE = 10;
 		let ctx = chip8.canvas.getContext('2d');
-		ctx.clearRect(0, 0, 64, 32);
+		ctx.clearRect(0, 0, 64 * SCALE, 32 * SCALE);
 		ctx.fillStyle = '#000000';
-		ctx.fillRect(0, 0, chip8.canvas.width, chip8.canvas.height);
+		ctx.fillRect(0, 0, 64 * SCALE, 32 * SCALE);
 
 		ctx.fillStyle = '#ffffff';
 
@@ -766,5 +778,5 @@ Render/Draw
 	}
 };
 
-module.exports = chip8; // exporting the chip8 object to run tests with JEST.js
+// module.exports = chip8; // exporting the chip8 object to run tests with JEST.js
 
