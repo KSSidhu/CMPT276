@@ -255,34 +255,40 @@ Display Registers, Memory, Instructions
 			var table = document.getElementById('regTable');
 		if(!chip8.registerFlag)
 		{
+			//Create table 
 			var tbody = document.createElement('tbody');
 			var tr = document.createElement('tr');
 			table.appendChild(tbody);
-
 			tbody.appendChild(tr);
 
+			//Header values
 			var heading = ["Register", "Value", "Register", "Value"];
+
+			//Used for splitting the table into 4 columns, where registers V 0-7 are in first column and V 8-15 are in third column
 			var tableBuffer = 8;
 
+			//Header
 			for(var col = 0; col < heading.length; col++)
 			{
 				var th = document.createElement('TH');
 				th.width = '75';
 				th.appendChild(document.createTextNode(heading[col]));
 				tr.appendChild(th);
-
-
-
 			}
 
+			//Create and populate tables
 			for (var f = 0; f < tableBuffer; f++)
 			{
+				//Row
 			  	var tr = document.createElement('TR'); 
+
+			  	//Columns and Values
 			    var regCol1 = document.createElement('TD');
 			    var regVal1 = document.createElement('TD');
 			    var regCol2 = document.createElement('TD');
 			    var regVal2 = document.createElement('TD');
 
+			    //Set ID to columns for updating
 			    var regID1 = document.createAttribute("id");
 			    regID1.value = "reg-V" + f;
 			    regVal1.setAttributeNode(regID1);
@@ -291,20 +297,24 @@ Display Registers, Memory, Instructions
 			   	regID2.value = "reg-V" + (f + tableBuffer);
 			    regVal2.setAttributeNode(regID2);
 
+			    //Add the cells to each row
 			    regCol1.appendChild(document.createTextNode("V" + f));
 			    regVal1.appendChild(document.createTextNode(chip8.v[f]));
 
 		        regCol2.appendChild(document.createTextNode("V" + (f + tableBuffer)));
 	            regVal2.appendChild(document.createTextNode(chip8.v[f + tableBuffer]));
 
-
+	            //Add to rows
 		        tr.appendChild(regCol1);
 		        tr.appendChild(regVal1);
 
 			    tr.appendChild(regCol2);
 			    tr.appendChild(regVal2);
 
+			    //Add to table
 			    tbody.appendChild(tr);
+
+			    //Add the i register and program counter to the table
 	            if(f == tableBuffer - 1)
 	            {  
 	            	tr = document.createElement('TR');
@@ -329,6 +339,7 @@ Display Registers, Memory, Instructions
 					iReg.appendChild(document.createTextNode("I"));
 					iRegVal.appendChild(document.createTextNode(chip8.i));
 
+					//Append the program counter
 					pcReg.appendChild(document.createTextNode("PC"));
 					pcRegVal.appendChild(document.createTextNode(chip8.pc));
 
@@ -337,18 +348,16 @@ Display Registers, Memory, Instructions
 					tr.appendChild(pcReg);
 					tr.appendChild(pcRegVal);
 	            }
+	            //Add to table
 			    tbody.appendChild(tr);
 			}
-
-
+			//Register table is created, prevent program from creating multiple tables
 			chip8.registerFlag = true;
 		}
 		}
-		
-
-
 	},
 
+	//Update register values after opcode is retrieved
 	updateRegisters: function()
 	{
 		if(!chip8.test) {
@@ -728,9 +737,12 @@ Backwards, Pause, Forwards, Help
 		if (!chip8.paused) {
 			chip8.stop();
 			chip8.paused = true;
+			document.getElementById("pause").innerText = "Play";
 		} else {
 			chip8.paused = false;
 			chip8.start();
+
+			document.getElementById("pause").innerText = "Pause";
 			if(!chip8.test)
 				document.getElementId();
 		}
