@@ -2,8 +2,6 @@
 // Refernce https://github.com/reu/chip8.js for emulation render cycle
 // Referenced http://devernay.free.fr/hacks/chip8/C8TECH10.HTM#00E0 for opcode instructions
 
-let debug = false;
-
 let chip8 = {
 
 	debug: false,
@@ -103,17 +101,13 @@ let chip8 = {
 
 		if (x > width) {
 			while(x > width) x -= width;
-		}
-
-		if (x < 0) {
+		}else if (x < 0) {
 			while(x < 0) x += width;
 		}
 
 		if (y > height) {
 			while(y > height) y -= height;
-		}
-
-		if (y < 0) {
+		}else if (y < 0) {
 			while(y < 0) y += height;
 		}
 

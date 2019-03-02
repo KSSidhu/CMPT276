@@ -59,7 +59,14 @@ function setVxTonn(opcode, x) {
 // case 0x7000
 //set vX equal to vX + kk
 function addnnToVx(opcode, x) {
-	chip8.v[x] += opcode & 0x00ff;
+	// chip8.v[x] += opcode & 0x00ff;
+	let val = (opcode & 0xff) + chip8.v[x];
+
+	if(val > 255) {
+		val -= 256;
+	}
+
+	chip8.v[x] = val;
 }
 
 // case 0x8000
@@ -89,15 +96,12 @@ function setVxToVxXorVy(x, y) {
 // case 0x8004
 //Set vX equal to vX + vY, set vF equal to carry
 function addVyToVx(x, y) {
-	let val = chip8.v[x] + chip8.v[y];
-
-	if (val > 0xff) {
-		chip8.v[0xf] = 1;
-	} else {
-		chip8.v[0xf] = 0;
+	chip8.v[x] = chip8.v[x] + chip8.v[y];
+	chip8.v[0xf] = +(chip8.v[x] > 255);
+	
+	if(chip8.v[x] > 255) {
+		chip8.v[x] -= 256;
 	}
-
-	chip8.v[x] = val;
 }
 
 // case 0x8005
@@ -106,6 +110,10 @@ function addVyToVx(x, y) {
 function subVyFromVx(x, y) {
 	chip8.v[0xf] = +(chip8.v[x] > chip8.v[y]);
 	chip8.v[x] -= chip8.v[y]; //Vx = Vx - Vy
+
+	if(chip8.v[x] < 0) {
+		chip8.v[x] += 256;
+	}
 }
 
 // case 0x8006
@@ -120,22 +128,24 @@ function shiftVxRight(x, y) {
 //Set vX equal to vY - vX, set vF equal to NOT borrow
 //if vY > vX then vF is set to 1, otherwise 0. Then vX - vY and result stored in vX
 function setVxToVyMinVx(x, y) {
-	if (chip8.v[y] > chip8.v[x]) {
-		// Vy > Vx
-		chip8.v[0xf] = 1;
-	} else {
-		chip8.v[0xf] = 0;
-	}
-
+	chip8.v[0xf] = +(chip8.v[y] > chip8.v[x]);
 	chip8.v[x] = chip8.v[y] - chip8.v[x]; // Vx = Vy - Vx
+	if (chip8.v[x] < 0) {
+		// Vy > Vx
+		chip8.v[x] += 256;
+	}
 }
 
 // case 0x800e
 //Set vX equal to vX SHL 1
 //if most significant bit of vX is 1, then vF is set to 1, otherwise 0. Then vX is multiplied by 2.
 function shiftVxLeft(x) {
-	chip8.v[0xf] = chip8.v[x] >> 7;
+	chip8.v[0xf] = chip8.v[x] & 0x80;
 	chip8.v[x] = chip8.v[x] << 1;
+
+	if(chip8.v[x] > 255) {
+		chip8.v[x] -= 256;
+	}
 }
 
 // case 0x9000
