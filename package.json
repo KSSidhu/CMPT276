@@ -3,10 +3,10 @@
   "version": "1.0.0",
   "description": "JavaScript Chip8 Emulator",
   "main": "chip8.js",
-  "dependencies": {
-    "jest": "^24.0.0"
+  "dependencies": {},
+  "devDependencies": {
+    "jest": "^24.1.0"
   },
-  "devDependencies": {},
   "scripts": {
     "test": "jest"
   },

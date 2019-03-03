@@ -784,5 +784,5 @@ Render/Draw
 	}
 };
 
-// module.exports = chip8; // exporting the chip8 object to run tests with JEST.js
+module.exports = chip8; // exporting the chip8 object to run tests with JEST.js
 

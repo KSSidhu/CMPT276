@@ -1,44 +1,5 @@
-// const ops = require('./ops');
-// const chip8 = require('./chip8');
 
-let chip8 = require('./chip8.js');
-// import {
-// 	clearScreen,
-// returnFromSubroutine,
-// jmpToLocation,
-// callAddress,
-// skipInstruction_VxEqKk,
-// skipInstruction_VxNeqKk,
-// skipInstruction_VxEqVy,
-// setVxTonn,
-// addnnToVx,
-// setVxToVy,
-// setVxToVxOrVy,
-// setVxToVxAndVy,
-// setVxToVxXorVy,
-// addVyToVx,
-// subVyFromVx,
-// shiftVxRight,
-// setVxToVyMinVx,
-// shiftVxLeft,
-// skipInstructionIfVxNeqVy,
-// setITonnn,
-// jmpToV0Plusnnn,
-// setVxRandomByte,
-// drawSprite,
-// skipInstructionIfVxKeyPressed,
-// skipInstructionIfVxKeyNotPressed,
-// setVxToDelayTimer,
-// waitAndStoreKeyPressInVx,
-// setDelayTimerToVx,
-// setSoundTimerToVx,
-// setIToIPlusVx,
-// setIToLocationOfSpriteFromVx,
-// storeBCDOfVxInI,
-// storeV0ToVxInMemory,
-// storeMemoryInVRegisters
-// } from "./ops.js";
-require('./ops.js');
+const chip8 = require('./chip8');
 
 let didIncrementPC = function(opcode) {
 	test('incremented the PC', () => {
