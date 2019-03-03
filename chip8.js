@@ -1,29 +1,20 @@
-
-
 // Reference http://www.multigesture.net/articles/how-to-write-an-emulator-chip-8-interpreter/ for chip8 object layout and functions to include
+// Refernce https://github.com/reu/chip8.js for emulation render cycle
 // Referenced http://devernay.free.fr/hacks/chip8/C8TECH10.HTM#00E0 for opcode instructions
 
-let CHIP8_FONTSET =[
-  0xF0, 0x90, 0x90, 0x90, 0xF0, // 0
-  0x20, 0x60, 0x20, 0x20, 0x70, // 1
-  0xF0, 0x10, 0xF0, 0x80, 0xF0, // 2
-  0xF0, 0x10, 0xF0, 0x10, 0xF0, // 3
-  0x90, 0x90, 0xF0, 0x10, 0x10, // 4
-  0xF0, 0x80, 0xF0, 0x10, 0xF0, // 5
-  0xF0, 0x80, 0xF0, 0x90, 0xF0, // 6
-  0xF0, 0x10, 0x20, 0x40, 0x40, // 7
-  0xF0, 0x90, 0xF0, 0x90, 0xF0, // 8
-  0xF0, 0x90, 0xF0, 0x10, 0xF0, // 9
-  0xF0, 0x90, 0xF0, 0x90, 0x90, // A
-  0xE0, 0x90, 0xE0, 0x90, 0xE0, // B
-  0xF0, 0x80, 0x80, 0x80, 0xF0, // C
-  0xE0, 0x90, 0x90, 0x90, 0xE0, // D
-  0xF0, 0x80, 0xF0, 0x80, 0xF0, // E
-  0xF0, 0x80, 0xF0, 0x80, 0x80  // F
-];
-//comment for test
+let debug = false;
 
-chip8 = {
+let chip8 = {
+
+	debug: false,
+
+	test: true,
+
+	loop: null,
+
+	// timer refresh rate
+	timerRefreshRate: 16,
+
 	// Program Counter
 	pc: 0,
 
@@ -43,16 +34,10 @@ chip8 = {
 	vram: new Uint8Array(64 * 32),
 
 	//Keyboard Buffer
-	keyBuffer: new Array(16),
-
-	//Tracks previous keys pressed
-	keyLog: new Array(16),
-
-	// Draw Operation Flag
-	drawFlag: false,
+	keyBuffer: new Uint8Array(16),
 
 	//Key Press
-	keyPress: false,
+	keyPressed: false,
 
 	// "I" Index Register
 	i: 0,
@@ -63,40 +48,94 @@ chip8 = {
 	//Sound Timer
 	soundTimer: 0,
 
-	//Flag for program loaded
-	loadFlag: false,
-
-	//Track if a key is pressed or waiting for key to be pressed
-	keyWait: false,
-
-	// Track if game is loaded
-	gameLoaded: false,
-
 	// The HTML canvas the emulator runs games to
 	canvas: null,
 
-	// Generates random numbers for memory, stack and V registers to 
+	registerFlag: false,
+
+	instructionFlag: false,
+
+	interval: null,
+
+	paused: false,
+
+	cycles: 0,
+
+	step: null,
+
+	loop: null,
+
+	// Generates random numbers for memory, stack and V registers to
 	// display on the HTML page
 	generateTestDisplay: function() {
-
 		// Generate random numbers for memory display
-		for(let i = 80; i < chip8.memory.length; i++) {
+		for (let i = 80; i < chip8.memory.length; i++) {
 			chip8.memory[i] = Math.random() * (255 - 1) + 1;
 		}
 
 		// Generate random numbers for testing
-		for(let i = 0; i < chip8.v.length; i++) {
+		for (let i = 0; i < chip8.v.length; i++) {
 			chip8.v[i] = Math.random() * (16 - 1) + 1;
 		}
 
 		// Generate random numbers for testing
-		for(let i = 0; i < chip8.stack.length; i++) {
+		for (let i = 0; i < chip8.stack.length; i++) {
 			chip8.stack[i] = Math.random() * (255 - 1) + 1;
 		}
 	},
 
+	updateTimers: function() {
+		if (chip8.delayTimer > 0) {
+			chip8.delayTimer--;
+		}
+
+		if (chip8.soundTimer > 0) {
+			chip8.soundTimer--;
+		}
+	},
+
+	checkPixels: function(x, y) {
+		let location;
+		let width = 64;
+		let height = 32;
+
+		if (x > width) {
+			while(x > width) x -= width;
+		}else if (x < 0) {
+			while(x < 0) x += width;
+		}
+
+		if (y > height) {
+			while(y > height) y -= height;
+		}else if (y < 0) {
+			while(y < 0) y += height;
+		}
+
+		location = x + (y * width);
+		chip8.vram[location] ^= 1;
+
+		return !chip8.vram[location];
+	},
 
 	reset: function() {
+		let CHIP8_FONTSET =[
+		  0xF0, 0x90, 0x90, 0x90, 0xF0, // 0
+		  0x20, 0x60, 0x20, 0x20, 0x70, // 1
+		  0xF0, 0x10, 0xF0, 0x80, 0xF0, // 2
+		  0xF0, 0x10, 0xF0, 0x10, 0xF0, // 3
+		  0x90, 0x90, 0xF0, 0x10, 0x10, // 4
+		  0xF0, 0x80, 0xF0, 0x10, 0xF0, // 5
+		  0xF0, 0x80, 0xF0, 0x90, 0xF0, // 6
+		  0xF0, 0x10, 0x20, 0x40, 0x40, // 7
+		  0xF0, 0x90, 0xF0, 0x90, 0xF0, // 8
+		  0xF0, 0x90, 0xF0, 0x10, 0xF0, // 9
+		  0xF0, 0x90, 0xF0, 0x90, 0x90, // A
+		  0xE0, 0x90, 0xE0, 0x90, 0xE0, // B
+		  0xF0, 0x80, 0x80, 0x80, 0xF0, // C
+		  0xE0, 0x90, 0x90, 0x90, 0xE0, // D
+		  0xF0, 0x80, 0xF0, 0x80, 0xF0, // E
+		  0xF0, 0x80, 0xF0, 0x80, 0x80  // F
+		];
 		// Used to initialize chip8 emulator
 
 		//clear memory
@@ -108,16 +147,16 @@ chip8 = {
 		}
 
 		// Clear display
-		chip8.vram = chip8.vram.fill(0);
+		chip8.vram = chip8.vram.map(() => 0);
 
 		// Clear V registers
 		chip8.v = chip8.v.map(() => 0);
 
 		// Clear stack
-		chip8.stack = chip8.stack.fill(0);
+		chip8.stack = chip8.stack.map(() => 0);
 
 		// Clear keyboard buffer
-		chip8.keyBuffer = chip8.keyBuffer.fill(0);
+		chip8.keyBuffer = chip8.keyBuffer.map(() => 0);
 
 		// reset stack pointers
 		chip8.sp = 0;
@@ -132,413 +171,610 @@ chip8 = {
 		chip8.delayTimer = 0;
 		chip8.soundTimer = 0;
 
-		// Grab the canvas element to draw on
-		chip8.canvas = document.getElementById('romDisplay').getContext('2d');
+		// Grab canvas to draw on
+		chip8.canvas = document.querySelector('canvas');
 
 		//reset flags
-		drawFlag = false;
-		loadFlag = false;
-		keyPress = false;
-		keyWait = false;
+		chip8.keyPressed = false;
+		chip8.keyWait = false;
+		chip8.paused = false;
+
+		//Display memory
+		if(!chip8.test)
+			chip8.initRegisters();
+
+		document.onkeyup = document.onkeydown = chip8.keyPress;
+
+		//
+		chip8.cycles = 0;
+		if (debug) console.log('ALL RESET');
+	},
+
+	//Convert opcode to hex
+	hexConverter: function(opcode) {
+		let temp = (opcode).toString(16).toUpperCase();
+		let pad = "";
+
+		for(let i = 0; i < 4-temp.length; i++) {
+			pad = pad + "0";
+		}
+
+		return ("0x" + pad + temp);
+	},
+
+	//Handle key presses
+	onKey: function(evt, name) {
+		let val = false;
+		let charStr = String.fromCharCode(evt.which);
+		if (evt.type == 'keydown') {
+			val = true;
+		} else if (evt.type == 'click') {
+			val = true;
+			charStr = name;
+		}
+
+		translateKeys = {
+			'1': 0x1,
+			'2': 0x2,
+			'3': 0x3,
+			'4': 0xc,
+			'Q': 0x4,
+			'W': 0x5,
+			'E': 0x6,
+			'R': 0xd,
+			'A': 0x7,
+			'S': 0x8,
+			'D': 0x9,
+			'F': 0xe,
+			'Z': 0xa,
+			'X': 0x0,
+			'C': 0xb,
+			'V': 0xf
+		}[charStr];
+
+		if (translateKeys !== undefined) {
+			chip8.keyBuffer[translateKeys] = val;
+		}
+
+		chip8.keyPressed = chip8.keyBuffer.reduce((prevValue, currentValue) => prevValue | currentValue);
+	},
+/******************************************
+Display Registers, Memory, Instructions 
+
+
+******************************************/
+
+	initRegisters: function() {
+		if(!chip8.test){
+			var table = document.getElementById('regTable');
+		if(!chip8.registerFlag)
+		{
+			var tbody = document.createElement('tbody');
+			var tr = document.createElement('tr');
+			table.appendChild(tbody);
+
+			tbody.appendChild(tr);
+
+			var heading = ["Register", "Value", "Register", "Value"];
+			var tableBuffer = 8;
+
+			for(var col = 0; col < heading.length; col++)
+			{
+				var th = document.createElement('TH');
+				th.width = '75';
+				th.appendChild(document.createTextNode(heading[col]));
+				tr.appendChild(th);
+
+
+
+			}
+
+			for (var f = 0; f < tableBuffer; f++)
+			{
+			  	var tr = document.createElement('TR'); 
+			    var regCol1 = document.createElement('TD');
+			    var regVal1 = document.createElement('TD');
+			    var regCol2 = document.createElement('TD');
+			    var regVal2 = document.createElement('TD');
+
+			    var regID1 = document.createAttribute("id");
+			    regID1.value = "reg-V" + f;
+			    regVal1.setAttributeNode(regID1);
+
+			    var regID2 = document.createAttribute("id");
+			   	regID2.value = "reg-V" + (f + tableBuffer);
+			    regVal2.setAttributeNode(regID2);
+
+			    regCol1.appendChild(document.createTextNode("V" + f));
+			    regVal1.appendChild(document.createTextNode(chip8.v[f]));
+
+		        regCol2.appendChild(document.createTextNode("V" + (f + tableBuffer)));
+	            regVal2.appendChild(document.createTextNode(chip8.v[f + tableBuffer]));
+
+
+		        tr.appendChild(regCol1);
+		        tr.appendChild(regVal1);
+
+			    tr.appendChild(regCol2);
+			    tr.appendChild(regVal2);
+
+			    tbody.appendChild(tr);
+	            if(f == tableBuffer - 1)
+	            {  
+	            	tr = document.createElement('TR');
+
+	            	//"I" Register 
+	            	var iReg = document.createElement('TD');
+			   		var iRegVal = document.createElement('TD');
+			   		//PC Register
+					var pcReg = document.createElement('TD');
+			   		var pcRegVal = document.createElement('TD');
+
+			   		//"I" id for updating value
+				    var iID = document.createAttribute("id");
+				    iID.value = "reg-I";
+				    iRegVal.setAttributeNode(iID);
+				    //PC id for updating value
+				    var pcID = document.createAttribute("id");
+				    pcID.value = "reg-PC";
+				    pcRegVal.setAttributeNode(pcID);
+
+				    //Append the "I" register
+					iReg.appendChild(document.createTextNode("I"));
+					iRegVal.appendChild(document.createTextNode(chip8.i));
+
+					pcReg.appendChild(document.createTextNode("PC"));
+					pcRegVal.appendChild(document.createTextNode(chip8.pc));
+
+					tr.appendChild(iReg);
+					tr.appendChild(iRegVal);
+					tr.appendChild(pcReg);
+					tr.appendChild(pcRegVal);
+	            }
+			    tbody.appendChild(tr);
+			}
+
+
+			chip8.registerFlag = true;
+		}
+		}
+		
 
 
 	},
 
-	
+	updateRegisters: function()
+	{
+		if(!chip8.test) {
+			if(chip8.paused)
+		{
+			return;
+		}
+
+		for(var i = 0; i < 16; i++)
+		{
+			$("#reg-V" + i).text(chip8.hexConverter(chip8.v[i]));
+		}
+		$("#reg-I").text(chip8.hexConverter(chip8.i));
+		$("#reg-PC").text(chip8.hexConverter(chip8.pc));
+		}
+		
+	},
+
+	// initInstructions: function()
+	// {
+	// 	var table = document.getElementById('instrTable');
+	// 	if(!chip8.instructionFlag)
+	// 	{
+	// 		var tbody = document.createElement('tbody');
+	// 		var tr = document.createElement('tr');
+	// 		table.appendChild(tbody);
+
+	// 		tbody.appendChild(tr);
+
+	// 		var heading = ["Instruction", "Value",];
+	// 		var tableBuffer = 8;
+
+	// 		for(var col = 0; col < heading.length; col++)
+	// 		{
+	// 			var th = document.createElement('TH');
+	// 			th.width = '75';
+	// 			th.appendChild(document.createTextNode(heading[col]));
+	// 			tr.appendChild(th);
+
+
+
+	// 		}		 
+	// 		for (var f = 0; f < tableBuffer; f++)
+	// 		{
+	// 		  	var tr = document.createElement('TR'); 
+	// 		    var regCol1 = document.createElement('TD');
+	// 		    var regVal1 = document.createElement('TD');
+	// 		    var regCol2 = document.createElement('TD');
+	// 		    var regVal2 = document.createElement('TD');
+
+	// 		    var regID1 = document.createAttribute("id");
+	// 		    regID1.value = "reg-V" + f;
+	// 		    regVal1.setAttributeNode(regID1);
+
+	// 		    var regID2 = document.createAttribute("id")
+	// 		   	regID2.value = "reg-V" + (f + tableBuffer);
+	// 		    regVal2.setAttributeNode(regID2);
+
+	// 		    regCol1.appendChild(document.createTextNode("V" + f));
+	// 		    regVal1.appendChild(document.createTextNode(chip8.v[f]));
+
+	// 	        regCol2.appendChild(document.createTextNode("V" + (f + tableBuffer)));
+	//             regVal2.appendChild(document.createTextNode(chip8.v[f + tableBuffer]));
+
+	// 	        tr.appendChild(regCol1);
+	// 	        tr.appendChild(regVal1);
+
+	// 		    tr.appendChild(regCol2);
+	// 		    tr.appendChild(regVal2);
+	// 		    tbody.appendChild(tr);
+	// 		}
+	// 		chip8.registerFlag = true;
+	// 	}
+	// },
+
+/******************************************
+Stop/Start Emulator
+
+
+******************************************/
+	stop: function() {
+		cancelAnimationFrame(loop);
+	},
+
+	start: function() {
+		loop = requestAnimationFrame(function step() {
+			step = chip8.emulate();
+			loop = requestAnimationFrame(step);
+		});
+	},
+
+	emulate: function() {
+		if (!chip8.paused) {
+			for (let i = 0; i < 8; i++) {
+				let opcode = (chip8.memory[chip8.pc] << 8) | chip8.memory[chip8.pc + 1];
+				chip8.runCycle(opcode);
+			}
+		}
+
+		if (!chip8.paused) {
+			chip8.updateTimers();
+		}
+
+		chip8.render();
+	},
 
 	loadGame: function(file) {
 		let reader = new FileReader();
-		console.log("HELLO FROM LAODGAME");
+		console.log('HELLO FROM LOADGAME');
 
 		reader.addEventListener('loadend', function() {
 			let buffer = new Uint8Array(reader.result);
-			buffer.map((val, index)=> (chip8.memory[index] = buffer[index]) );
-			chip8.pc = 0x200;
-			chip8.gameLoaded = true;
-			console.log("Game is now loaded");
+			buffer.map((val, index) => chip8.memory[index + 512] = buffer[index]);
+			chip8.pc = 512;
+			console.log('Game is now loaded');
 		});
 
 		reader.readAsArrayBuffer(file);
 	},
 
-
 	//Emulation Cycle
 	runCycle: function(opcode) {
-		//Fetch Opcode
-		// var opcode = (chip8.memory[chip8.pc] << 8) | chip8.memory[chip8.pc + 1]; // obtain 16-bit opcode command
-		//Grab top 8 bits of opcode, shift left by 8 to make space to add remaining 8 bits of opcode
 
 		//Calculate x and y indicies
-		var x = (opcode & 0x0f00) >> 8;
-		var y = (opcode & 0x00f0) >> 4;
+		let x = (opcode & 0x0f00) >> 8;
+		let y = (opcode & 0x00f0) >> 4;
 
+		// Increment Program Counter
+		chip8.pc += 2;
 
 		//Decode Opcode
 		switch (opcode & 0xf000) { // Check 4 most significant bits
-			case 0x0000: 
-				switch (opcode & 0x000f) { // Check least 4 significant bits
-					case 0x0000: 
-						chip8.vram = chip8.vram.map(() => 0); // clear content of the vram array
+			case 0x0000:
+			//Case 0x000 is ignored on modern interpreters according to Cowgod's Chip 8 Technical Manual
+				switch (opcode & 0x00ff) { // Check least 4 significant bits
+					case 0x00e0:
+						if(debug) console.log('HELLO FROM 0x00e0');
+						clearScreen();
 						break;
-					//Case 0x000 is ignored on modern interpreters according to Cowgod's Chip 8 Technical Manual
-					
+
 					//Clear Display
-					case 0x000e:
-						chip8.pc = chip8.stack[chip8.sp--]; // push PC to top of stack
+					case 0x00ee:
+						if (debug) console.log('HELLO FROM 0x00ee');
+						returnFromSubroutine();
 						break;
 				}
 				break;
 
 			//Jump to Address, location
-			case 0x1000: 
-				chip8.pc = opcode & 0x0fff;
+			case 0x1000:
+				if (debug) console.log('HELLO FROM 0x1000');
+				jmpToLocation(opcode);
 				break;
 
 			//Call Function
-			case 0x2000: 
-				chip8.stack[chip8.sp] = chip8.pc;
-				chip8.sp++;
-				chip8.pc = opcode & 0x0fff;
+			case 0x2000:
+				if (debug) console.log('HELLO FROM 0x2000');
+				callAddress(opcode);
 				break;
 
 			//Skip to Next Instruction, vX Equal kk
-			case 0x3000: 
-				if (chip8.v[x] == (opcode & 0x00ff)) {
-					//compare V[x] to last 8 bits
-					chip8.pc += 2;
-				}
+			case 0x3000:
+				if (debug) console.log('HELLO FROM 0x3000');
+				skipInstruction_VxEqKk(opcode, x);
 				break;
 
 			//Skip to Next Instruction, if vX Not Equal kk
-			case 0x4000: 
-				if (chip8.v[x] != (opcode & 0x00ff)) {
-					//compare V[x] to last 8 bits
-					chip8.pc += 2;
-				}
+			case 0x4000:
+				if (debug) console.log('HELLO FROM 0x4000');
+				skipInstruction_VxNeqKk(opcode, x);
 				break;
 
 			//Skip to Next Instruction, if vX Equals vY
-			case 0x5000: 
-				if (chip8.v[x] === chip8.v[y]) {
-					chip8.pc += 2;
-				}
+			case 0x5000:
+				if (debug) console.log('HELLO FROM 0x5000');
+				skipInstruction_VxEqVy(x, y);
 				break;
 
 			//Set vX to kk
-			case 0x6000: 
-				chip8.v[x] = opcode & 0x00ff;
-				chip8.pc += 2;
+			case 0x6000:
+				if (debug) console.log('HELLO FROM 0x6000');
+				setVxTonn(opcode, x);
 				break;
 
 			//set vX equal to vX + kk
-			case 0x7000: 
-				chip8.v[x] += opcode & 0x00ff;
-				chip8.pc += 2;
+			case 0x7000:
+				if (debug) console.log('HELLO FROM 0x7000');
+				addnnToVx(opcode, x);
 				break;
 
 			case 0x8000:
 				switch (opcode & 0x000f) {
-
 					//Store vY in vX
-					case 0x0000: 
-						chip8.v[x] = chip8.v[y];
-						chip8.pc += 2;
+					case 0x0000:
+						if (debug) console.log('HELLO FROM 0x8000');
+						setVxToVy(x, y);
 						break;
 
 					//Set vX equal to vX or vY
-					case 0x0001: 
-						chip8.v[x] = (chip8.v[x] | chip8.v[y]);
-						chip8.pc += 2;
+					case 0x0001:
+						if (debug) console.log('HELLO FROM 0x8001');
+						setVxToVxOrVy(x, y);
 						break;
 
 					//Set vX equal to vX and vY
-					case 0x0002: 
-						chip8.v[x] = (chip8.v[x] & chip8.v[y]);
-						chip8.pc += 2;
+					case 0x0002:
+						if (debug) console.log('HELLO FROM 0x8002');
+						setVxToVxAndVy(x, y);
 						break;
 
 					//Set vX equal to vX XOR vY
 					case 0x0003:
-						chip8.v[x] = chip8.v[x] ^ chip8.v[y];
-						chip8.pc += 2;
+						if (debug) console.log('HELLO FROM 0x8003');
+						setVxToVxXorVy(x, y);
 						break;
 
 					//Set vX equal to vX + vY, set vF equal to carry
 					case 0x0004:
-						if (chip8.v[y] > 0xff - chip8.v[x])
-							chip8.v[0xf] = 1; //carry
-						else chip8.v[0xf] = 0;
-
-						chip8.v[x] += chip8.v[y];
-						chip8.pc += 2;
+						if (debug) console.log('HELLO FROM 0x8004');
+						addVyToVx(x, y);
 						break;
 
 					//set vX equal to vX - vY, set vF equal to NOT borrow
 					//if vX > vY then vF is 1, otherwise 0. Then vX - vY and result stored in vX
 					case 0x0005:
-						if (chip8.v[x] > chip8.v[y]) {
-							// Vx > Vy
-							chip8.v[0xf] = 1; //carry
-						} else {
-							chip8.v[0xf] = 0;
-						}
-
-						chip8.v[x] -= chip8.v[y]; //Vx = Vx - Vy
-						chip8.pc += 2;
+						if (debug) console.log('HELLO FROM 0x8005');
+						subVyFromVx(x, y);
 						break;
 
 					//Set vX = vX SHR 1
 					//if least significant bit of vX is 1, then vF is 1, otherwise 0. Then result divided by 2
 					case 0x0006:
-						if (chip8.v[x] == 1) {
-							chip8.v[0xf] = 1;
-						} else {
-							chip8.v[0xf] = 0;
-						}
-
-						chip8.v[x] = chip8.v[x] >> 1;
-						chip8.pc += 2;
+						if (debug) console.log('HELLO FROM 0x8006');
+						shiftVxRight(x, y);
 						break;
 
 					//Set vX equal to vY - vX, set vF equal to NOT borrow
 					//if vY > vX then vF is set to 1, otherwise 0. Then vX - vY and result stored in vX
 					case 0x0007:
-						if (chip8.v[y] > chip8.v[x]) {
-							// Vy > Vx
-							chip8.v[0xf] = 1;
-						} else {
-							chip8.v[0xf] = 0;
-						}
-
-						chip8.v[x] = chip8.v[y] - chip8.v[x]; // Vx = Vy - Vx
-						chip8.pc += 2;
+						if (debug) console.log('HELLO FROM 0xf00x8007');
+						setVxToVyMinVx(x, y);
 						break;
 
 					//Set vX equal to vX SHL 1
 					//if most significant bit of vX is 1, then vF is set to 1, otherwise 0. Then vX is multiplied by 2.
 					case 0x000e:
-						chip8.v[0xf] = chip8.v[x] >> 7;
-						chip8.v[x] *= 2;
-						chip8.pc += 2;
+						if (debug) console.log('HELLO FROM 0x800e');
+						shiftVxLeft(x)
 						break;
 				}
-			break;
+				break;
 
 			//Skip next instruction if vX is not equal to vY
 			case 0x9000:
-				if (chip8.v[x] != chip8.v[y]) {
-					// Vx != Vy ?
-					chip8.pc += 2;
-				}
+				if (debug) console.log('HELLO FROM 0x9000');
+				skipInstructionIfVxNeqVy(x, y);
 				break;
 
 			//Set i equal to nnn
 			case 0xa000: // ANNN : Sets I to address NNN
-				chip8.i = opcode & 0x0fff; // This case grabs the last 12 bits to analyze
-				chip8.pc += 2;
+				if (debug) console.log('HELLO FROM 0xa000');
+				setITonnn(opcode);
 				break;
 
 			//Jump to location v0 + nnn
 			case 0xb000:
-				chip8.pc = (opcode & 0x0fff) + chip8.v[0];
+				if (debug) console.log('HELLO FROM 0xb000');
+				jmpToV0Plusnnn(opcode);
 				break;
 
 			//Set vX equal to random byte AND kk
 			case 0xc000:
-				chip8.v[x] = (Math.random() * 256) & (opcode & 0x00ff);
-				chip8.pc += 2;
+				if (debug) console.log('HELLO FROM 0xc000');
+				setVxRandomByte(opcode, x);
 				break;
 
-	// Still requires testing
-	// ---------------------------------------------------------------------------------------------
-			
-
-			//Display n-byte sprite starting at memory location i at (vX, vY), set vF equal to collision
 			case 0xd000:
-				var height = opcode & 0x000f; // save nibble
-				var sprite;
-
-				chip8.v[0xf] = 0;
-
-				for (var ylim = 0; ylim < height; y++) {
-					sprite = chip8.v[i + ylim];
-
-					for (var xlim = 0; xlim < 8; xlim++) {
-						if ((sprite & (0x80 >> xlim)) != 0) {
-							if (chip8.vram[v[x] + xlim + (chip8.v[y] + ylim) * 64] == 1) { // checks if any sprites currently exist at position
-								chip8.v[0xf] = 1;
-							}
-							chip8.vram[v[x] + xlim + (chip8.v[y] + ylim) * 64] ^= 1; // draw sprite to screen
-						}
-					}
-				}
-
+				if (debug) console.log('HELLO FROM 0xd000');
+				drawSprite(opcode, x, y);
 				break;
-
-	// ---------------------------------------------------------------------------------------------
 
 			case 0xe000:
-				switch(opcode & 0x00ff) {
+				switch (opcode & 0x00ff) {
 					//Skip next instruction if the key with the value vX is pressed
 					case 0x009e:
-						let index1 = chip8.v[x];
-						if(chip8.keyBuffer[index1] != 0) {
-							chip8.pc += 2;
-						}
+						if (debug) console.log('HELLO FROM 0xe09e');
+						skipInstructionIfVxKeyPressed(x);
 						break;
 					//Skip next instruction if the key with the value vX is not pressed
 					case 0x00a1:
-						let index2 = chip8.v[x];
-						if(chip8.keyBuffer[index2] == 0) {
-							chip8.pc += 2;
-						}
+						if (debug) console.log('HELLO FROM 0xf0a1');
+						skipInstructionIfVxKeyNotPressed(x);
 						break;
 				}
 				break;
 
 			case 0xf000:
 				switch (opcode & 0x00ff) {
-
 					//Place value of DelayTimer in vX
 					case 0x0007:
-						chip8.v[x] = chip8.delayTimer;
-						chip8.pc += 2;
+						if (debug) console.log('HELLO FROM 0xf007');
+						setVxToDelayTimer(x);
 						break;
 
 					//Wait for keypress, then store it in vX
 					case 0x000a:
-						let keyPress = false;
-						for(let i = 0; i < 16; i++) {
-							if(chip8.keyBuffer[i] != 0) { // if key is pressed
-								chip8.v[x] = i; // store the value of the key into V[x]
-								keyPress = true;
-							}
-
-							if(!keyPress) // if no key is pressed, stop execution until input is given
-								return;
-							chip8.pc += 2;
-						}
-						break;
+						if (debug) console.log('HELLO FROM 0xf00a');
+						waitAndStoreKeyPressInVx(x);
+						
 
 					//DelayTimer is set to vX
 					case 0x0015:
-						chip8.delayTimer = chip8.v[x];
-						chip8.pc += 2;
+						if (debug) console.log('HELLO FROM 0xf015');
+						setDelayTimerToVx(x);
 						break;
 
 					//Set Sound Timer to vX
 					case 0x0018:
-						chip8.soundTimer = chip8.v[x];
-						chip8.pc += 2;
+						if (debug) console.log('HELLO FROM 0xf018');
+						setSoundTimerToVx(x);
 						break;
 
 					//Set i equal to i + vX
 					case 0x001e:
-						chip8.i += chip8.v[x];
-						chip8.pc += 2;
+						if (debug) console.log('HELLO FROM 0xf01e');
+						setIToIPlusVx(x);
 						break;
 
 					//Set i equal to location of sprite for digit vX
 					case 0x0029:
-						chip8.i = chip8.v[x] * 5;
-						chip8.pc += 2;
+						if (debug) console.log('HELLO FROM 0xf029 ');
+						setIToLocationOfSpriteFromVx(x);
 						break;
 
 					//Store BCD representation of vX in memory location starting at i
 					case 0x0033:
-						//Store binary decimal representation of I
-						chip8.memory[chip8.i] = chip8.v[x] / 100; //Store hundreth's position at location i in memory
-						chip8.memory[chip8.i + 1] = (chip8.v[x] / 10) % 10; // Store tens digit into location i + 1 in memory
-						chip8.memory[chip8.i + 2] = (chip8.v[x] % 100) % 10; // Store ones digit into location i + 2 in memory
-						chip8.pc += 2;
+						if (debug) console.log('HELLO FROM 0xf033');
+						// Store binary decimal representation of I
+						storeBCDOfVxInI(x);
 						break;
 
 					//Store registers v0 through vX in memory at i
 					case 0x0055:
-						for(let i = 0; i <= x; i++) {
-							chip8.v[i] = chip8.memory[chip8.i + i];
-						}
+						if (debug) console.log('HELLO FROM 0xf055');
+						storeV0ToVxInMemory(x);
 						break;
 
 					//Read registers from v0 through vX at i
 					case 0x0065:
-						for(let i = 0; i <= x; i++) {
-							chip8.v[i] = chip8.memory[chip8.i + i];
-						}
+						if (debug) console.log('HELLO FROM 0xf065');
+						storeMemoryInVRegisters(x);
 						break;
 				}
-			break;
+				break;
 
 			default:
-				console.log('Unknown Opcode: ' + opcode);
+				console.log('Unknown Opcode: 0x' + opcode.toString(16));
 		}
+		chip8.updateRegisters();
 	},
 
-/******************************************
-Keyboard Handling
+	/******************************************
+Backwards, Pause, Forwards, Help
 
 
 ******************************************/
-	keyPress: function(index)
-	{
-		 translateKeys = {
-	                    '1': 0x1,  // 1
-	                    '2': 0x2,  // 2
-	                   	'3': 0x3,  // 3
-	                    '4': 0x4,  // 4
-	                    'Q': 0x5,  // Q
-	                    'W': 0x6,  // W
-	                    'E': 0x7,  // E
-	                    'R': 0x8,  // R
-	                    'A': 0x9,  // A
-	                    'S': 0xA,  // S
-	                    'D': 0xB,  // D
-	                    'F': 0xC,  // F
-	                    'Z': 0xD,  // Z
-	                    'X': 0xE,  // X
-	                    'C': 0xF,  // C
-	                    'V': 0x10  // V
-	    }
-	    if(index == '2')
-	    {
-	    	alert(translateKeys[index]);
-	    }
-	    chip8.setKey(translateKeys[index]);
+	//Step back in emulator one step
+	backwards: function() {
+		chip8.paused = false;
+		chip8.stop();
+		chip8.pc -= 2;
+		chip8.emulate();
+		chip8.start();
+		chip8.pause();
 	},
 
-	setKey: function(keyCode)
-	{
-		chip8.keyBuffer[keyCode] = true;
-		chip8.keyLog[keyCode] = keyCode;
-	}, //
+	//Stop and pause all operations in emulator
+	pause: function() {
+		if (!chip8.paused) {
+			chip8.stop();
+			chip8.paused = true;
+		} else {
+			chip8.paused = false;
+			chip8.start();
+			if(!chip8.test)
+				document.getElementId();
+		}
+	},
 
+	//Step forward in emulator one step
+	forwards: function() {
+		chip8.paused = false;
+		chip8.stop();
+		chip8.emulate();
+		chip8.start();
+		chip8.pause();
+	},
+
+	help : function()
+	{
+		var urlk = 'https://github.com/KSSidhu';
+		var urlj = 'https://github.com/leafittome';
+		var urla = 'https://github.com/adamx37';
+		var urlc = 'https://github.com/chamodib';
+		confirm(
+			"Chip 8 Emulator \n\n Created by: \n Kirat Sidhu " + urlk + " \n James Young " + urlj + " \n Adam Tran " + urla + " \n Chamodi Basnayake " + urlc
+			);
+	},
 
 /******************************************
-Remder/Draw
+Render/Draw
 
 
 ******************************************/
 	render: function() {
-		// If there's nothing to draw, return
-		if(chip8.drawFlag === false) {
-			return;
+		let SCALE = 10;
+		let ctx = chip8.canvas.getContext('2d');
+		ctx.clearRect(0, 0, 64 * SCALE, 32 * SCALE);
+		ctx.fillStyle = '#000000';
+		ctx.fillRect(0, 0, 64 * SCALE, 32 * SCALE);
+
+		let x, y;
+
+		ctx.fillStyle = '#ffffff';
+
+		for (let i = 0; i < chip8.vram.length; i++) {
+			x = (i % 64) * SCALE;
+			y = Math.floor(i / 64) * SCALE;
+			if (chip8.vram[i]) ctx.fillRect(x, y, SCALE, SCALE);
 		}
-
-		chip8.canvas.fillStyle = "#aaa";
-		chip8.canvas.fillRect(0, 0, 640, 320);
-		chip8.canvas.fillStyle = "#FF9100";
-
-		for(let i = 0; i < chip8.vram.length; i++) {
-			if(chip8.vram[i] == 1) {
-				let y = i / 64 | 0;
-				let x = i - 64*y;
-				chip8.canvas.fillRect(x*15,y*15,15,15);
-			}
-		}
-
-		chip8.drawFlag = false;
-	} //
+	}
 };
-	
 
-module.exports = chip8; // exporting the chip8 object to run tests with JEST.js
+// module.exports = chip8; // exporting the chip8 object to run tests with JEST.js
+
