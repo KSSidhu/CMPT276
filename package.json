@@ -1,0 +1,23 @@
+{
+  "name": "cmpt276",
+  "version": "1.0.0",
+  "description": "JavaScript Chip8 Emulator",
+  "main": "chip8.js",
+  "dependencies": {},
+  "devDependencies": {
+    "jest": "^24.1.0"
+  },
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KSSidhu/CMPT276.git"
+  },
+  "author": "Kirat Sidhu, Chamodi Basnayake, Adam Tran, James Young",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/KSSidhu/CMPT276/issues"
+  },
+  "homepage": "https://github.com/KSSidhu/CMPT276#readme"
+}

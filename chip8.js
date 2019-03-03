@@ -2,13 +2,11 @@
 // Refernce https://github.com/reu/chip8.js for emulation render cycle
 // Referenced http://devernay.free.fr/hacks/chip8/C8TECH10.HTM#00E0 for opcode instructions
 
-let debug = false;
-
 let chip8 = {
 
 	debug: false,
 
-	test: true,
+	test: false,
 
 	loop: null,
 
@@ -64,6 +62,8 @@ let chip8 = {
 	step: null,
 
 	loop: null,
+
+	breakPoint: false,
 
 	// Generates random numbers for memory, stack and V registers to
 	// display on the HTML page
@@ -249,34 +249,40 @@ Display Registers, Memory, Instructions
 			var table = document.getElementById('regTable');
 		if(!chip8.registerFlag)
 		{
+			//Create table 
 			var tbody = document.createElement('tbody');
 			var tr = document.createElement('tr');
 			table.appendChild(tbody);
-
 			tbody.appendChild(tr);
 
+			//Header values
 			var heading = ["Register", "Value", "Register", "Value"];
+
+			//Used for splitting the table into 4 columns, where registers V 0-7 are in first column and V 8-15 are in third column
 			var tableBuffer = 8;
 
+			//Header
 			for(var col = 0; col < heading.length; col++)
 			{
 				var th = document.createElement('TH');
 				th.width = '75';
 				th.appendChild(document.createTextNode(heading[col]));
 				tr.appendChild(th);
-
-
-
 			}
 
+			//Create and populate tables
 			for (var f = 0; f < tableBuffer; f++)
 			{
+				//Row
 			  	var tr = document.createElement('TR'); 
+
+			  	//Columns and Values
 			    var regCol1 = document.createElement('TD');
 			    var regVal1 = document.createElement('TD');
 			    var regCol2 = document.createElement('TD');
 			    var regVal2 = document.createElement('TD');
 
+			    //Set ID to columns for updating
 			    var regID1 = document.createAttribute("id");
 			    regID1.value = "reg-V" + f;
 			    regVal1.setAttributeNode(regID1);
@@ -285,20 +291,24 @@ Display Registers, Memory, Instructions
 			   	regID2.value = "reg-V" + (f + tableBuffer);
 			    regVal2.setAttributeNode(regID2);
 
+			    //Add the cells to each row
 			    regCol1.appendChild(document.createTextNode("V" + f));
 			    regVal1.appendChild(document.createTextNode(chip8.v[f]));
 
 		        regCol2.appendChild(document.createTextNode("V" + (f + tableBuffer)));
 	            regVal2.appendChild(document.createTextNode(chip8.v[f + tableBuffer]));
 
-
+	            //Add to rows
 		        tr.appendChild(regCol1);
 		        tr.appendChild(regVal1);
 
 			    tr.appendChild(regCol2);
 			    tr.appendChild(regVal2);
 
+			    //Add to table
 			    tbody.appendChild(tr);
+
+			    //Add the i register and program counter to the table
 	            if(f == tableBuffer - 1)
 	            {  
 	            	tr = document.createElement('TR');
@@ -323,6 +333,7 @@ Display Registers, Memory, Instructions
 					iReg.appendChild(document.createTextNode("I"));
 					iRegVal.appendChild(document.createTextNode(chip8.i));
 
+					//Append the program counter
 					pcReg.appendChild(document.createTextNode("PC"));
 					pcRegVal.appendChild(document.createTextNode(chip8.pc));
 
@@ -331,18 +342,16 @@ Display Registers, Memory, Instructions
 					tr.appendChild(pcReg);
 					tr.appendChild(pcRegVal);
 	            }
+	            //Add to table
 			    tbody.appendChild(tr);
 			}
-
-
+			//Register table is created, prevent program from creating multiple tables
 			chip8.registerFlag = true;
 		}
 		}
-		
-
-
 	},
 
+	//Update register values after opcode is retrieved
 	updateRegisters: function()
 	{
 		if(!chip8.test) {
@@ -436,7 +445,7 @@ Stop/Start Emulator
 
 	emulate: function() {
 		if (!chip8.paused) {
-			for (let i = 0; i < 8; i++) {
+			for (let i = 0; i < 10; i++) {
 				let opcode = (chip8.memory[chip8.pc] << 8) | chip8.memory[chip8.pc + 1];
 				chip8.runCycle(opcode);
 			}
@@ -455,7 +464,7 @@ Stop/Start Emulator
 
 		reader.addEventListener('loadend', function() {
 			let buffer = new Uint8Array(reader.result);
-			buffer.map((val, index) => chip8.memory[index + 512] = buffer[index]);
+			buffer.map((val, index) => (chip8.memory[index + 512] = buffer[index]));
 			chip8.pc = 512;
 			console.log('Game is now loaded');
 		});
@@ -711,12 +720,10 @@ Backwards, Pause, Forwards, Help
 ******************************************/
 	//Step back in emulator one step
 	backwards: function() {
-		chip8.paused = false;
 		chip8.stop();
 		chip8.pc -= 2;
-		chip8.emulate();
 		chip8.start();
-		chip8.pause();
+		chip8.paused = true;
 	},
 
 	//Stop and pause all operations in emulator
@@ -724,9 +731,12 @@ Backwards, Pause, Forwards, Help
 		if (!chip8.paused) {
 			chip8.stop();
 			chip8.paused = true;
+			document.getElementById("pause").innerText = "Play";
 		} else {
 			chip8.paused = false;
 			chip8.start();
+
+			document.getElementById("pause").innerText = "Pause";
 			if(!chip8.test)
 				document.getElementId();
 		}
@@ -764,17 +774,14 @@ Render/Draw
 		ctx.fillStyle = '#000000';
 		ctx.fillRect(0, 0, 64 * SCALE, 32 * SCALE);
 
-		let x, y;
-
 		ctx.fillStyle = '#ffffff';
 
 		for (let i = 0; i < chip8.vram.length; i++) {
-			x = (i % 64) * SCALE;
-			y = Math.floor(i / 64) * SCALE;
+			let x = (i % 64) * SCALE;
+			let y = Math.floor(i / 64) * SCALE;
 			if (chip8.vram[i]) ctx.fillRect(x, y, SCALE, SCALE);
 		}
 	}
 };
 
-// module.exports = chip8; // exporting the chip8 object to run tests with JEST.js
-
+module.exports = chip8; // exporting the chip8 object to run tests with JEST.js
