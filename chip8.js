@@ -187,7 +187,7 @@ let chip8 = {
 
 		//
 		chip8.cycles = 0;
-		if (debug) console.log('ALL RESET');
+		if (chip8.debug) console.log('ALL RESET');
 	},
 
 	//Convert opcode to hex
@@ -252,8 +252,12 @@ Display Registers, Memory, Instructions
 			//Create table 
 			var tbody = document.createElement('tbody');
 			var tr = document.createElement('tr');
-			table.appendChild(tbody);
-			tbody.appendChild(tr);
+			if(!chip8.test) {
+				table.appendChild(tbody);
+				tbody.appendChild(tr);
+			}
+			// table.appendChild(tbody);
+			// tbody.appendChild(tr);
 
 			//Header values
 			var heading = ["Register", "Value", "Register", "Value"];
@@ -488,13 +492,13 @@ Stop/Start Emulator
 			//Case 0x000 is ignored on modern interpreters according to Cowgod's Chip 8 Technical Manual
 				switch (opcode & 0x00ff) { // Check least 4 significant bits
 					case 0x00e0:
-						if(debug) console.log('HELLO FROM 0x00e0');
+						if(chip8.debug) console.log('HELLO FROM 0x00e0');
 						clearScreen();
 						break;
 
 					//Clear Display
 					case 0x00ee:
-						if (debug) console.log('HELLO FROM 0x00ee');
+						if (chip8.debug) console.log('HELLO FROM 0x00ee');
 						returnFromSubroutine();
 						break;
 				}
@@ -502,43 +506,43 @@ Stop/Start Emulator
 
 			//Jump to Address, location
 			case 0x1000:
-				if (debug) console.log('HELLO FROM 0x1000');
+				if (chip8.debug) console.log('HELLO FROM 0x1000');
 				jmpToLocation(opcode);
 				break;
 
 			//Call Function
 			case 0x2000:
-				if (debug) console.log('HELLO FROM 0x2000');
+				if (chip8.debug) console.log('HELLO FROM 0x2000');
 				callAddress(opcode);
 				break;
 
 			//Skip to Next Instruction, vX Equal kk
 			case 0x3000:
-				if (debug) console.log('HELLO FROM 0x3000');
+				if (chip8.debug) console.log('HELLO FROM 0x3000');
 				skipInstruction_VxEqKk(opcode, x);
 				break;
 
 			//Skip to Next Instruction, if vX Not Equal kk
 			case 0x4000:
-				if (debug) console.log('HELLO FROM 0x4000');
+				if (chip8.debug) console.log('HELLO FROM 0x4000');
 				skipInstruction_VxNeqKk(opcode, x);
 				break;
 
 			//Skip to Next Instruction, if vX Equals vY
 			case 0x5000:
-				if (debug) console.log('HELLO FROM 0x5000');
+				if (chip8.debug) console.log('HELLO FROM 0x5000');
 				skipInstruction_VxEqVy(x, y);
 				break;
 
 			//Set vX to kk
 			case 0x6000:
-				if (debug) console.log('HELLO FROM 0x6000');
+				if (chip8.debug) console.log('HELLO FROM 0x6000');
 				setVxTonn(opcode, x);
 				break;
 
 			//set vX equal to vX + kk
 			case 0x7000:
-				if (debug) console.log('HELLO FROM 0x7000');
+				if (chip8.debug) console.log('HELLO FROM 0x7000');
 				addnnToVx(opcode, x);
 				break;
 
@@ -546,59 +550,59 @@ Stop/Start Emulator
 				switch (opcode & 0x000f) {
 					//Store vY in vX
 					case 0x0000:
-						if (debug) console.log('HELLO FROM 0x8000');
+						if (chip8.debug) console.log('HELLO FROM 0x8000');
 						setVxToVy(x, y);
 						break;
 
 					//Set vX equal to vX or vY
 					case 0x0001:
-						if (debug) console.log('HELLO FROM 0x8001');
+						if (chip8.debug) console.log('HELLO FROM 0x8001');
 						setVxToVxOrVy(x, y);
 						break;
 
 					//Set vX equal to vX and vY
 					case 0x0002:
-						if (debug) console.log('HELLO FROM 0x8002');
+						if (chip8.debug) console.log('HELLO FROM 0x8002');
 						setVxToVxAndVy(x, y);
 						break;
 
 					//Set vX equal to vX XOR vY
 					case 0x0003:
-						if (debug) console.log('HELLO FROM 0x8003');
+						if (chip8.debug) console.log('HELLO FROM 0x8003');
 						setVxToVxXorVy(x, y);
 						break;
 
 					//Set vX equal to vX + vY, set vF equal to carry
 					case 0x0004:
-						if (debug) console.log('HELLO FROM 0x8004');
+						if (chip8.debug) console.log('HELLO FROM 0x8004');
 						addVyToVx(x, y);
 						break;
 
 					//set vX equal to vX - vY, set vF equal to NOT borrow
 					//if vX > vY then vF is 1, otherwise 0. Then vX - vY and result stored in vX
 					case 0x0005:
-						if (debug) console.log('HELLO FROM 0x8005');
+						if (chip8.debug) console.log('HELLO FROM 0x8005');
 						subVyFromVx(x, y);
 						break;
 
 					//Set vX = vX SHR 1
 					//if least significant bit of vX is 1, then vF is 1, otherwise 0. Then result divided by 2
 					case 0x0006:
-						if (debug) console.log('HELLO FROM 0x8006');
+						if (chip8.debug) console.log('HELLO FROM 0x8006');
 						shiftVxRight(x, y);
 						break;
 
 					//Set vX equal to vY - vX, set vF equal to NOT borrow
 					//if vY > vX then vF is set to 1, otherwise 0. Then vX - vY and result stored in vX
 					case 0x0007:
-						if (debug) console.log('HELLO FROM 0xf00x8007');
+						if (chip8.debug) console.log('HELLO FROM 0xf00x8007');
 						setVxToVyMinVx(x, y);
 						break;
 
 					//Set vX equal to vX SHL 1
 					//if most significant bit of vX is 1, then vF is set to 1, otherwise 0. Then vX is multiplied by 2.
 					case 0x000e:
-						if (debug) console.log('HELLO FROM 0x800e');
+						if (chip8.debug) console.log('HELLO FROM 0x800e');
 						shiftVxLeft(x)
 						break;
 				}
@@ -606,30 +610,30 @@ Stop/Start Emulator
 
 			//Skip next instruction if vX is not equal to vY
 			case 0x9000:
-				if (debug) console.log('HELLO FROM 0x9000');
+				if (chip8.debug) console.log('HELLO FROM 0x9000');
 				skipInstructionIfVxNeqVy(x, y);
 				break;
 
 			//Set i equal to nnn
 			case 0xa000: // ANNN : Sets I to address NNN
-				if (debug) console.log('HELLO FROM 0xa000');
+				if (chip8.debug) console.log('HELLO FROM 0xa000');
 				setITonnn(opcode);
 				break;
 
 			//Jump to location v0 + nnn
 			case 0xb000:
-				if (debug) console.log('HELLO FROM 0xb000');
+				if (chip8.debug) console.log('HELLO FROM 0xb000');
 				jmpToV0Plusnnn(opcode);
 				break;
 
 			//Set vX equal to random byte AND kk
 			case 0xc000:
-				if (debug) console.log('HELLO FROM 0xc000');
+				if (chip8.debug) console.log('HELLO FROM 0xc000');
 				setVxRandomByte(opcode, x);
 				break;
 
 			case 0xd000:
-				if (debug) console.log('HELLO FROM 0xd000');
+				if (chip8.debug) console.log('HELLO FROM 0xd000');
 				drawSprite(opcode, x, y);
 				break;
 
@@ -637,12 +641,12 @@ Stop/Start Emulator
 				switch (opcode & 0x00ff) {
 					//Skip next instruction if the key with the value vX is pressed
 					case 0x009e:
-						if (debug) console.log('HELLO FROM 0xe09e');
+						if (chip8.debug) console.log('HELLO FROM 0xe09e');
 						skipInstructionIfVxKeyPressed(x);
 						break;
 					//Skip next instruction if the key with the value vX is not pressed
 					case 0x00a1:
-						if (debug) console.log('HELLO FROM 0xf0a1');
+						if (chip8.debug) console.log('HELLO FROM 0xf0a1');
 						skipInstructionIfVxKeyNotPressed(x);
 						break;
 				}
@@ -652,56 +656,56 @@ Stop/Start Emulator
 				switch (opcode & 0x00ff) {
 					//Place value of DelayTimer in vX
 					case 0x0007:
-						if (debug) console.log('HELLO FROM 0xf007');
+						if (chip8.debug) console.log('HELLO FROM 0xf007');
 						setVxToDelayTimer(x);
 						break;
 
 					//Wait for keypress, then store it in vX
 					case 0x000a:
-						if (debug) console.log('HELLO FROM 0xf00a');
+						if (chip8.debug) console.log('HELLO FROM 0xf00a');
 						waitAndStoreKeyPressInVx(x);
 						
 
 					//DelayTimer is set to vX
 					case 0x0015:
-						if (debug) console.log('HELLO FROM 0xf015');
+						if (chip8.debug) console.log('HELLO FROM 0xf015');
 						setDelayTimerToVx(x);
 						break;
 
 					//Set Sound Timer to vX
 					case 0x0018:
-						if (debug) console.log('HELLO FROM 0xf018');
+						if (chip8.debug) console.log('HELLO FROM 0xf018');
 						setSoundTimerToVx(x);
 						break;
 
 					//Set i equal to i + vX
 					case 0x001e:
-						if (debug) console.log('HELLO FROM 0xf01e');
+						if (chip8.debug) console.log('HELLO FROM 0xf01e');
 						setIToIPlusVx(x);
 						break;
 
 					//Set i equal to location of sprite for digit vX
 					case 0x0029:
-						if (debug) console.log('HELLO FROM 0xf029 ');
+						if (chip8.debug) console.log('HELLO FROM 0xf029 ');
 						setIToLocationOfSpriteFromVx(x);
 						break;
 
 					//Store BCD representation of vX in memory location starting at i
 					case 0x0033:
-						if (debug) console.log('HELLO FROM 0xf033');
+						if (chip8.debug) console.log('HELLO FROM 0xf033');
 						// Store binary decimal representation of I
 						storeBCDOfVxInI(x);
 						break;
 
 					//Store registers v0 through vX in memory at i
 					case 0x0055:
-						if (debug) console.log('HELLO FROM 0xf055');
+						if (chip8.debug) console.log('HELLO FROM 0xf055');
 						storeV0ToVxInMemory(x);
 						break;
 
 					//Read registers from v0 through vX at i
 					case 0x0065:
-						if (debug) console.log('HELLO FROM 0xf065');
+						if (chip8.debug) console.log('HELLO FROM 0xf065');
 						storeMemoryInVRegisters(x);
 						break;
 				}
@@ -731,14 +735,14 @@ Backwards, Pause, Forwards, Help
 		if (!chip8.paused) {
 			chip8.stop();
 			chip8.paused = true;
-			document.getElementById("pause").innerText = "Play";
+			if(!chip8.test)
+				document.getElementById("pause").innerText = "Play";
 		} else {
 			chip8.paused = false;
 			chip8.start();
 
-			document.getElementById("pause").innerText = "Pause";
 			if(!chip8.test)
-				document.getElementId();
+				document.getElementById("pause").innerText = "Pause";
 		}
 	},
 
