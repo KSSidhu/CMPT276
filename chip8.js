@@ -10,6 +10,8 @@ let chip8 = {
 
 	loop: null,
 
+	previousCPU: [],
+
 	// timer refresh rate
 	timerRefreshRate: 16,
 
@@ -460,6 +462,7 @@ Stop/Start Emulator
 		}
 
 		chip8.render();
+		chip8.previousCPU.push(chip8);
 	},
 
 	loadGame: function(file) {
@@ -725,7 +728,8 @@ Backwards, Pause, Forwards, Help
 	//Step back in emulator one step
 	backwards: function() {
 		chip8.stop();
-		chip8.pc -= 2;
+		// chip8.pc -= 2;
+		chip8.previousCPU.pop();
 		chip8.start();
 		chip8.paused = true;
 	},
