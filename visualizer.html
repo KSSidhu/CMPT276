@@ -55,7 +55,7 @@ html {
 }
 /* Create two equal columns that floats next to each other */
 .toolbar{
-	  background-image: linear-gradient(-90deg, white, #eee);
+    background-image: linear-gradient(-90deg, white, #eee);
   border: 1px solid #ccc;
   border-radius: 2px;
   float: left;
@@ -100,14 +100,14 @@ html {
   grid-template-columns: repeat(3, 1fr);
 
     background-image: linear-gradient(to bottom,transparent,transparent 
-  	25%,rgba(0,0,0,.1));
+    25%,rgba(0,0,0,.1));
 
 }
 
 .keyDisplay {
   float: left;
   width: 65%;
-  padding: 10px;	  
+  padding: 10px;    
 }
 
 .keys {
@@ -117,7 +117,7 @@ html {
 
 .key-button
 {
-	background-color: #fff;
+  background-color: #fff;
 }
 
 .key-button:hover {
@@ -126,13 +126,13 @@ html {
 
 .controlDisplay
 {
-	grid-column-start: 5;
-	grid-row-start: 1;
-	grid-row-end: 5;
-	height: 100%;
-	padding: 10px;
-	border: 1px solid;
-	border-radius: 4px;
+  grid-column-start: 5;
+  grid-row-start: 1;
+  grid-row-end: 5;
+  height: 100%;
+  padding: 10px;
+  border: 1px solid;
+  border-radius: 4px;
 }
 
 .info-wrapper {
@@ -165,7 +165,7 @@ html {
   border: 1px solid;
   padding: 2px;
     background-image: linear-gradient(to bottom,transparent,transparent 
-  	25%,rgba(0,0,0,.1));
+    25%,rgba(0,0,0,.1));
 }
 
 .toolbar-button-wrapper input[type=file]{
@@ -191,7 +191,7 @@ button {
   overflow: hidden;
   cursor: pointer;
   background-image: linear-gradient(to bottom,transparent,transparent 
-  	25%,rgba(0,0,0,.15));
+    25%,rgba(0,0,0,.15));
 }
 
 button:hover {
@@ -298,7 +298,7 @@ table.regTable tbody td {
     </div>
 
     <div class="row">
-    	<div class="keyDisplay" style="background-color:#B5C1DF;">
+      <div class="keyDisplay" style="background-color:#B5C1DF;">
         <div class="keys">
           <button name="1" class="key-button" type="button" onclick="chip8.onKey(event, name)"> 1 </button>
           <button name="2" class="key-button" type="button" onclick="chip8.onKey(event, name)"> 2 </button>
@@ -318,14 +318,14 @@ table.regTable tbody td {
           <button name="V" class="key-button" type="button" onclick="chip8.onKey(event, name)"> V </button>        
         <div class="controlDisplay" style="background-color:#6D7995;">
 
-	        <button name="backwards" id="backwards" class="log-button" type="button" onclick="chip8.backwards()"> Backwards </button>
-	        <button name="pause" id="pause" class="log-button" type="button" onclick="chip8.pause()"> Pause </button>
-	        <button name="forwards" id="fowards" class="log-button" type="button" onclick="chip8.forwards()"> Forwards </button>
+          <button name="backwards" id="backwards" class="log-button" type="button" onclick="chip8.backwards()"> Backwards </button>
+          <button name="pause" id="pause" class="log-button" type="button" onclick="chip8.pause()"> Pause </button>
+          <button name="forwards" id="fowards" class="log-button" type="button" onclick="chip8.forwards()"> Forwards </button>
           <div class="info-wrapper"> 
             <h2> Chip 8 Emulator </h2>
             <h3> Team 7 </h3>
           </div>
-      	</div>
+        </div>
        </div>
 
       
@@ -337,11 +337,11 @@ table.regTable tbody td {
         </textarea>
       </div> -->
       <div class="logDisplay" style="background-color:#6D7995;">
-	      <table class="instrTable" id="instrTable">
-			   <tbody> 
-			   </tbody>
-		    </table>
-	  </div>
+        <table class="instrTable" id="instrTable">
+         <tbody> 
+         </tbody>
+        </table>
+    </div>
 
 
     </div>
