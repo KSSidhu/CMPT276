@@ -1,0 +1,30 @@
+clear
+
+: main
+	v0 := 2
+	v1 := 4
+	i := block
+
+	loop
+		if v1 >= 16 then jump over
+		sprite v0 v1 1
+		v0 += 5
+		if v0 >= 59 begin
+			v0 := 2
+			v1 += 2
+		end
+	again
+
+	: over
+		v0 := 32
+		v1 := 30
+		i := paddle
+		sprite v0 v1 1
+		return
+
+
+: block
+	0xf0
+
+: paddle
+	0xff
