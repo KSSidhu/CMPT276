@@ -67,6 +67,8 @@ let chip8 = {
 
 	breakPoint: false,
 
+	prevReg: 0,
+
 	// Generates random numbers for memory, stack and V registers to
 	// display on the HTML page
 	generateTestDisplay: function() {
@@ -294,8 +296,10 @@ Display Registers, Memory, Instructions
 			    regVal1.setAttributeNode(regID1);
 
 			    var regID2 = document.createAttribute("id");
+			    var regBG = document.createAttribute("backgroundColor");
 			   	regID2.value = "reg-V" + (f + tableBuffer);
 			    regVal2.setAttributeNode(regID2);
+			    regVal2.setAttributeNode(regBG);
 
 			    //Add the cells to each row
 			    regCol1.appendChild(document.createTextNode("V" + f));
@@ -357,25 +361,51 @@ Display Registers, Memory, Instructions
 		}
 	},
 
-	//Update register values after opcode is retrieved
-	updateRegisters: function()
+	// //Update register values after opcode is retrieved
+	// updateRegisters: function()
+	// {
+	// 	if(!chip8.test) {
+	// 		if(chip8.paused)
+	// 		{
+	// 			return;
+	// 		}
+
+	// 			for(var i = 0; i < 16; i++)
+	// 			{
+	// 				$("#reg-V" + i).text(chip8.hexConverter(chip8.v[i]));
+
+					
+	// 			}
+
+	// 			$("#reg-I").text(chip8.hexConverter(chip8.i));
+	// 			$("#reg-PC").text(chip8.hexConverter(chip8.pc));
+	// 	}
+		
+	// },
+
+	updateRegister: function(index)
 	{
 		if(!chip8.test) {
-			if(chip8.paused)
-		{
-			return;
-		}
 
-		for(var i = 0; i < 16; i++)
-		{
-			$("#reg-V" + i).text(chip8.hexConverter(chip8.v[i]));
-		}
-		$("#reg-I").text(chip8.hexConverter(chip8.i));
-		$("#reg-PC").text(chip8.hexConverter(chip8.pc));
-		}
-		
+			$("#reg-V" + index).css("backgroundColor", "white");
+			if(chip8.paused)
+			{
+				return;
+			}
+
+				$("#reg-V" + index).text(chip8.hexConverter(chip8.v[index]));
+				if(chip8.v[index] != chip8.prevReg)
+				{
+
+					$("#reg-V" + index).css("backgroundColor", "grey");
+				}
+
+			$("#reg-I").text(chip8.hexConverter(chip8.i));
+			$("#reg-PC").text(chip8.pc);
+			}
 	},
 
+	// //Init Instructions
 	// initInstructions: function()
 	// {
 	// 	var table = document.getElementById('instrTable');
@@ -387,7 +417,7 @@ Display Registers, Memory, Instructions
 
 	// 		tbody.appendChild(tr);
 
-	// 		var heading = ["Instruction", "Value",];
+	// 		var heading = ["Memory" "Instruction", "Value"];
 	// 		var tableBuffer = 8;
 
 	// 		for(var col = 0; col < heading.length; col++)
@@ -403,10 +433,8 @@ Display Registers, Memory, Instructions
 	// 		for (var f = 0; f < tableBuffer; f++)
 	// 		{
 	// 		  	var tr = document.createElement('TR'); 
-	// 		    var regCol1 = document.createElement('TD');
-	// 		    var regVal1 = document.createElement('TD');
-	// 		    var regCol2 = document.createElement('TD');
-	// 		    var regVal2 = document.createElement('TD');
+	// 		    var mem = document.createElement('TD');
+	// 		    var instr = document.createElement('TD');
 
 	// 		    var regID1 = document.createAttribute("id");
 	// 		    regID1.value = "reg-V" + f;
@@ -717,7 +745,7 @@ Stop/Start Emulator
 			default:
 				console.log('Unknown Opcode: 0x' + opcode.toString(16));
 		}
-		chip8.updateRegisters();
+		// chip8.updateRegisters();\
 	},
 
 	/******************************************
