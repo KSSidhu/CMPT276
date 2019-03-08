@@ -65,8 +65,6 @@ let chip8 = {
 
 	loop: null,
 
-	breakPoint: false,
-
 	// Generates random numbers for memory, stack and V registers to
 	// display on the HTML page
 	generateTestDisplay: function() {
@@ -450,6 +448,9 @@ Stop/Start Emulator
 	},
 
 	emulate: function() {
+		chip8.previousCPU.push({video: chip8.vram.slice(), counter: chip8.pc, iRegister: chip8.i, vRegisters: chip8.v.slice(), 
+									mem: chip8.memory.slice(), stack: chip8.stack.slice(), stackPointer: chip8.sp, keys: chip8.keyBuffer.slice(), 
+									delay: chip8.delayTimer, sound: chip8.sountTimer, waitKey: chip8.keyWait});
 		if (!chip8.paused) {
 			for (let i = 0; i < 10; i++) {
 				let opcode = (chip8.memory[chip8.pc] << 8) | chip8.memory[chip8.pc + 1];
@@ -462,7 +463,17 @@ Stop/Start Emulator
 		}
 
 		chip8.render();
-		chip8.previousCPU.push(chip8);
+
+		// if(chip8.previousCPU.length < 15) {
+		// 	chip8.previousCPU.push({video: chip8.vram, counter: chip8.pc, iRegister: chip8.i, vRegisters: chip8.v, 
+		// 							mem: chip8.memory, stack: chip8.stack, stackPointer: chip8.sp, keys: chip8.keyBuffer, delay: chip8.delayTimer, sound: chip8.sountTimer, waitKey: chip8.keyWait});
+		// } else {
+		// 	chip8.previousCPU.shift();
+		// 	chip8.previousCPU.push({video: chip8.vram, counter: chip8.pc, iRegister: chip8.i, vRegisters: chip8.v, 
+		// 							mem: chip8.memory, stack: chip8.stack, stackPointer: chip8.sp, keys: chip8.keyBuffer, delay: chip8.delayTimer, sound: chip8.sountTimer, waitKey: chip8.keyWait});
+		// }
+		// chip8.previousCPU.push({video: chip8.vram, counter: chip8.pc, iRegister: chip8.i, vRegisters: chip8.v, 
+		// 							mem: chip8.memory, stack: chip8.stack, stackPointer: chip8.sp, keys: chip8.keyBuffer, delay: chip8.delayTimer, sound: chip8.sountTimer, waitKey: chip8.keyWait});
 	},
 
 	loadGame: function(file) {
@@ -598,7 +609,7 @@ Stop/Start Emulator
 					//Set vX equal to vY - vX, set vF equal to NOT borrow
 					//if vY > vX then vF is set to 1, otherwise 0. Then vX - vY and result stored in vX
 					case 0x0007:
-						if (chip8.debug) console.log('HELLO FROM 0xf00x8007');
+						if (chip8.debug) console.log('HELLO FROM 0x8007');
 						setVxToVyMinVx(x, y);
 						break;
 
@@ -727,11 +738,33 @@ Backwards, Pause, Forwards, Help
 ******************************************/
 	//Step back in emulator one step
 	backwards: function() {
+		chip8.paused = false;
+		// chip8.render();
 		chip8.stop();
-		// chip8.pc -= 2;
+		// chip8.emulate();
+		
+		// Reset chip8 properties to previously saved chip8 object
+		chip8.vram = chip8.previousCPU[chip8.previousCPU.length - 1].video.slice();
+		chip8.pc = chip8.previousCPU[chip8.previousCPU.length - 1].counter;
+		chip8.i = chip8.previousCPU[chip8.previousCPU.length - 1].iRegister;
+		chip8.stack = chip8.previousCPU[chip8.previousCPU.length - 1].stack.slice();
+		chip8.sp = chip8.previousCPU[chip8.previousCPU.length - 1].stackPointer;
+		chip8.memory = chip8.previousCPU[chip8.previousCPU.length - 1].mem.slice();
+		console.log(chip8.v);
+		chip8.v = chip8.previousCPU[chip8.previousCPU.length - 1].vRegisters.slice();
+		console.log(chip8.v);
+		chip8.keyBuffer = chip8.previousCPU[chip8.previousCPU.length - 1].keys.slice();
+		chip8.soundTimer = chip8.previousCPU[chip8.previousCPU.length - 1].sound;
+		chip8.delayTimer = chip8.previousCPU[chip8.previousCPU.length - 1].delay;
+		chip8.keyWait = chip8.previousCPU[chip8.previousCPU.length - 1].waitKey;
+
 		chip8.previousCPU.pop();
+
+		// chip8.emulate();
+		chip8.render();
 		chip8.start();
-		chip8.paused = true;
+		chip8.pause();
+
 	},
 
 	//Stop and pause all operations in emulator
@@ -779,10 +812,10 @@ Render/Draw
 		let SCALE = 10;
 		let ctx = chip8.canvas.getContext('2d');
 		ctx.clearRect(0, 0, 64 * SCALE, 32 * SCALE);
-		ctx.fillStyle = '#000000';
+		ctx.fillStyle = '#AAAAAA';
 		ctx.fillRect(0, 0, 64 * SCALE, 32 * SCALE);
 
-		ctx.fillStyle = '#ffffff';
+		ctx.fillStyle = '#000000';
 
 		for (let i = 0; i < chip8.vram.length; i++) {
 			let x = (i % 64) * SCALE;
