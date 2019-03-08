@@ -366,29 +366,7 @@ Display Registers, Memory, Instructions
 		}
 		}
 	},
-
-	// //Update register values after opcode is retrieved
-	// updateRegisters: function()
-	// {
-	// 	if(!chip8.test) {
-	// 		if(chip8.paused)
-	// 		{
-	// 			return;
-	// 		}
-
-	// 			for(var i = 0; i < 16; i++)
-	// 			{
-	// 				$("#reg-V" + i).text(chip8.hexConverter(chip8.v[i]));
-
-					
-	// 			}
-
-	// 			$("#reg-I").text(chip8.hexConverter(chip8.i));
-	// 			$("#reg-PC").text(chip8.hexConverter(chip8.pc));
-	// 	}
-		
-	// },
-
+	
 	//Update Register Display
 	updateRegister: function(index)
 	{
@@ -833,9 +811,7 @@ Backwards, Pause, Forwards, Help
 		chip8.stack = chip8.previousCPU[chip8.previousCPU.length - 1].stack.slice();
 		chip8.sp = chip8.previousCPU[chip8.previousCPU.length - 1].stackPointer;
 		chip8.memory = chip8.previousCPU[chip8.previousCPU.length - 1].mem.slice();
-		console.log(chip8.v);
 		chip8.v = chip8.previousCPU[chip8.previousCPU.length - 1].vRegisters.slice();
-		console.log(chip8.v);
 		chip8.keyBuffer = chip8.previousCPU[chip8.previousCPU.length - 1].keys.slice();
 		chip8.soundTimer = chip8.previousCPU[chip8.previousCPU.length - 1].sound;
 		chip8.delayTimer = chip8.previousCPU[chip8.previousCPU.length - 1].delay;
