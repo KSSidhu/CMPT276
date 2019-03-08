@@ -448,6 +448,7 @@ Stop/Start Emulator
 	},
 
 	emulate: function() {
+		// Save copy of current chip 8 object to access later
 		chip8.previousCPU.push({video: chip8.vram.slice(), counter: chip8.pc, iRegister: chip8.i, vRegisters: chip8.v.slice(), 
 									mem: chip8.memory.slice(), stack: chip8.stack.slice(), stackPointer: chip8.sp, keys: chip8.keyBuffer.slice(), 
 									delay: chip8.delayTimer, sound: chip8.sountTimer, waitKey: chip8.keyWait});
@@ -463,17 +464,6 @@ Stop/Start Emulator
 		}
 
 		chip8.render();
-
-		// if(chip8.previousCPU.length < 15) {
-		// 	chip8.previousCPU.push({video: chip8.vram, counter: chip8.pc, iRegister: chip8.i, vRegisters: chip8.v, 
-		// 							mem: chip8.memory, stack: chip8.stack, stackPointer: chip8.sp, keys: chip8.keyBuffer, delay: chip8.delayTimer, sound: chip8.sountTimer, waitKey: chip8.keyWait});
-		// } else {
-		// 	chip8.previousCPU.shift();
-		// 	chip8.previousCPU.push({video: chip8.vram, counter: chip8.pc, iRegister: chip8.i, vRegisters: chip8.v, 
-		// 							mem: chip8.memory, stack: chip8.stack, stackPointer: chip8.sp, keys: chip8.keyBuffer, delay: chip8.delayTimer, sound: chip8.sountTimer, waitKey: chip8.keyWait});
-		// }
-		// chip8.previousCPU.push({video: chip8.vram, counter: chip8.pc, iRegister: chip8.i, vRegisters: chip8.v, 
-		// 							mem: chip8.memory, stack: chip8.stack, stackPointer: chip8.sp, keys: chip8.keyBuffer, delay: chip8.delayTimer, sound: chip8.sountTimer, waitKey: chip8.keyWait});
 	},
 
 	loadGame: function(file) {
