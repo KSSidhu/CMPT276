@@ -55,6 +55,8 @@ let chip8 = {
 
 	instructionFlag: false,
 
+	memFlag: false,
+
 	interval: null,
 
 	paused: false,
@@ -64,6 +66,10 @@ let chip8 = {
 	step: null,
 
 	loop: null,
+
+	breakPoint: false,
+
+	prevReg: 0,
 
 	// Generates random numbers for memory, stack and V registers to
 	// display on the HTML page
@@ -180,8 +186,11 @@ let chip8 = {
 		chip8.paused = false;
 
 		//Display memory
-		if(!chip8.test)
+		if(!chip8.test) {
 			chip8.initRegisters();
+			chip8.initInstructions();
+			chip8.initMem();
+		}
 
 		document.onkeyup = document.onkeydown = chip8.keyPress;
 
@@ -244,6 +253,7 @@ Display Registers, Memory, Instructions
 
 ******************************************/
 
+	//Init Register Display
 	initRegisters: function() {
 		if(!chip8.test){
 			var table = document.getElementById('regTable');
@@ -292,8 +302,10 @@ Display Registers, Memory, Instructions
 			    regVal1.setAttributeNode(regID1);
 
 			    var regID2 = document.createAttribute("id");
+			    var regBG = document.createAttribute("backgroundColor");
 			   	regID2.value = "reg-V" + (f + tableBuffer);
 			    regVal2.setAttributeNode(regID2);
+			    regVal2.setAttributeNode(regBG);
 
 			    //Add the cells to each row
 			    regCol1.appendChild(document.createTextNode("V" + f));
@@ -354,82 +366,141 @@ Display Registers, Memory, Instructions
 		}
 		}
 	},
-
-	//Update register values after opcode is retrieved
-	updateRegisters: function()
+	
+	//Update Register Display
+	updateRegister: function(index)
 	{
 		if(!chip8.test) {
-			if(chip8.paused)
-		{
-			return;
-		}
 
-		for(var i = 0; i < 16; i++)
-		{
-			$("#reg-V" + i).text(chip8.hexConverter(chip8.v[i]));
-		}
-		$("#reg-I").text(chip8.hexConverter(chip8.i));
-		$("#reg-PC").text(chip8.hexConverter(chip8.pc));
-		}
-		
+			$("#reg-V" + index).css("backgroundColor", "white");
+			if(chip8.paused)
+			{
+				return;
+			}
+
+				if(chip8.v[index] != chip8.prevReg)
+				{
+
+					$("#reg-V" + index).css("backgroundColor", "grey");
+					$("#reg-V" + index).text(chip8.hexConverter(chip8.v[index]));
+				}
+				else if(chip8.v[index] == chip8.prevReg)
+				{
+
+					$("#reg-V" + index).css("backgroundColor", "white");
+				}
+
+			$("#reg-I").text(chip8.hexConverter(chip8.i));
+			$("#reg-PC").text(chip8.pc);
+
+			}
+
+
 	},
 
-	// initInstructions: function()
-	// {
-	// 	var table = document.getElementById('instrTable');
-	// 	if(!chip8.instructionFlag)
-	// 	{
-	// 		var tbody = document.createElement('tbody');
-	// 		var tr = document.createElement('tr');
-	// 		table.appendChild(tbody);
+	//Init Instructions Display
+	initInstructions: function()
+	{
+		if(!chip8.test){
+			var table = document.getElementById('instrTable');
+			if(!chip8.instructionFlag)
+			{
+				var tbody = document.createElement('tbody');
+				var tr = document.createElement('tr');
+				table.appendChild(tbody);
 
-	// 		tbody.appendChild(tr);
+				tbody.appendChild(tr);
 
-	// 		var heading = ["Instruction", "Value",];
-	// 		var tableBuffer = 8;
+				var heading = ["Opcode", "Instruction"];
+				var tableBuffer = 8;
 
-	// 		for(var col = 0; col < heading.length; col++)
-	// 		{
-	// 			var th = document.createElement('TH');
-	// 			th.width = '75';
-	// 			th.appendChild(document.createTextNode(heading[col]));
-	// 			tr.appendChild(th);
+				for(var col = 0; col < heading.length; col++)
+				{
+					var th = document.createElement('TH');
+					th.width = '75';
+					th.appendChild(document.createTextNode(heading[col]));
+					tr.appendChild(th);
 
 
 
-	// 		}		 
-	// 		for (var f = 0; f < tableBuffer; f++)
-	// 		{
-	// 		  	var tr = document.createElement('TR'); 
-	// 		    var regCol1 = document.createElement('TD');
-	// 		    var regVal1 = document.createElement('TD');
-	// 		    var regCol2 = document.createElement('TD');
-	// 		    var regVal2 = document.createElement('TD');
+				}		 
+				for (var f = 0; f < tableBuffer; f++)
+				{
+				  	var tr = document.createElement('TR'); 
+				  	var op = document.createElement('TD');
+				    var instr = document.createElement('TD');
 
-	// 		    var regID1 = document.createAttribute("id");
-	// 		    regID1.value = "reg-V" + f;
-	// 		    regVal1.setAttributeNode(regID1);
+				    var opID = document.createAttribute("id");
+				    opID.value = "op" + f;
+				    op.setAttributeNode(opID);
 
-	// 		    var regID2 = document.createAttribute("id")
-	// 		   	regID2.value = "reg-V" + (f + tableBuffer);
-	// 		    regVal2.setAttributeNode(regID2);
+				    var instrID = document.createAttribute("id");
+				    instrID.value = "instr" + f;
+				    instr.setAttributeNode(instrID);
 
-	// 		    regCol1.appendChild(document.createTextNode("V" + f));
-	// 		    regVal1.appendChild(document.createTextNode(chip8.v[f]));
+				    op.appendChild(document.createTextNode("test" + f));
+				    instr.appendChild(document.createTextNode("test" + f));
 
-	// 	        regCol2.appendChild(document.createTextNode("V" + (f + tableBuffer)));
-	//             regVal2.appendChild(document.createTextNode(chip8.v[f + tableBuffer]));
+			        tr.appendChild(op);
+			        tr.appendChild(instr);
 
-	// 	        tr.appendChild(regCol1);
-	// 	        tr.appendChild(regVal1);
+				    tbody.appendChild(tr);
+				}
+				chip8.instructionFlag = true;
+			}
+		}
+	},
 
-	// 		    tr.appendChild(regCol2);
-	// 		    tr.appendChild(regVal2);
-	// 		    tbody.appendChild(tr);
-	// 		}
-	// 		chip8.registerFlag = true;
-	// 	}
-	// },
+	//Init Memory Display
+	initMem: function()
+	{
+		if(!chip8.test){
+			var table = document.getElementById('memTable');
+			if(!chip8.memFlag)
+			{
+				var tbody = document.createElement('tbody');
+				var tr = document.createElement('tr');
+				table.appendChild(tbody);
+
+				tbody.appendChild(tr);
+
+				var heading = ["Memory", "Value"];
+				var tableBuffer = 8;
+
+				for(var col = 0; col < heading.length; col++)
+				{
+					var th = document.createElement('TH');
+					th.width = '75';
+					th.appendChild(document.createTextNode(heading[col]));
+					tr.appendChild(th);
+
+				}		 
+				for (var f = 0; f < tableBuffer; f++)
+				{
+				  	var tr = document.createElement('TR'); 
+				  	var mem = document.createElement('TD');
+				    var val = document.createElement('TD');
+
+				    var memID = document.createAttribute("id");
+				    memID.value = "mem" + f;
+				    mem.setAttributeNode(memID);
+
+				    var valID = document.createAttribute("id");
+				    valID.value = "val" + f;
+				    val.setAttributeNode(valID);
+
+				    mem.appendChild(document.createTextNode("test" + f));
+				    val.appendChild(document.createTextNode("test" + f));
+
+			        tr.appendChild(mem);
+			        tr.appendChild(val);
+
+				    tbody.appendChild(tr);
+				}
+				chip8.memFlag = true;
+			}
+		}
+	},
 
 /******************************************
 Stop/Start Emulator
@@ -718,7 +789,7 @@ Stop/Start Emulator
 			default:
 				console.log('Unknown Opcode: 0x' + opcode.toString(16));
 		}
-		chip8.updateRegisters();
+		// chip8.updateRegisters();\
 	},
 
 	/******************************************
@@ -740,9 +811,7 @@ Backwards, Pause, Forwards, Help
 		chip8.stack = chip8.previousCPU[chip8.previousCPU.length - 1].stack.slice();
 		chip8.sp = chip8.previousCPU[chip8.previousCPU.length - 1].stackPointer;
 		chip8.memory = chip8.previousCPU[chip8.previousCPU.length - 1].mem.slice();
-		console.log(chip8.v);
 		chip8.v = chip8.previousCPU[chip8.previousCPU.length - 1].vRegisters.slice();
-		console.log(chip8.v);
 		chip8.keyBuffer = chip8.previousCPU[chip8.previousCPU.length - 1].keys.slice();
 		chip8.soundTimer = chip8.previousCPU[chip8.previousCPU.length - 1].sound;
 		chip8.delayTimer = chip8.previousCPU[chip8.previousCPU.length - 1].delay;

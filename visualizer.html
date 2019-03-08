@@ -82,6 +82,16 @@ html {
   max-height: 324px;
   min-height: 324px;
 }
+.log-display-wrapper {
+  width:  calc(30vw - 20px); 
+  height: calc(30vh - 20px);
+  resize: none;
+  max-height: 240px;
+  min-height: 240px;
+  display: grid;
+  grid-template-columns: repeat(2,1fr);
+  padding: 5px;
+}
 
 .logDisplay {
   float: left;
@@ -223,23 +233,23 @@ button:active:after {
 }
 
 table.instrTable {
+  float: left;
+  position: relative;
   border: 1px solid #1C6EA4;
-  background-color: #EEEEEE;
+  background-color: #fff;
   text-align: left;
   border-collapse: collapse;
-  width:  calc(30vw - 20px);    
-  height: calc(30vh - 20px);
+  width:  calc(15vw - 10px);    
+  height: calc(35vh - 20px);
   resize: none;
-  max-height: 240px;
-  min-height: 240px;
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  max-height: 300px;
+  min-height: 300px;
 
 }
 
 table.instrTable td, table.instrTable th {
   border: 1px solid #AAAAAA;
-  padding: 3px 2px;
+  padding: 5px 2px;
 }
 
 table.instrTable tbody td {
@@ -337,10 +347,16 @@ table.regTable tbody td {
         </textarea>
       </div> -->
       <div class="logDisplay" style="background-color:#6D7995;">
+        <div class="log-display-wrapper" style="background-color:#6D7995;">
         <table class="instrTable" id="instrTable">
          <tbody> 
          </tbody>
         </table>
+        <table class="instrTable" id="memTable">
+         <tbody> 
+         </tbody>
+        </table>
+      </div>
     </div>
 
 
@@ -367,27 +383,6 @@ table.regTable tbody td {
     window.addEventListener("keyup", function(event, name) {
     chip8.onKey(event, null);
   }, true);
-   
-    // let newString = "";
-    // for(let i = 0; i < chip8.memory.length; i++) {
-    // newString = newString + "Memory" + i + ": " + chip8.memory[i] + '\n';
-    // document.getElementById('memTable').value = newString;
-    // };
-    
-
-    // let registers = "";
-
-    // for(let k = 0; k < chip8.v.length; k++) {
-    //   registers = registers + "V" + k + ": " + chip8.v[k] + '\n';
-    //   document.getElementById('table').innerHTML = registers;
-    // }
-
-    // let keyTrack = "";
-
-    // for(let j = 0; j < chip8.keyLog.length; j++) {
-    //   keyTrack = keyTrack + "key: "  + chip8.keyLog[j] + '\n';
-    //   document.getElementById('logtextarea').value = keyTrack;
-    // }
   
 
 
