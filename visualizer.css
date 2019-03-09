@@ -1,0 +1,299 @@
+body {
+  font-family: 'Roboto', sans-serif;
+}
+* {
+  box-sizing: border-box;
+}
+
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #c7d4ef;
+}
+
+li {
+  float: left;
+}
+
+li a {
+  display: block;
+  color: black;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+li a:hover {
+  background-color: #fff;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 100%;
+  box-sizing: border-box;
+}
+
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: inherit;
+}
+
+.visualizer {
+  border-radius: 5px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  
+  width: 90%;
+  height: 90%;
+}
+
+/*For UI Scaling*/
+.wrapper{
+  padding: 20px;
+  resize: both;
+  position: relative;
+  height: 320px;
+}
+
+.resize-ui{
+  width: 10px;
+  height: 10px;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+}
+/* Create two equal columns that floats next to each other */
+.toolbar{
+    background-image: linear-gradient(-90deg, white, #eee);
+  border: 1px solid #ccc;
+  border-radius: 2px;
+  float: left;
+  width: 100%;
+  height: 10%;
+}
+
+.romDisplay {
+  float: left;
+  width: 65%;
+  padding: 10px;
+}
+
+.regDisplay {
+  float: left;
+  width: 35%;
+  padding: 10px;
+}
+
+.reg-display-wrapper {
+  width:  calc(30vw - 20px);    
+  height: calc(30vh - 20px);
+  resize: none;
+  max-height: 324px;
+  min-height: 324px;
+}
+.log-display-wrapper {
+  width:  calc(30vw - 20px); 
+  height: calc(30vh - 20px);
+  resize: none;
+  max-height: 240px;
+  min-height: 240px;
+  display: grid;
+  grid-template-columns: repeat(2,1fr);
+  padding: 5px;
+}
+
+.logDisplay {
+  float: left;
+  width: 35%;
+  padding: 10px;
+}
+
+.log-button{
+  color: black;
+  height: 40px;
+  min-width: 50px;
+  background-color: #fff;
+  border: 1px solid;
+  padding: 5px;
+  display: inline-grid;
+  grid-template-columns: repeat(3, 1fr);
+
+    background-image: linear-gradient(to bottom,transparent,transparent 
+    25%,rgba(0,0,0,.1));
+
+}
+
+.keyDisplay {
+  float: left;
+  width: 65%;
+  padding: 10px;    
+}
+
+.keys {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.key-button
+{
+  font-size: 17px;
+  background-color: #fff;
+}
+
+.key-button:hover {
+  background-image: linear-gradient(-27deg, #eee, #eee);
+}
+
+.controlDisplay
+{
+  grid-column-start: 5;
+  grid-row-start: 1;
+  grid-row-end: 5;
+  height: 100%;
+  padding: 10px;
+  margin-left: 8px;
+  border: 1px solid;
+  border-radius: 4px;
+}
+
+.info-wrapper {
+  text-align: center;
+  padding-top: 35%;
+  padding-bottom: 25%;
+  font-family: "Arial", Helvetica, sans-serif;
+  color: #fff;
+}
+
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/*Tool bar buttons formatting and working Load ROM button*/
+.toolbar-button-wrapper {
+  position: relative;
+  overflow: hidden;
+  display: inline-block;
+}
+
+.toolbar-button {
+  color: black;
+  height: 20px;
+  background-color: #fff;
+  border: 1px solid;
+  padding: 2px;
+    background-image: linear-gradient(to bottom,transparent,transparent 
+    25%,rgba(0,0,0,.1));
+}
+
+.toolbar-button-wrapper input[type=file]{
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
+}
+
+button {
+  position: relative;
+  background-color: #C7D4F0;
+  border: 1px solid ;
+  border-radius: 4px;
+  padding: 4px 4px;
+  outline: none;
+  color: black;
+  height : 60px;
+  text-align: center;
+  -webkit-transition-duration: 0.5s; /* Safari */
+  transition-duration: 0.5s;
+  text-decoration: none;
+  overflow: hidden;
+  cursor: pointer;
+  background-image: linear-gradient(to bottom,transparent,transparent 
+    25%,rgba(0,0,0,.15));
+}
+
+button:hover {
+  background-color: #eee;
+}
+
+button:active{
+  background-color: #eee;
+}
+
+button:after {
+  content: "";
+  background: #ccc;
+  display: block;
+  position: absolute;
+  padding-top: 300%;
+  padding-left: 350%;
+  margin-left: -20px;
+  margin-top: -120%;
+  opacity: 0;
+  transition: all 0.5s
+}
+
+button:active:after {
+  padding: 0;
+  margin: 0;
+  opacity: 1;
+  transition: 0s
+}
+
+table.instrTable {
+  float: left;
+  position: relative;
+  border: 1px solid #1C6EA4;
+  background-color: #fff;
+  text-align: left;
+  border-collapse: collapse;
+  width:  calc(15vw - 10px);    
+  height: calc(35vh - 20px);
+  resize: none;
+  max-height: 300px;
+  min-height: 300px;
+
+}
+
+table.instrTable td, table.instrTable th {
+  border: 1px solid #AAAAAA;
+  padding: 5px 2px;
+}
+
+table.instrTable tbody td {
+  font-size: 13px;
+}
+
+table.regTable {
+  float: left;
+  position: relative;
+  border: 1px solid #1C6EA4;
+  background-color: #fff;
+  text-align: left;
+  border-collapse: collapse;
+  width:  calc(30vw - 20px);    
+  height: calc(50vh - 30px);
+  resize: none;
+  max-height: 324px;
+  min-height: 324px;
+}
+
+table.regTable td, table.regTable th {
+  border: 1px solid #AAAAAA;
+  padding: 7.5px 2px;
+}
+
+table.regTable tbody td {
+  font-size: 13px;
+}
