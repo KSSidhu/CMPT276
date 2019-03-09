@@ -1,4 +1,4 @@
-# CMPT 276: Product Document Release 2
+# CMPT 276: Product Document Release 3
 
 ### What's Changed
 > ### Features completed
@@ -11,25 +11,26 @@
 - Pause Button
 - Register Display and automatic updating
 - Altered Testing: Not using Jest.js for this release, instead using separate Javascript and HTML file
+- Emulator can run all ROMS
+- Memory, instructions, and registers displayed
+- Highlighting and updating memory, instructions, and registers
+- Forwards/Backwards buttons implemented
+- Added NavBar and added github and buttons there
 
 > ### Features Not Completed
-- Emulator cannot run all ROMS and still has issues drawing some
-- Not all memory and registers are displayed
-- Forwards/Backwards buttons
 - Mouse click is not responsive
 
 ## Major Features For Next Release
-- Release 3: Chip8 Tool
+- Release 4: Chip8 Games
 
 Chip8 Tool:
 - Fully completed and begin implementation if not fully implemented by end date
 
 Chip8 Emulator :
-- Have it run all ROMs successfully
+- Fix Bugs
 
 Chip8 Visualizer :
-- Integration with Emulator with Memory and Registry displaying on Visualizer
-- Forwards and backwards button implementation
+- Fix bugs
 - Improve mouse input
 
 
