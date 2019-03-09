@@ -192,6 +192,8 @@ let chip8 = {
 			chip8.initMem();
 		}
 
+		chip8.previousCPU = [];
+
 		document.onkeyup = document.onkeydown = chip8.keyPress;
 
 		//
@@ -538,17 +540,24 @@ Stop/Start Emulator
 	},
 
 	loadGame: function(file) {
-		let reader = new FileReader();
-		console.log('HELLO FROM LOADGAME');
+		let temp = chip8.memory;
+		try {
+			let reader = new FileReader();
+			console.log('HELLO FROM LOADGAME');
 
-		reader.addEventListener('loadend', function() {
-			let buffer = new Uint8Array(reader.result);
-			buffer.map((val, index) => (chip8.memory[index + 512] = buffer[index]));
-			chip8.pc = 512;
-			console.log('Game is now loaded');
-		});
+			reader.addEventListener('loadend', function() {
+				let buffer = new Uint8Array(reader.result);
+				buffer.map((val, index) => (chip8.memory[index + 512] = buffer[index]));
+				chip8.pc = 512;
+				console.log('Game is now loaded');
+			});
+			if(reader.length != 0)
+				reader.readAsArrayBuffer(file);
+		} catch (err) {
+			alert("Improper File Selected, Please Try Again.");
+			chip8.start();
 
-		reader.readAsArrayBuffer(file);
+		}
 	},
 
 	//Emulation Cycle
@@ -832,13 +841,13 @@ Backwards, Pause, Forwards, Help
 			chip8.stop();
 			chip8.paused = true;
 			if(!chip8.test)
-				document.getElementById("pause").innerText = "Play";
+				document.getElementById("pause").innerHTML = '<i class="fas fa-play"></i> Play';
 		} else {
 			chip8.paused = false;
 			chip8.start();
 
 			if(!chip8.test)
-				document.getElementById("pause").innerText = "Pause";
+				document.getElementById("pause").innerHTML = '<i class="fas fa-pause"></i> Pause';
 		}
 	},
 
