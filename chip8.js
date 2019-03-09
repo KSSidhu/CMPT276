@@ -372,7 +372,37 @@ Display Registers, Memory, Instructions
 		}
 		}
 	},
+	
+	//Update Register Display
+	updateRegister: function(index)
+	{
+		if(!chip8.test) {
 
+			$("#reg-V" + index).css("backgroundColor", "white");
+			if(chip8.paused)
+			{
+				return;
+			}
+
+				if(chip8.v[index] != chip8.prevReg)
+				{
+
+					$("#reg-V" + index).css("backgroundColor", "grey");
+					$("#reg-V" + index).text(chip8.hexConverter(chip8.v[index]));
+				}
+				else if(chip8.v[index] == chip8.prevReg)
+				{
+
+					$("#reg-V" + index).css("backgroundColor", "white");
+				}
+
+			$("#reg-I").text(chip8.hexConverter(chip8.i));
+			$("#reg-PC").text(chip8.pc);
+
+			}
+
+
+	},
 
 	//Init Instructions Display
 	initInstructions: function()
@@ -898,9 +928,7 @@ Backwards, Pause, Forwards, Help
 		chip8.stack = chip8.previousCPU[chip8.previousCPU.length - 1].stack.slice();
 		chip8.sp = chip8.previousCPU[chip8.previousCPU.length - 1].stackPointer;
 		chip8.memory = chip8.previousCPU[chip8.previousCPU.length - 1].mem.slice();
-		console.log(chip8.v);
 		chip8.v = chip8.previousCPU[chip8.previousCPU.length - 1].vRegisters.slice();
-		console.log(chip8.v);
 		chip8.keyBuffer = chip8.previousCPU[chip8.previousCPU.length - 1].keys.slice();
 		chip8.soundTimer = chip8.previousCPU[chip8.previousCPU.length - 1].sound;
 		chip8.delayTimer = chip8.previousCPU[chip8.previousCPU.length - 1].delay;
