@@ -532,7 +532,6 @@ function storeBCDOfVxInI(x) {
 	value = (chip8.v[x] % 100) % 10;
 	chip8.memory[index] = value // Store ones digit into location i + 2 in memory	
 	chip8.updateMem(index, value);
-	console.log("hellooooooo")
 }
 
 // case 0xf055

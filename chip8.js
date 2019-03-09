@@ -607,7 +607,7 @@ Display Registers, Memory, Instructions
 				chip8.currMem = chip8.maxRows;
 			}
 			$("#mem" + chip8.currMem).text("memory" + index);
-			$("#val" + chip8.currMem).text(chip8.hexConverter(value));
+			$("#val" + chip8.currMem).text(chip8.hexConverter(parseInt(value)));
 			chip8.highlight("mem", chip8.currMem, "#ddd");
 			chip8.highlight("val", chip8.currMem, "#eee");
 
@@ -645,6 +645,7 @@ Stop/Start Emulator
 		if (!chip8.paused) {
 			for (let i = 0; i < 10; i++) {
 				let opcode = (chip8.memory[chip8.pc] << 8) | chip8.memory[chip8.pc + 1];
+				chip8.updateMem(chip8.pc, opcode);
 				chip8.runCycle(opcode);
 			}
 		}
