@@ -3,6 +3,10 @@
 // 00E0
 // CLS
 function clearScreen() {
+	var op = "0x00E0";
+	var instr = "CLS";
+	chip8.updateInstruction(op, instr);
+
 	chip8.vram = chip8.vram.map(() => 0);
 }
 
@@ -10,6 +14,10 @@ function clearScreen() {
 // 00EE
 // RET
 function returnFromSubroutine() {
+	var op = "0x00EE";
+	var instr = "RET";
+	chip8.updateInstruction(op, instr);
+
 	chip8.sp--;
 	chip8.pc = chip8.stack[chip8.sp]; // push PC to top of stack
 }
@@ -19,6 +27,10 @@ function returnFromSubroutine() {
 // JP addr
 //Jump to Address, location
 function jmpToLocation(opcode) {
+	var op = "0x1000";
+	var instr = "JP addr";
+	chip8.updateInstruction(op, instr);
+
 	chip8.pc = opcode & 0x0fff;
 }
 
@@ -27,6 +39,10 @@ function jmpToLocation(opcode) {
 // CALL addr
 //Call Function
 function callAddress(opcode) {
+	var op = "0x2000";
+	var instr = "CALL addr";
+	chip8.updateInstruction(op, instr);
+
 	chip8.stack[chip8.sp] = chip8.pc;
 	chip8.sp++;
 	chip8.pc = opcode & 0x0fff;
@@ -37,7 +53,11 @@ function callAddress(opcode) {
 // SE vX, byte
 //Skip to Next Instruction, vX Equal nn
 function skipInstruction_VxEqKk(opcode, x) {
-	if (chip8.v[x] === (opcode & 0x00ff)) {
+	var op = "0x3000";
+	var instr = "SE vX, byte";
+	chip8.updateInstruction(op, instr);
+
+	if (chip8.v[x] === (opcode & 0x00ff)) {	
 		//compare V[x] to last 8 bits
 		chip8.pc += 2;
 	}
@@ -48,6 +68,9 @@ function skipInstruction_VxEqKk(opcode, x) {
 // SNE vX, byte
 //Skip to Next Instruction, if vX Not Equal kk
 function skipInstruction_VxNeqKk(opcode, x) {
+	var op = "0x4000";
+	var instr = "SNE vX, byte";
+	chip8.updateInstruction(op, instr);
 	if (chip8.v[x] != (opcode & 0x00ff)) {
 		//compare V[x] to last 8 bits
 		chip8.pc += 2;
@@ -59,6 +82,10 @@ function skipInstruction_VxNeqKk(opcode, x) {
 // SE vX, vY
 //Skip to Next Instruction, if vX Equals vY
 function skipInstruction_VxEqVy(x, y) {
+	var op = "0x5000";
+	var instr = "SE vX, vY";
+	chip8.updateInstruction(op, instr);
+
 	if (chip8.v[x] === chip8.v[y]) {
 		chip8.pc += 2;
 	}
@@ -69,6 +96,10 @@ function skipInstruction_VxEqVy(x, y) {
 // LD vX, byte
 //Set vX to kk
 function setVxTonn(opcode, x) {
+	var op = "0x6000";
+	var instr = "LD vX, byte";
+	chip8.updateInstruction(op, instr);
+
 	chip8.prevReg = chip8.v[x];
 	chip8.v[x] = opcode & 0x00ff;
 	chip8.updateRegister(x);
@@ -80,6 +111,9 @@ function setVxTonn(opcode, x) {
 //set vX equal to vX + kk
 function addnnToVx(opcode, x) {
 	// chip8.v[x] += opcode & 0x00ff;
+	var op = "0x7000";
+	var instr = "ADD vX, byte";
+	chip8.updateInstruction(op, instr);
 
 	chip8.prevReg = chip8.v[x];
 	let val = (opcode & 0xff) + chip8.v[x];
@@ -100,6 +134,10 @@ function addnnToVx(opcode, x) {
 // LD vX, vY
 //Store vY in vX
 function setVxToVy(x, y) {
+	var op = "0x8000";
+	var instr = "LD vX, vY";
+	chip8.updateInstruction(op, instr);
+
 	chip8.prevReg = chip8.v[x];
 	chip8.v[x] = chip8.v[y];
 
@@ -111,6 +149,10 @@ function setVxToVy(x, y) {
 // OR vX, vY
 //Set vX equal to vX or vY
 function setVxToVxOrVy(x, y) {
+	var op = "0x8001";
+	var instr = "OR vX, vY";
+	chip8.updateInstruction(op, instr);
+
 	chip8.prevReg = chip8.v[x];
 	chip8.v[x] = chip8.v[x] | chip8.v[y];
 
@@ -122,6 +164,10 @@ function setVxToVxOrVy(x, y) {
 // AND vX, vY
 //Set vX equal to vX and vY
 function setVxToVxAndVy(x, y) {
+	var op = "0x8002";
+	var instr = "AND vX, vY";
+	chip8.updateInstruction(op, instr);
+
 	chip8.prevReg = chip8.v[x];
 	chip8.v[x] = chip8.v[x] & chip8.v[y];
 
@@ -133,6 +179,10 @@ function setVxToVxAndVy(x, y) {
 // XOR vX, vY
 //Set vX equal to vX XOR vY
 function setVxToVxXorVy(x, y) {
+	var op = "0x8003";
+	var instr = "XOR vX, vY";
+	chip8.updateInstruction(op, instr);
+
 	chip8.prevReg = chip8.v[x];
 	chip8.v[x] = chip8.v[x] ^ chip8.v[y];
 
@@ -144,6 +194,10 @@ function setVxToVxXorVy(x, y) {
 // ADD vX, vY
 //Set vX equal to vX + vY, set vF equal to carry
 function addVyToVx(x, y) {
+	var op = "0x8004";
+	var instr = "ADD vX, vY";
+	chip8.updateInstruction(op, instr);
+
 	chip8.prevReg = chip8.v[x];
 	chip8.v[x] = chip8.v[x] + chip8.v[y];
 	chip8.updateRegister(x);
@@ -165,6 +219,10 @@ function addVyToVx(x, y) {
 //set vX equal to vX - vY, set vF equal to NOT borrow
 //if vX > vY then vF is 1, otherwise 0. Then vX - vY and result stored in vX
 function subVyFromVx(x, y) {
+	var op = "0x8005";
+	var instr = "SUB vX, vY";
+	chip8.updateInstruction(op, instr);
+
 	chip8.prevReg = chip8.v[0xf];
 	chip8.v[0xf] = +(chip8.v[x] > chip8.v[y]);
 	chip8.updateRegister(0xf);
@@ -181,10 +239,15 @@ function subVyFromVx(x, y) {
 }
 
 // case 0x8006
-// SHR
+// 8xy6
+// SHR vX, vY
 //Set vX = vX SHR 1
 //if least significant bit of vX is 1, then vF is 1, otherwise 0. Then result divided by 2
 function shiftVxRight(x, y) {
+	var op = "0x8006";
+	var instr = "SHR vX, vY";
+	chip8.updateInstruction(op, instr);
+
 	chip8.prevReg = chip8.v[0xf];
 	chip8.v[0xf] = chip8.v[x] & 0x1;
 	chip8.updateRegister(0xf);
@@ -195,10 +258,15 @@ function shiftVxRight(x, y) {
 }
 
 // case 0x8007
-// SUBN
+// 8xy7
+// SUBN vX, vY
 //Set vX equal to vY - vX, set vF equal to NOT borrow
 //if vY > vX then vF is set to 1, otherwise 0. Then vX - vY and result stored in vX
 function setVxToVyMinVx(x, y) {
+	var op = "0x8007";
+	var instr = "SUBN vX, vY";
+	chip8.updateInstruction(op, instr);
+
 	chip8.prevReg = chip8.v[0xf];
 	chip8.v[0xf] = +(chip8.v[y] > chip8.v[x]);
 	chip8.updateRegister(0xf);
@@ -215,10 +283,15 @@ function setVxToVyMinVx(x, y) {
 }
 
 // case 0x800e
-// SHL
+// 8xyE
+// SHL vX, vY
 //Set vX equal to vX SHL 1
 //if most significant bit of vX is 1, then vF is set to 1, otherwise 0. Then vX is multiplied by 2.
 function shiftVxLeft(x) {
+	var op = "0x800E";
+	var instr = "SHL vX, vY";
+	chip8.updateInstruction(op, instr);
+
 	chip8.prevReg = chip8.v[0xf];
 	chip8.v[0xf] = chip8.v[x] & 0x80;
 	chip8.updateRegister(0xf);
@@ -235,32 +308,52 @@ function shiftVxLeft(x) {
 }
 
 // case 0x9000
-// SNE
+// 9xy0
+// SNE vX, vY
 //Skip next instruction if vX is not equal to vY
 function skipInstructionIfVxNeqVy(x, y) {
+	var op = "0x9000";
+	var instr = "SNE vX, vY";
+	chip8.updateInstruction(op, instr);
+
 	if (chip8.v[x] != chip8.v[y]) {
 		chip8.pc += 2;
 	}
 }
 
 // case 0xa000
-// LD
+// Annn
+// LD I, addr
 // Sets I to address NNN
 function setITonnn(opcode) {
+	var op = "0xa000";
+	var instr = "LD I, addr";
+	chip8.updateInstruction(op, instr);
+
 	chip8.i = opcode & 0x0fff; // This case grabs the last 12 bits to analyze
 }
 
 // case 0xb000
-// JP
+// Bnnn
+// JP v0, addr
 //Jump to location v0 + nnn
 function jmpToV0Plusnnn(opcode) {
+	var op = "0xb000";
+	var instr = "JP v0, addr";
+	chip8.updateInstruction(op, instr);
+
 	chip8.pc = (opcode & 0x0fff) + chip8.v[0];
 }
 
 // case 0xc000
-// RND
+// Cxkk
+// RND vX, byte
 //Set vX equal to random byte AND kk
 function setVxRandomByte(opcode, x) {
+	var op = "0xC000";
+	var instr = "RND vX, byte";
+	chip8.updateInstruction(op, instr);
+
 	chip8.prevReg = chip8.v[x];
 	chip8.v[x] = Math.floor(Math.random() * 256) & (opcode & 0x00ff);
 	chip8.updateRegister(x);
@@ -268,8 +361,13 @@ function setVxRandomByte(opcode, x) {
 }
 
 // case 0xd000
-// DRW
+// Dxyn
+// DRW vX, vY, nibble
 function drawSprite(opcode, x, y) {
+	var op = "0xD000";
+	var instr = "DRW vX, vY, n";
+	chip8.updateInstruction(op, instr);
+
 	//Display n-byte sprite starting at memory location i at (vX, vY), set vF equal to collis
 	let height = opcode & 0x000f; // save nibble for height of pixel
 	let sprite;
@@ -300,36 +398,56 @@ function drawSprite(opcode, x, y) {
 }
 
 // case 0xe09e
-// SKP
+// Ex8E
+// SKP vX
 //Skip next instruction if the key with the value vX is pressed
 function skipInstructionIfVxKeyPressed(x) {
+	var op = "0xE09E";
+	var instr = "SKP vX";
+	chip8.updateInstruction(op, instr);
+
 	if (chip8.keyBuffer[chip8.v[x]]) {
 		chip8.pc += 2;
 	}
 }
 
 // case 0xe0a1
-// SKNP
+// ExA1
+// SKNP vX
 //Skip next instruction if the key with the value vX is not pressed
 function skipInstructionIfVxKeyNotPressed(x) {
+	var op = "0xE0A1";
+	var instr = "SKNP vX";
+	chip8.updateInstruction(op, instr);
+
 	if (!chip8.keyBuffer[chip8.v[x]]) {
 		chip8.pc += 2;
 	}
 }
 
 // case 0xf007
-// LD
+// Fx07
+// LD vX, DT
 //Place value of DelayTimer in vX
 function setVxToDelayTimer(x) {
+	var op = "0xF007";
+	var instr = "LD vX, DT";
+	chip8.updateInstruction(op, instr);
+
 	chip8.prevReg = chip8.v[x];
 	chip8.v[x] = chip8.delayTimer;
 	chip8.updateRegister(x);
 }
 
 // case 0xf00a
-// LD
+// Fx0A 
+// LD vX, K
 //Wait for keypress, then store it in vX
 function waitAndStoreKeyPressInVx(x) {
+	var op = "0xF00A";
+	var instr = "LD vX, K";
+	chip8.updateInstruction(op, instr);
+
 	let keyPress = false;
 	for (let i = 0; i < chip8.keyBuffer.length; i++) {
 		if (chip8.keyBuffer[i]) {
@@ -344,66 +462,105 @@ function waitAndStoreKeyPressInVx(x) {
 }
 
 // case 0xf015
-// LD
+// Fx15
+// LD vX, K
 //DelayTimer is set to vX
 function setDelayTimerToVx(x) {
+	var op = "0xF015";
+	var instr = "LD vX, K";
+	chip8.updateInstruction(op, instr);
+
 	chip8.delayTimer = chip8.v[x];
 }
 
 // case 0xf018
-// LD
+// Fx18
+// LD ST, vX
 //Set Sound Timer to vX
 function setSoundTimerToVx(x) {
+	var op = "0xf018";
+	var instr = "LD ST, vX";
+	chip8.updateInstruction(op, instr);
+
 	chip8.soundTimer = chip8.v[x];
 }
 
 // case 0xf01e
-// ADD
+// Fx1E
+// ADD I, vX
 //Set i equal to i + vX
 function setIToIPlusVx(x) {
+	var op = "0xF01E";
+	var instr = "ADD I, vX";
+	chip8.updateInstruction(op, instr);
+
 	chip8.i += chip8.v[x];
 }
 
 // case 0xf029
-// LD
+// Fx29
+// LD F, vX
 //Set i equal to location of sprite for digit vX
 function setIToLocationOfSpriteFromVx(x) {
+	var op = "0xF029";
+	var instr = "LD F, vX";
+	chip8.updateInstruction(op, instr);
+
 	chip8.i = chip8.v[x] * 5;
 }
 
 // case 0xf033
-// LD
+// Fx33
+// LD B, vX
 //Store BCD representation of vX in memory location starting at i
 function storeBCDOfVxInI(x) {
+	var op = "0xF033";
+	var instr = "LD B, vX";
+	chip8.updateInstruction(op, instr);
 
-	chip8.prevReg = chip8.v[x];
-	chip8.memory[chip8.i] = chip8.v[x] / 100; //Store hundreth's position at location i in memory
-	chip8.updateRegister(x);
+	var index = chip8.i;
+	var value = chip8.v[x] / 100; //Store hundreth's position at location i in memory
+	chip8.memory[index] = value; 
+	chip8.updateMem(index, value);
 
-	chip8.prevReg = chip8.v[x];
-	chip8.memory[chip8.i + 1] = (chip8.v[x] / 10) % 10; // Store tens digit into location i + 1 in memory
-	chip8.updateRegister(x);
+	index = chip8.i + 1;
+	value = (chip8.v[x] / 10) % 10;
+	chip8.memory[index] = value; // Store tens digit into location i + 1 in memory
+	chip8.updateMem(index, value);
 
-
-	chip8.prevReg = chip8.v[x];
-	chip8.memory[chip8.i + 2] = (chip8.v[x] % 100) % 10; // Store ones digit into location i + 2 in memory	
-	chip8.updateRegister(x);
-
+	index = chip8.i + 2;
+	value = (chip8.v[x] % 100) % 10;
+	chip8.memory[index] = value // Store ones digit into location i + 2 in memory	
+	chip8.updateMem(index, value);
+	console.log("hellooooooo")
 }
 
 // case 0xf055
-// LD
+// Fx55
+// LD [I], vX
 //Store registers v0 through vX in memory at i
 function storeV0ToVxInMemory(x) {
+	var op = "0xF055";
+	var instr = "LD [I], vX";
+	chip8.updateInstruction(op, instr);
+
 	for (let i = 0; i <= x; i++) {
-		chip8.memory[chip8.i + i] = chip8.v[i];
+		var index = chip8.i + i;
+		var value = chip8.v[i];
+		chip8.memory[index] = value;
+		chip8.updateMem(index, value);
 	}
 }
 
 // case 0xf065
-// LD
+// Fx65
+// LD vX, [I]
 //Read registers from v0 through vX at i
 function storeMemoryInVRegisters(x) {
+	var op = "0xF065";
+	var instr = "LD vX, [I]";
+	chip8.updateInstruction(op, instr);
+
 	for (let i = 0; i <= x; i++) {
 		chip8.prevReg = chip8.v[i];
 		chip8.v[i] = chip8.memory[chip8.i + i];
