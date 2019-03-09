@@ -1,0 +1,132 @@
+<html>
+	<body>
+		<script type = "text/javascript">
+
+			// var mnemonic = "RTS";
+			// var NNN;
+			// var NN = 1;
+			// var N;
+			// var reg = 1;
+			// var reg2;
+
+			function convert() {
+
+				var mnemonic = document.test.mnemonic.value;
+				switch (mnemonic) {
+					case "CLS":
+						var str = "0x00E0";
+						break;
+
+					case "RTS":
+						var str = "0x00EE";
+						break;
+
+					// case "SYS":
+					// 	return "" + 0 + NNN;
+
+					// case "JUMP":
+					// 	return "" + 1 + NNN;
+
+					// case "CALL":
+					// 	return "" + 2 + NNN;
+
+					// case "SKE":
+					// 	return "" + 3 + reg + NN;
+
+					// case "SKNE":
+					// 	return "" + 4 + reg + NN;
+
+					// case "SKR":
+					// 	return (5 + reg + reg2 + 0).tostring();
+
+					// case "LOAD":
+					// 	return "" + 6 + reg + NN;
+
+					// case "ADD":
+					// 	return "" + 7 + reg + NN;
+
+					// case "MOVE":
+					// 	return "" + 8 + reg + reg2 + 0;
+
+					// case "OR":
+					// 	return "" + 8 + reg + reg2 + 1;
+
+					// case "AND":
+					// 	return "" + 8 + reg + reg2 + 2;
+
+					// case "XOR":
+					// 	return "" + 8 + reg + reg2 + 3;
+
+					// case "ADDR":
+					// 	return "" + 8 + reg + reg2 + 4;
+
+					// case "SUB":
+					// 	return "" + 8 + reg + reg2 + 5;
+
+					// case "SHR":
+					// 	return "" + 8 + reg + 0 + 6;
+
+					// case "SHL":
+					// 	return "" + 8 + reg + 0 + "E";
+
+					// case "SKNE":
+					// 	return "" + 9 + reg + reg2 + 0;
+
+					// case "LOADI":
+					// 	return "A" + "" + NNN;
+
+					// case "JUMPI":
+					// 	return "B" + "" + NNN;
+
+					// case "RND":
+					// 	return "C" + "" + reg + NN;
+
+					// case "DRW":
+					// 	return "D" + "" + reg + reg2 + N;
+
+					// case "SKPR":
+					// 	return "E" + "" + reg + 9 + "E";
+
+					// case "SKNP":
+					// 	return "E" + "" + reg + "A" + 1;
+
+					// case "MOVED":
+					// 	return "F" + "" + reg + 0 + 7;
+
+					// case "KEYD":
+					// 	return "F" + "" + reg + 0 + "A";
+
+					// case "LOADD":
+					// 	return "F" + "" + reg + 1 + 5;
+
+					// case "LOADS":
+					// 	return "F" + "" + reg + 1 + 8;
+
+					// case "ADDI":
+					// 	return "F" + "" + reg + 1 + "E";
+
+					// case "LDSPR":
+					// 	return "F" + "" + reg + 2 + 9;
+
+					// case "BCD":
+					// 	return "F" + "" + reg + 3 + 3;
+
+					// case "STOR":
+					// 	return "F" + "" + reg + 5 + 5;
+
+					// case "READ":
+					// 	return "F" + "" + reg + 6 + 5;
+				}
+
+				document.test.hex.value = str;
+			}
+			
+		</script>
+
+		<form name="test">
+            Mneumonic <br><input type="textbox" name="mnemonic">
+            <input type="button" onclick="convert();" value="Convert" /><br><br>
+            <input type="textbox" id="hex" >
+        </form>
+	</body>
+</html>
