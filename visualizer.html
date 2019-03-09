@@ -13,14 +13,13 @@
   <script src = "https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
   <script src = "chip8.js"></script>
   <script src="ops.js"></script>
-  
+
 </head>
 <body>
-  <ul>
+<ul>
   <li><a href="https://github.com/KSSidhu/CMPT276"><i class="far fa-file-code"></i></a></li>
   <li><a href="#about" onclick="chip8.help()">About</a></li>
 </ul>
-
 <br>
 <div class="wrapper" id="wrapper">
   <div class="visualizer" id="visualizer" >
@@ -29,6 +28,8 @@
         <div class="toolbar-button-wrapper">
           <button class="toolbar-button" > Load ROM </button>
           <input type="file" name="myfile" id="fileInput"/>
+
+          <button class="toolbar-button" type="button" onclick="chip8.help()"> About </button>
       </div>
       </div>
       <div class="romDisplay" style="background-color:#C7D4F0;">
@@ -63,7 +64,7 @@
           <button name="X" class="key-button" type="button" onclick="chip8.onKey(event, name)"> X </button>
           <button name="C" class="key-button" type="button" onclick="chip8.onKey(event, name)"> C </button>
           <button name="V" class="key-button" type="button" onclick="chip8.onKey(event, name)"> V </button>        
-        <div class="controlDisplay" style="background-color:#6D7995;">
+        <div class="controlDisplay" style="background-color:#7F8BA8;">
 
           <button name="backwards" id="backwards" class="log-button" type="button" onclick="chip8.backwards()"><i class="fas fa-step-backward"></i> Backwards </button>
           <button name="pause" id="pause" class="log-button" type="button" onclick="chip8.pause()"><i class="fas fa-pause"></i> Pause </button>
@@ -77,12 +78,6 @@
 
       
       </div>
-
-     <!--  <div class="logDisplay" style="background-color:#6D7995;">
-
-        <textarea id="logtextarea" rows="10" cols="70" readonly autofocus>
-        </textarea>
-      </div> -->
       <div class="logDisplay" style="background-color:#6D7995;">
         <div class="log-display-wrapper" style="background-color:#6D7995;">
         <table class="instrTable" id="instrTable">
