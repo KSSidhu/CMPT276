@@ -51,11 +51,17 @@ let chip8 = {
 	// The HTML canvas the emulator runs games to
 	canvas: null,
 
+	//register display
 	registerFlag: false,
 
+	//instruction display
 	instructionFlag: false,
+	maxRows: 7,
+	currInstr: 7,
 
+	//memory display
 	memFlag: false,
+	currMem: 7,
 
 	interval: null,
 
@@ -367,58 +373,6 @@ Display Registers, Memory, Instructions
 		}
 	},
 
-	// //Update register values after opcode is retrieved
-	// updateRegisters: function()
-	// {
-	// 	if(!chip8.test) {
-	// 		if(chip8.paused)
-	// 		{
-	// 			return;
-	// 		}
-
-	// 			for(var i = 0; i < 16; i++)
-	// 			{
-	// 				$("#reg-V" + i).text(chip8.hexConverter(chip8.v[i]));
-
-					
-	// 			}
-
-	// 			$("#reg-I").text(chip8.hexConverter(chip8.i));
-	// 			$("#reg-PC").text(chip8.hexConverter(chip8.pc));
-	// 	}
-		
-	// },
-
-	//Update Register Display
-	updateRegister: function(index)
-	{
-		if(!chip8.test) {
-
-			$("#reg-V" + index).css("backgroundColor", "white");
-			if(chip8.paused)
-			{
-				return;
-			}
-
-				if(chip8.v[index] != chip8.prevReg)
-				{
-
-					$("#reg-V" + index).css("backgroundColor", "grey");
-					$("#reg-V" + index).text(chip8.hexConverter(chip8.v[index]));
-				}
-				else if(chip8.v[index] == chip8.prevReg)
-				{
-
-					$("#reg-V" + index).css("backgroundColor", "white");
-				}
-
-			$("#reg-I").text(chip8.hexConverter(chip8.i));
-			$("#reg-PC").text(chip8.pc);
-
-			}
-
-
-	},
 
 	//Init Instructions Display
 	initInstructions: function()
@@ -522,6 +476,117 @@ Display Registers, Memory, Instructions
 				chip8.memFlag = true;
 			}
 		}
+	},
+
+
+	// //Update register values after opcode is retrieved
+	// updateRegisters: function()
+	// {
+	// 	if(!chip8.test) {
+	// 		if(chip8.paused)
+	// 		{
+	// 			return;
+	// 		}
+
+	// 			for(var i = 0; i < 16; i++)
+	// 			{
+	// 				$("#reg-V" + i).text(chip8.hexConverter(chip8.v[i]));
+
+					
+	// 			}
+
+	// 			$("#reg-I").text(chip8.hexConverter(chip8.i));
+	// 			$("#reg-PC").text(chip8.hexConverter(chip8.pc));
+	// 	}
+		
+	// },
+
+	//Update Register Display
+	updateRegister: function(index)
+	{
+		if(!chip8.test) {
+
+			chip8.highlight("reg-V", index, "white");
+
+			if(chip8.paused)
+			{
+				return;
+			}
+
+				if(chip8.v[index] != chip8.prevReg)
+				{
+
+					chip8.highlight("reg-V", index, "#ddd");
+					$("#reg-V" + index).text(chip8.hexConverter(chip8.v[index]));
+				}
+				else if(chip8.v[index] == chip8.prevReg)
+				{
+
+					chip8.highlight("reg-V", index, "white");
+				}
+
+			$("#reg-I").text(chip8.hexConverter(chip8.i));
+			$("#reg-PC").text(chip8.pc);
+
+			}
+
+
+	},
+
+	updateInstruction: function(opcode, instruction)
+	{
+		if(!chip8.test) {
+			if(chip8.paused)
+			{
+				return;
+			}
+
+			chip8.highlight("op", chip8.currInstr - 1, "white");
+			chip8.highlight("instr", chip8.currInstr - 1, "white");
+
+			if(chip8.currInstr < 0)
+			{
+				chip8.currInstr = chip8.maxRows;
+			}
+			$("#op" + chip8.currInstr).text(opcode);
+			$("#instr" + chip8.currInstr).text(instruction);
+			chip8.highlight("op", chip8.currInstr, "#ddd");
+			chip8.highlight("instr", chip8.currInstr, "#eee");
+
+			chip8.currInstr--;
+
+		}
+
+	},
+
+	updateMem: function(index, value)
+	{
+		if(!chip8.test) {
+			if(chip8.paused)
+			{
+				return;
+			}
+
+			chip8.highlight("mem", chip8.currMem - 1, "white");
+			chip8.highlight("val", chip8.currMem - 1, "white");
+
+			if(chip8.currMem < 0)
+			{
+				chip8.currMem = chip8.maxRows;
+			}
+			$("#mem" + chip8.currMem).text("memory" + index);
+			$("#val" + chip8.currMem).text(chip8.hexConverter(value));
+			chip8.highlight("mem", chip8.currMem, "#ddd");
+			chip8.highlight("val", chip8.currMem, "#eee");
+
+			chip8.currMem--;
+
+		}
+	},
+
+	highlight: function(id, index, colour)
+	{
+		$("#" + id + index).css("backgroundColor", colour);
 	},
 
 /******************************************
@@ -895,10 +960,10 @@ Render/Draw
 		let SCALE = 10;
 		let ctx = chip8.canvas.getContext('2d');
 		ctx.clearRect(0, 0, 64 * SCALE, 32 * SCALE);
-		ctx.fillStyle = '#AAAAAA';
+		ctx.fillStyle = '#EEEEEE';
 		ctx.fillRect(0, 0, 64 * SCALE, 32 * SCALE);
 
-		ctx.fillStyle = '#000000';
+		ctx.fillStyle = '#FFA500';
 
 		for (let i = 0; i < chip8.vram.length; i++) {
 			let x = (i % 64) * SCALE;
