@@ -1,132 +1,99 @@
-<html>
-	<body>
-		<script type = "text/javascript">
 
-			// var mnemonic = "RTS";
-			// var NNN;
-			// var NN = 1;
-			// var N;
-			// var reg = 1;
-			// var reg2;
+<html><head>
+<style>
+    body {
+        margin: 0%;
+    }
 
-			function convert() {
+    @font-face {
+        font-family: "CG";
+        src: url(./resources/CENTURYGOTHIC.ttf) format("truetype");
+    }
 
-				var mnemonic = document.test.mnemonic.value;
-				switch (mnemonic) {
-					case "CLS":
-						var str = "0x00E0";
-						break;
+    textarea {
+        margin-left: 0%;
+        margin-top: 0%;
+        height: 10%;
+        width: 20%;
+        resize: none;
+        visibility: visible;
+        background-color: white;
+        border-color: black;
 
-					case "RTS":
-						var str = "0x00EE";
-						break;
+    }
 
-					// case "SYS":
-					// 	return "" + 0 + NNN;
+    button {
+        background-color: white;
+        font-family: CG;
+        border-color: black;
+        border-width: 1px;
+        text-transform: capitalize;
+    }
 
-					// case "JUMP":
-					// 	return "" + 1 + NNN;
+</style></head>
 
-					// case "CALL":
-					// 	return "" + 2 + NNN;
 
-					// case "SKE":
-					// 	return "" + 3 + reg + NN;
+<body>
+    <textarea id="textbox">r0</textarea><br><br>
+    <button id="create">SAVE TO FILE</button>
+    <a download="notes.txt" id="downloadlink" style="display: none"><button onclick="functionreset()">DOWNLOAD</button></a>
+    <br>
 
-					// case "SKNE":
-					// 	return "" + 4 + reg + NN;
+    <script>
+        (function() {
+            var textFile = null,
+                makeTextFile = function(text) {
+                    var data = new Blob([text], {
+                        type: 'text/plain'
+                    });
 
-					// case "SKR":
-					// 	return (5 + reg + reg2 + 0).tostring();
+                    // If we are replacing a previously generated file we need to
+                    // manually revoke the object URL to avoid memory leaks.
+                    if (textFile !== null) {
+                        window.URL.revokeObjectURL(textFile);
+                    }
 
-					// case "LOAD":
-					// 	return "" + 6 + reg + NN;
+                    textFile = window.URL.createObjectURL(data);
 
-					// case "ADD":
-					// 	return "" + 7 + reg + NN;
+                    return textFile;
+                };
 
-					// case "MOVE":
-					// 	return "" + 8 + reg + reg2 + 0;
+            /////////////// EXTRACT INFO FROM A TEXT FILE///////////
 
-					// case "OR":
-					// 	return "" + 8 + reg + reg2 + 1;
+            //For sample
+            var mnemonic = "RTS";
 
-					// case "AND":
-					// 	return "" + 8 + reg + reg2 + 2;
+            switch (mnemonic) {
+               case "CLS":
+                  var create = document.getElementById('create'),textbox = document.getElementById("textbox").value = "0x00E0";
+                  alert(textbox);
+                  break;
 
-					// case "XOR":
-					// 	return "" + 8 + reg + reg2 + 3;
+               case "RTS" :
+                  var create = document.getElementById('create'),textbox = document.getElementById("textbox").value = "0x00EE";
+            }
 
-					// case "ADDR":
-					// 	return "" + 8 + reg + reg2 + 4;
+            create.addEventListener('click', function() {
+                var link = document.getElementById('downloadlink');
+                link.href = makeTextFile(textbox);
+                link.style.display = 'block';
+                document.getElementById('create').style.display = 'none';
+            }, false);
+        })();
 
-					// case "SUB":
-					// 	return "" + 8 + reg + reg2 + 5;
+        function functionreset() {
+            var link = document.getElementById('downloadlink');
+            link.style.display = 'none';
+            document.getElementById('create').style.display = 'block';
+        }
 
-					// case "SHR":
-					// 	return "" + 8 + reg + 0 + 6;
+    </script>
+    <script>
+         document.getElementById("textbox").onchange = function() {functionreset()}
+    </script>
 
-					// case "SHL":
-					// 	return "" + 8 + reg + 0 + "E";
+<!-- REFERENCES: 
 
-					// case "SKNE":
-					// 	return "" + 9 + reg + reg2 + 0;
+    https://stackoverflow.com/questions/52792178/i-want-to-save-textbox-to-txt-file-in-html-using-javascript-but-i-have-an-error?fbclid=IwAR3imyhtf-nizrShgFY1RA1H7CQyIk7_ZgAb2P1kLIjIQePSTCFvUdnj-J0-->
 
-					// case "LOADI":
-					// 	return "A" + "" + NNN;
-
-					// case "JUMPI":
-					// 	return "B" + "" + NNN;
-
-					// case "RND":
-					// 	return "C" + "" + reg + NN;
-
-					// case "DRW":
-					// 	return "D" + "" + reg + reg2 + N;
-
-					// case "SKPR":
-					// 	return "E" + "" + reg + 9 + "E";
-
-					// case "SKNP":
-					// 	return "E" + "" + reg + "A" + 1;
-
-					// case "MOVED":
-					// 	return "F" + "" + reg + 0 + 7;
-
-					// case "KEYD":
-					// 	return "F" + "" + reg + 0 + "A";
-
-					// case "LOADD":
-					// 	return "F" + "" + reg + 1 + 5;
-
-					// case "LOADS":
-					// 	return "F" + "" + reg + 1 + 8;
-
-					// case "ADDI":
-					// 	return "F" + "" + reg + 1 + "E";
-
-					// case "LDSPR":
-					// 	return "F" + "" + reg + 2 + 9;
-
-					// case "BCD":
-					// 	return "F" + "" + reg + 3 + 3;
-
-					// case "STOR":
-					// 	return "F" + "" + reg + 5 + 5;
-
-					// case "READ":
-					// 	return "F" + "" + reg + 6 + 5;
-				}
-
-				document.test.hex.value = str;
-			}
-			
-		</script>
-
-		<form name="test">
-            Mneumonic <br><input type="textbox" name="mnemonic">
-            <input type="button" onclick="convert();" value="Convert" /><br><br>
-            <input type="textbox" id="hex" >
-        </form>
-	</body>
-</html>
+</body></html>
