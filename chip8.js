@@ -998,10 +998,10 @@ Render/Draw
 		let SCALE = 10;
 		let ctx = chip8.canvas.getContext('2d');
 		ctx.clearRect(0, 0, 64 * SCALE, 32 * SCALE);
-		ctx.fillStyle = '#EEEEEE';
+		ctx.fillStyle = '#AAAAAA';
 		ctx.fillRect(0, 0, 64 * SCALE, 32 * SCALE);
 
-		ctx.fillStyle = '#FFA500';
+		ctx.fillStyle = '#ffffff';
 
 		for (let i = 0; i < chip8.vram.length; i++) {
 			let x = (i % 64) * SCALE;
