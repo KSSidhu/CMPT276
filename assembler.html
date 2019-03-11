@@ -1,5 +1,8 @@
 
 <html><head>
+    <input type="file" id="files" name="files[]" multiple />
+    <output id="list"></output>
+    <br> <br>
 <style>
     body {
         margin: 0%;
@@ -39,7 +42,33 @@
     <a download="notes.txt" id="downloadlink" style="display: none"><button onclick="functionreset()">DOWNLOAD</button></a>
     <br>
 
+
     <script>
+        var mnemonic = "SYS";
+        var N = 1;
+        var NN = 10;
+        var NNN = 100;
+
+        //INPUT
+          
+        function handleFileSelect(evt) {
+            var files = evt.target.files; // FileList object
+
+            // files is a FileList of File objects. List some properties.
+            var output = [];
+            for (var i = 0, f; f = files[i]; i++) {
+              output.push('<li><strong>', escape(f.name), '</strong> (', f.type || 'n/a', ') - ',
+                          f.size, ' bytes, last modified: ',
+                          f.lastModifiedDate ? f.lastModifiedDate.toLocaleDateString() : 'n/a',
+                          '</li>');
+            }
+            document.getElementById('list').innerHTML = '<ul>' + output.join('') + '</ul>';
+      }
+
+        document.getElementById('files').addEventListener('change', handleFileSelect, false);
+
+        //OUTPUT
+
         (function() {
             var textFile = null,
                 makeTextFile = function(text) {
@@ -61,16 +90,119 @@
             /////////////// EXTRACT INFO FROM A TEXT FILE///////////
 
             //For sample
-            var mnemonic = "RTS";
-
+            
             switch (mnemonic) {
-               case "CLS":
-                  var create = document.getElementById('create'),textbox = document.getElementById("textbox").value = "0x00E0";
-                  alert(textbox);
-                  break;
+                case "CLS":
+                    var create = document.getElementById('create'),textbox = document.getElementById("textbox").value = "0x00E0";
+                    alert(textbox);
+                    break;
 
-               case "RTS" :
-                  var create = document.getElementById('create'),textbox = document.getElementById("textbox").value = "0x00EE";
+                case "RTS" :
+                    var create = document.getElementById('create'),textbox = document.getElementById("textbox").value = "0x00EE";
+                    break;
+                case "SYS":
+                    var create = document.getElementById('create'),textbox = document.getElementById("textbox").value = "0x0" + NNN;
+                    break;
+                // case JUMP:
+                //     var create = document.getElementById('create'),textbox = document.getElementById("textbox").value = "0x1" + NNN;
+                //     break;
+
+                // case CALL:
+                //     var create = document.getElementById('create'),textbox = document.getElementById("textbox").value = "0x2" + NNN;
+                //     break;
+
+                // case SKE:
+                //     var create = document.getElementById('create'),textbox = document.getElementById("textbox").value = "0x3" + reg + NNN;
+                //     break;
+
+                // case SKNE:
+                //     var create = document.getElementById('create'),textbox = document.getElementById("textbox").value = "0x4" + reg + NNN;
+                //     break;
+
+
+                // case SKR:
+                //     var create = document.getElementById('create'),textbox = document.getElementById("textbox").value = "0x5" + reg + reg2 + "0";
+                //     break;
+
+                // case LOAD:
+                //     var create = document.getElementById('create'),textbox = document.getElementById("textbox").value = "0x6" + reg + NN;
+                //     break;
+                    
+
+                // case ADD:
+                //     return "" + 7 + reg + NN;
+
+                // case MOVE:
+                //     return "" + 8 + reg + reg2 + 0;
+
+                // case OR:
+                //     return "" + 8 + reg + reg2 + 1;
+
+                // case AND:
+                //     return "" + 8 + reg + reg2 + 2;
+
+                // case XOR:
+                //     return "" + 8 + reg + reg2 + 3;
+
+                // case ADDR:
+                //     return "" + 8 + reg + reg2 + 4;
+
+                // case SUB:
+                //     return "" + 8 + reg + reg2 + 5;
+
+                // case SHR:
+                //     return "" + 8 + reg + 0 + 6;
+
+                // case SHL:
+                //     return "" + 8 + reg + 0 + "E";
+
+                // case SKNE:
+                //     return "" + 9 + reg + reg2 + 0;
+
+                // case LOADI:
+                //     return "A" + "" + NNN;
+
+                // case JUMPI:
+                //     return "B" + "" + NNN;
+
+                // case RND:
+                //     return "C" + "" + reg + NN;
+
+                // case DRW:
+                //     return "D" + "" + reg + reg2 + N;
+
+                // case SKPR:
+                //     return "E" + "" + reg + 9 + "E";
+
+                // case SKNP:
+                //     return "E" + "" + reg + "A" + 1;
+
+                // case MOVED:
+                //     return "F" + "" + reg + 0 + 7;
+
+                // case KEYD:
+                //     return "F" + "" + reg + 0 + "A";
+
+                // case LOADD:
+                //     return "F" + "" + reg + 1 + 5;
+
+                // case LOADS:
+                //     return "F" + "" + reg + 1 + 8;
+
+                // case ADDI:
+                //     return "F" + "" + reg + 1 + "E";
+
+                // case LDSPR:
+                //     return "F" + "" + reg + 2 + 9;
+
+                // case BCD:
+                //     return "F" + "" + reg + 3 + 3;
+
+                // case STOR:
+                //     return "F" + "" + reg + 5 + 5;
+
+                // case READ:
+                //     return "F" + "" + reg + 6 + 5;
             }
 
             create.addEventListener('click', function() {
