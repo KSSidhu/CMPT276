@@ -254,14 +254,16 @@ let chip8 = {
 		}
 
 		chip8.keyPressed = chip8.keyBuffer.reduce((prevValue, currentValue) => prevValue | currentValue);
+
+		if(evt.type == 'click')
+			chip8.keyBuffer[translateKeys] = false;
 	},
 /******************************************
 Display Registers, Memory, Instructions 
 
 
 ******************************************/
-
-	//Init Register Display
+//Init Register Display
 	initRegisters: function() {
 		if(!chip8.test){
 			var table = document.getElementById('regTable');
@@ -620,7 +622,7 @@ Display Registers, Memory, Instructions
 	{
 		$("#" + id + index).css("backgroundColor", colour);
 	},
-
+	
 /******************************************
 Stop/Start Emulator
 
