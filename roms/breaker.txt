@@ -1,65 +1,110 @@
 clear
 
 : block
-	0xf0
+  0xf0
 
 : user
-	0xff
+  0xff
   
 : ball
-	0x10
+  0x80
   
-: left v0 += -1 return
-
-: right v0 += 1 return
-
-: turnLeft v3 := 60 v5 := 1 return
-: turnRight v3 := 61 v5 := -1 return
-: turnUp v4 := 31 v6 := -1 return
-: turnDown v4 := 1 v6 := 1 return
 
 : main
-	v0 := 2 # x position
-	v1 := 4 # y position
-	i := block
+  vd := 2 # x position
+  vc := 2 # y position
+  i := block
 
-	loop
-		if v1 >= 16 then jump game
-		sprite v0 v1 1
-		v0 += 5
-		if v0 >= 59 begin
-			v0 := 2
-			v1 += 2
-		end
-	again
+  loop
+    if vc == 18 then jump game
+    sprite vd vc 1
+    vd += 5
+    if vd >= 59 begin
+    vd := 2
+    vc += 2
+    end
+  again
   
   : game
-  	# draw ball starting position
-	  v3 := 60 # ball x position
-    v4 := 20 # ball y position
-    v5 := 1 # ball x direction
-    v6 := 1 # ball y direction
+    # draw ball starting position
+    :alias ballx v3
+    ballx := 32 # ball x position
+    :alias bally v4
+    bally := 20 # ball y position
+    :alias dirx v5
+    dirx := 1 # ball x direction
+    :alias diry v6
+    diry := -1 # ball y direction
     i := ball
+    sprite ballx bally 1
     
     # paddle starting position
+    :alias paddlex v0
     v0 := 28
-		v1 := 30
+    :alias paddley v1
+    v1 := 29
+    i := user
+    sprite paddlex paddley 1
     
-  	loop # main game loop
-    	loop
-      sprite v3 v4 1
-      if v3 == 60 then jump turnLeft
-      if v3 == 61 then jump turnRight
-      v3 += v5
-      sprite v3 v4 1
-      again
-      
-      i := user
-      sprite v0 v1 1
-    	v2 := key
-      sprite v0 v1 1
-    	if v2 == 4 then left
-      if v2 == 6 then right
-      
-      i := ball
+    loop # main game loop
+      updateBall
+      if vf != 0 then updateBricks
+      updatePaddle
     again
+    
+    
+####################################################
+
+: updateBall
+  i := ball
+  sprite ballx bally 1
+  if bally == 31 then reset
+  if ballx == 63 then dirx := -1
+  if ballx == 0 then dirx := 1
+  if bally == 0 then diry := 1
+
+  ballx += dirx
+  bally += diry
+  sprite ballx bally 1
+  return
+
+   
+: updatePaddle
+  
+  i := user
+  sprite paddlex paddley 1
+  v7 := 4
+  if v7 key then v0 += -1
+  v8 := 6
+  if v8 key then v0 += 1
+  paddlex := v0
+  paddley := v1
+  sprite paddlex paddley 1
+  return
+
+
+: reset
+  bally := 28
+  ballx := 32
+  dirx := 1
+  diry := -1
+  return
+  
+: reverse
+  diry := -1
+  dirx := 1
+  return
+
+: updateBricks
+  if bally == 29 then updateDirection
+  return
+  
+: updateDirection
+  diry := -1
+  if dirx == 1 begin
+    dirx := 1
+  else
+    dirx := -1
+  end
+  
+  return

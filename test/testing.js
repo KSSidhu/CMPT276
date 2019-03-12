@@ -41,7 +41,6 @@ function resetTest() {
 	test3 = chip8.delayTimer === 0 ? true : false;
 	test4 = chip8.soundTimer === 0 ? true : false;
 	test5 = chip8.paused === false ? true : false;
-	test6 = chip8.keyPressed === false ? true : false;
 	// Check flags
 	// expect(chip8).toMatchObject({paused: false, keyPressed: false});
 	// Check arrays for memory, registers and vram
@@ -71,10 +70,58 @@ function resetTest() {
 		}
 	}
 
-	if (test1 & test2 & test3 & test4 & test5 & test6 & test7 & test8 & test9 & test10 & test11) {
-		console.log('SUCCESS: reset function');
+	if (test1) {
+		document.getElementById("checkPC").innerHTML = '<i class="fas fa-check"></i>';
 	} else {
-		console.log('ERROR: reset function');
+		document.getElementById("checkPC").innerHTML = '<i class="fas fa-times"></i>';
+	}
+
+	if (test2) {
+		document.getElementById("checkSP").innerHTML = '<i class="fas fa-check"></i>';
+	} else {
+		document.getElementById("checkSP").innerHTML = '<i class="fas fa-times"></i>';
+	}
+
+	if (test3 & test4) {
+		document.getElementById("checkTimers").innerHTML = '<i class="fas fa-check"></i>';
+	} else {
+		document.getElementById("checkTimers").innerHTML = '<i class="fas fa-times"></i>';
+	}
+
+	if (test5) {
+		document.getElementById("checkPaused").innerHTML = '<i class="fas fa-check"></i>';
+	} else {
+		document.getElementById("checkPaused").innerHTML = '<i class="fas fa-times"></i>';
+	}
+
+	if (test7) {
+		document.getElementById("checkMemory").innerHTML = '<i class="fas fa-check"></i>';
+	} else {
+		document.getElementById("checkMemory").innerHTML = '<i class="fas fa-times"></i>';
+	}
+
+	if (test8) {
+		document.getElementById("checkVRegisters").innerHTML = '<i class="fas fa-check"></i>';
+	} else {
+		document.getElementById("checkVRegisters").innerHTML = '<i class="fas fa-times"></i>';
+	}
+
+	if (test9) {
+		document.getElementById("checkStack").innerHTML = '<i class="fas fa-check"></i>';
+	} else {
+		document.getElementById("checkStack").innerHTML = '<i class="fas fa-times"></i>';
+	}
+
+	if (test10) {
+		document.getElementById("checkVram").innerHTML = '<i class="fas fa-check"></i>';
+	} else {
+		document.getElementById("checkVram").innerHTML = '<i class="fas fa-times"></i>';
+	}
+
+	if (test11) {
+		document.getElementById("checkKeyBuffer").innerHTML = '<i class="fas fa-check"></i>';
+	} else {
+		document.getElementById("checkKeyBuffer").innerHTML = '<i class="fas fa-times"></i>';
 	}
 }
 
@@ -100,9 +147,9 @@ function pauseTest() {
 	}
 
 	if (test1 & test2 & test3) {
-		console.log('SUCCESS: Pause Button');
+		document.getElementById("checkPause").innerHTML = '<i class="fas fa-check"></i>';
 	} else {
-		console.log('ERROR: Pause Button');
+		document.getElementById("checkPause").innerHTML = '<i class="fas fa-times"></i>';
 	}
 }
 
@@ -112,11 +159,12 @@ function test_00e0() {
 	for (let i = 0; i < chip8.vram.length; i++) {
 		// expect(chip8.vram[i]).toEqual(0);
 		if (chip8.vram[i] != 0) {
-			console.log('ERROR: 0x00e0');
+			document.getElementById("check0x00e0").innerHTML = '<i class="fas fa-times"></i>';
+			return;
 		}
 	}
 
-	console.log('SUCCESS: 0x00e0');
+	document.getElementById("check0x00e0").innerHTML = '<i class="fas fa-check"></i>';
 }
 
 function test_00ee() {
@@ -125,12 +173,19 @@ function test_00ee() {
 	chip8.sp = 1;
 	chip8.runCycle(opcode);
 	
-	let test = ((chip8.sp === 0) & (chip8.pc === 0)) ? true : false;
+	let test = (chip8.sp === 0) ? true : false;
+	let test2 = chip8.pc === 0 ? true : false;
 
 	if(test) {
-		console.log('SUCCESS: 0x00ee');
+		document.getElementById("check0x00EEi").innerHTML = '<i class="fas fa-check"></i>';
 	} else {
-		console.log("ERROR: 0x00ee");
+		document.getElementById("check0x00EEi").innerHTML = '<i class="fas fa-times"></i>';
+	}
+
+	if(test2) {
+		document.getElementById("check0x00EEii").innerHTML = '<i class="fas fa-check"></i>';
+	} else {
+		document.getElementById("check0x00EEii").innerHTML = '<i class="fas fa-times"></i>';
 	}
 }
 
@@ -141,9 +196,9 @@ function test_1000() {
 	let test = (chip8.pc === 0) ? true : false;
 
 	if(test) {
-		console.log("SUCCESS: 0x1000");
+		document.getElementById("check0x1NNN").innerHTML = '<i class="fas fa-check"></i>';
 	} else {
-		console.log("ERROR: 0x1000");
+		document.getElementById("check0x1NNN").innerHTML = '<i class="fas fa-times"></i>';
 	}
 }
 
@@ -153,12 +208,17 @@ function test_2000() {
 	chip8.runCycle(opcode);
 
 	test1 = ((chip8.sp === 1) & (chip8.pc === 0x0111)) ? true : false;
-	test2 = (chip8.stack[0] === 514) ? true : false;
-
-	if(test1 & test2) {
-		console.log("SUCCESS: 0x2000");
+	if(test1) {
+		document.getElementById("check0x2NNNi").innerHTML = '<i class="fas fa-check"></i>';
 	} else {
-		console.log("ERROR: 0x2000");
+		document.getElementById("check0x1NNNi").innerHTML = '<i class="fas fa-times"></i>';
+	}
+
+	test2 = (chip8.stack[0] === 514) ? true : false;
+	if(test2) {
+		document.getElementById("check0x2NNNii").innerHTML = '<i class="fas fa-check"></i>';
+	} else {
+		document.getElementById("check0x1NNNii").innerHTML = '<i class="fas fa-times"></i>';
 	}
 }
 
@@ -171,16 +231,20 @@ function test_3000() {
 
 	chip8.runCycle(opcode); // run iteration with v[x] = 0
 	let test1 = (chip8.pc === 516) ? true : false;
+	if(test1) {
+		document.getElementById("check0x3NNNi").innerHTML = '<i class="fas fa-check"></i>';
+	} else {
+		document.getElementById("check0x3NNNi").innerHTML = '<i class="fas fa-times"></i>';
+	}
 
 	chip8.v[x] = 1;
 	chip8.runCycle(opcode);
 
 	let test2 = (chip8.pc === 518) ? true : false;
-
-	if(test1 & test2) {
-		console.log("SUCCESS: 0x3000");
+	if(test2) {
+		document.getElementById("check0x3NNNii").innerHTML = '<i class="fas fa-check"></i>';
 	} else {
-		console.log("ERROR: 0x3000");
+		document.getElementById("check0x3NNNii").innerHTML = '<i class="fas fa-times"></i>';
 	}
 }
 
@@ -192,15 +256,20 @@ function test_4000() {
 
 	chip8.runCycle(opcode); // run iteration with v[x] = 0
 	let test1 = (chip8.pc === 514) ? true : false;
+	if(test1) {
+		document.getElementById("check0x4NNNi").innerHTML = '<i class="fas fa-check"></i>';
+	} else {
+		document.getElementById("check0x4NNNi").innerHTML = '<i class="fas fa-times"></i>';
+	}
 
 	chip8.v[x] = 0x0033;
 	chip8.runCycle(opcode);
 	let test2 = (chip8.pc === 518) ? true : false;
 
-	if(test1 & test2) {
-		console.log("SUCCESS: 0x4000");
+	if(test2) {
+		document.getElementById("check0x4NNNii").innerHTML = '<i class="fas fa-check"></i>';
 	} else {
-		console.log("ERROR: 0x4000");
+		document.getElementById("check0x4NNNii").innerHTML = '<i class="fas fa-times"></i>';
 	}
 }
 
@@ -216,15 +285,21 @@ function test_5000() {
 	chip8.runCycle(opcode);
 	let test1 = (chip8.pc === 516) ? true : false;
 
+	if(test1) {
+		document.getElementById("check0x5XYNi").innerHTML = '<i class="fas fa-check"></i>';
+	} else {
+		document.getElementById("check0x5XYNi").innerHTML = '<i class="fas fa-times"></i>';
+	}
+
 	chip8.v[y] = 12;
 	chip8.v[x] = 0;
 
 	let test2 = (chip8.pc === 516) ? true : false;
 
-	if(test1 & test2) {
-		console.log("SUCCESS: 0x5000");
+	if(test2) {
+		document.getElementById("check0x5XYNii").innerHTML = '<i class="fas fa-check"></i>';
 	} else {
-		console.log("ERROR: 0x5000");
+		document.getElementById("check0x5XYNii").innerHTML = '<i class="fas fa-times"></i>';
 	}
 }
 
@@ -235,12 +310,19 @@ function test_6000() {
 
 	chip8.runCycle(opcode);
 
-	let test = ((chip8.v[x] === 17) & (chip8.pc === 514)) ? true : false;
+	let test1 = (chip8.v[x] === 17) ? true : false;
+	let test2 = (chip8.pc === 514) ? true : false
 
-	if(test) {
-		console.log("SUCCESS: 0x6000");
+	if(test1) {
+		document.getElementById("check0x6XNNi").innerHTML = '<i class="fas fa-check"></i>';
 	} else {
-		console.log("ERROR: 0x6000");
+		document.getElementById("check0x6XNNi").innerHTML = '<i class="fas fa-times"></i>';
+	}
+
+	if(test2) {
+		document.getElementById("check0x6XNNii").innerHTML = '<i class="fas fa-check"></i>';
+	} else {
+		document.getElementById("check0x6XNNii").innerHTML = '<i class="fas fa-times"></i>';
 	}
 }
 
@@ -252,102 +334,225 @@ function test_7000() {
 	chip8.v[x] = 17;
 
 	chip8.runCycle(opcode);
-	let test = ((chip8.v[x] === 34) & (chip8.pc === 514)) ? true : false;
+	let test = (chip8.v[x] === 34) ? true : false;
+	let test2 = chip8.pc === 514 ? true : false;
 
-	if(test) {
-		console.log("SUCCESS: 0x7000");
+	if(test1) {
+		document.getElementById("check0x7XNNi").innerHTML = '<i class="fas fa-check"></i>';
 	} else {
-		console.log("ERROR: 0x7000");
+		document.getElementById("check0x7XNNi").innerHTML = '<i class="fas fa-times"></i>';
+	}
+
+	if(test2) {
+		document.getElementById("check0x7XNNii").innerHTML = '<i class="fas fa-check"></i>';
+	} else {
+		document.getElementById("check0x7XNNii").innerHTML = '<i class="fas fa-times"></i>';
 	}
 }
 
 function test_8000() {
-	console.log("TEST: 0x8000");
 	chip8.reset();
 	let opcode = 0x8120;
 
 	let y = (opcode & 0x00f0) >> 4;
 	let x = (opcode & 0x0f00) >> 8;
 
-	// Opcode: 0x800
+	// Opcode: 0x8000
 	chip8.v[y] = 17;
 	chip8.runCycle(opcode);
-	let test1 = ((chip8.pc === 514) & (chip8.v[x] === 17)) ? true : false;
+	let test = (chip8.pc === 514) ? true : false;
+	let test1 = (chip8.v[x] === 17) ? true : false;
 	if(test1) {
-		console.log(" - SUCCESS: 0x8000");
+		document.getElementById("check0x8XY0i").innerHTML = '<i class="fas fa-check"></i>';
 	} else {
-		console.log(" - ERROR: 0x8000");
+		document.getElementById("check0x8XY0i").innerHTML = '<i class="fas fa-times"></i>';
+	}
+
+	if(test) {
+		document.getElementById("check0x8XY0ii").innerHTML = '<i class="fas fa-check"></i>';
+	} else {
+		document.getElementById("check0x8XY0ii").innerHTML = '<i class="fas fa-times"></i>';
 	}
 
 	// Opcode: 0x8001
 	chip8.v[x] = 0;
 	chip8.runCycle(0x8121);
-	let test2 = ((chip8.pc === 516) & (chip8.v[x] === 17)) ? true : false;
+	test = (chip8.pc === 516)? true : false;
+	let test2 = (chip8.v[x] === 17) ? true : false;
+
 	if(test2) {
-		console.log(" - SUCCESS: 0x8001");
+		document.getElementById("check0x8XY1i").innerHTML = '<i class="fas fa-check"></i>';
 	} else {
-		console.log(" - ERROR: 0x8001");
+		document.getElementById("check0x8XY1i").innerHTML = '<i class="fas fa-times"></i>';
+	}
+
+	if(test) {
+		document.getElementById("check0x8XY1ii").innerHTML = '<i class="fas fa-check"></i>';
+	} else {
+		document.getElementById("check0x8XY1ii").innerHTML = '<i class="fas fa-times"></i>';
 	}
 
 	// Opcode: 0x8002
 	chip8.v[x] = 0;
 	chip8.runCycle(0x8122);
-	let test3 = ((chip8.pc === 518) & (chip8.v[x] === 0)) ? true : false;
+	let test3 = (chip8.v[x] === 0) ? true : false;
+	test = (chip8.pc === 518) ? true : false;
+
 	if(test3) {
-		console.log(" - SUCCESS: 0x8002");
+		document.getElementById("check0x8XY2i").innerHTML = '<i class="fas fa-check"></i>';
 	} else {
-		console.log(" - ERROR: 0x8002");
+		document.getElementById("check0x8XY2i").innerHTML = '<i class="fas fa-times"></i>';
+	}
+
+	if(test) {
+		document.getElementById("check0x8XY2ii").innerHTML = '<i class="fas fa-check"></i>';
+	} else {
+		document.getElementById("check0x8XY2ii").innerHTML = '<i class="fas fa-times"></i>';
 	}
 
 	// Opcode: 0x8003
 	chip8.v[x] = 0;
 	chip8.runCycle(0x8123);
-	let test4 = ((chip8.pc === 520) & (chip8.v[x] === 17)) ? true : false;
+	test = (chip8.pc === 520) ? true : false;
+	let test4 = (chip8.v[x] === 17) ? true : false;
+	
 	if(test4) {
-		console.log(" - SUCCESS: 0x8003");
+		document.getElementById("check0x8XY3i").innerHTML = '<i class="fas fa-check"></i>';
 	} else {
-		console.log(" - ERROR: 0x8003");
+		document.getElementById("check0x8XY3i").innerHTML = '<i class="fas fa-times"></i>';
+	}
+
+	if(test) {
+		document.getElementById("check0x8XY3ii").innerHTML = '<i class="fas fa-check"></i>';
+	} else {
+		document.getElementById("check0x8XY3ii").innerHTML = '<i class="fas fa-times"></i>';
 	}
 
 	// Opcode: 0x8004
 	chip8.v[x] = 0;
 	chip8.runCycle(0x8124);
-	let test5 = ((chip8.pc === 522) & (chip8.v[x] === 17) & (chip8.v[0xf] === 0)) ? true : false;
+	test = (chip8.pc === 522)  ? true : false;
+	let test5 = (chip8.v[x] === 17) ? true : false;
+	let test5Sub = (chip8.v[0xf] === 0) ? true : false;
+	
 	if(test5) {
-		console.log(" - SUCCESS: 0x8004");
+		document.getElementById("check0x8XY4i").innerHTML = '<i class="fas fa-check"></i>';
 	} else {
-		console.log(" - ERROR: 0x8004");
+		document.getElementById("check0x8XY4i").innerHTML = '<i class="fas fa-times"></i>';
+	}
+
+	if(test5Sub) {
+		document.getElementById("check0x8XY4ii").innerHTML = '<i class="fas fa-check"></i>';
+	} else {
+		document.getElementById("check0x8XY4ii").innerHTML = '<i class="fas fa-times"></i>';
+	}
+
+	if(test) {
+		document.getElementById("check0x8XY4iii").innerHTML = '<i class="fas fa-check"></i>';
+	} else {
+		document.getElementById("check0x8XY4iii").innerHTML = '<i class="fas fa-times"></i>';
 	}
 
 	// Opcode: 0x8005
-	chip8.v[x] = 0;
+	chip8.v[x] = 20;
 	chip8.runCycle(0x8125);
-	let test6 = ((chip8.pc === 524) & (chip8.v[0xf] === 0)) ? true : false;
+	let test6 = (chip8.pc === 524) ? true : false;
+	test = (chip8.v[0xf] === 1) ? true : false;
+	let test6Sub = (chip8.v[x] === 3) ? true : false;
+
+	
 	if(test6) {
-		console.log(" - SUCCESS: 0x8005");
+		document.getElementById("check0x8XY5i").innerHTML = '<i class="fas fa-check"></i>';
 	} else {
-		console.log(" - ERROR: 0x8005");
+		document.getElementById("check0x8XY5i").innerHTML = '<i class="fas fa-times"></i>';
+	}
+
+	if(test6Sub) {
+		document.getElementById("check0x8XY5ii").innerHTML = '<i class="fas fa-check"></i>';
+	} else {
+		document.getElementById("check0x8XY5ii").innerHTML = '<i class="fas fa-times"></i>';
+	}
+
+	if(test) {
+		document.getElementById("check0x8XY5iii").innerHTML = '<i class="fas fa-check"></i>';
+	} else {
+		document.getElementById("check0x8XY5iii").innerHTML = '<i class="fas fa-times"></i>';
 	}
 
 	// Opcode: 0x8006
 	chip8.v[x] = 1;
 	chip8.runCycle(0x8126);
-	let test7 = ((chip8.pc === 526) & (chip8.v[x] === 0) & (chip8.v[0xf] === 1)) ? true : false;
+	test = (chip8.pc === 526) ? true : false;
+	let test7Sub = (chip8.v[0xf] === 1) ? true : false;
+	let test7 = (chip8.v[x] === 0) ? true : false;
+	
 	if(test7) {
-		console.log(" - SUCCESS: 0x8006");
+		document.getElementById("check0x8XY6i").innerHTML = '<i class="fas fa-check"></i>';
 	} else {
-		console.log(" - ERROR: 0x8006");
+		document.getElementById("check0x8XY6i").innerHTML = '<i class="fas fa-times"></i>';
+	}
+
+	if(test7Sub) {
+		document.getElementById("check0x8XY6ii").innerHTML = '<i class="fas fa-check"></i>';
+	} else {
+		document.getElementById("check0x8XY6ii").innerHTML = '<i class="fas fa-times"></i>';
+	}
+
+	if(test) {
+		document.getElementById("check0x8XY6iii").innerHTML = '<i class="fas fa-check"></i>';
+	} else {
+		document.getElementById("check0x8XY6iii").innerHTML = '<i class="fas fa-times"></i>';
 	}
 
 	// Opcode: 0x8007
 	chip8.reset();
 	chip8.v[x] = 0;
 	chip8.runCycle(0x8127);
-	let test8 = ((chip8.pc === 514) & (chip8.v[x] === 0) & (chip8.v[0xf] === 0) & test7 & test6 & test5 & test4 & test3 & test2 & test1) ? true : false;
+	test = (chip8.pc === 514) ? true : false;
+	let test8 = (chip8.v[0xf] === 0) ? true : false;
+	let test8Sub = (chip8.v[x] === 0) ? true : false;
+
 	if(test8) {
-		console.log(" - SUCCESS: 0x8007");
+		document.getElementById("check0x8XY7i").innerHTML = '<i class="fas fa-check"></i>';
 	} else {
-		console.log(" - ERROR: 0x8007");
+		document.getElementById("check0x8XY7i").innerHTML = '<i class="fas fa-times"></i>';
+	}
+
+	if(test8Sub) {
+		document.getElementById("check0x8XY7ii").innerHTML = '<i class="fas fa-check"></i>';
+	} else {
+		document.getElementById("check0x8XY7ii").innerHTML = '<i class="fas fa-times"></i>';
+	}
+
+	if(test) {
+		document.getElementById("check0x8XY7iii").innerHTML = '<i class="fas fa-check"></i>';
+	} else {
+		document.getElementById("check0x8XY7iii").innerHTML = '<i class="fas fa-times"></i>';
+	}
+
+	// Opcode: 0x8006
+	chip8.v[x] = 255;
+	chip8.runCycle(0x8126);
+	test = (chip8.pc === 516) ? true : false;
+	let testESub = (chip8.v[0xf] === 1) ? true : false;
+	let testE = (chip8.v[x] === 127) ? true : false;
+	
+	if(testE) {
+		document.getElementById("check0x8XYEi").innerHTML = '<i class="fas fa-check"></i>';
+	} else {
+		document.getElementById("check0x8XYEi").innerHTML = '<i class="fas fa-times"></i>';
+	}
+
+	if(testESub) {
+		document.getElementById("check0x8XYEii").innerHTML = '<i class="fas fa-check"></i>';
+	} else {
+		document.getElementById("check0x8XYEii").innerHTML = '<i class="fas fa-times"></i>';
+	}
+
+	if(test) {
+		document.getElementById("check0x8XYEiii").innerHTML = '<i class="fas fa-check"></i>';
+	} else {
+		document.getElementById("check0x8XYEiii").innerHTML = '<i class="fas fa-times"></i>';
 	}
 }
 
@@ -364,6 +569,12 @@ function test_9000() {
 
 	let test1 = (chip8.pc === 516) ? true : false;
 
+	if(test1) {
+		document.getElementById("check0x9XY0i").innerHTML = '<i class="fas fa-check"></i>';
+	} else {
+		document.getElementById("check0x9XY0i").innerHTML = '<i class="fas fa-times"></i>';
+	}
+
 	chip8.v[1] = 1;
 	chip8.v[4] = 1;
 
@@ -372,9 +583,9 @@ function test_9000() {
 	let test2 = (chip8.pc === 518) ? true : false;
 
 	if(test2) {
-		console.log("SUCCESS: 0x9000");
+		document.getElementById("check0x9XY0ii").innerHTML = '<i class="fas fa-check"></i>';
 	} else {
-		console.log("ERROR: 0x9000");
+		document.getElementById("check0x9XY0ii").innerHTML = '<i class="fas fa-times"></i>';
 	}
 }
 
@@ -384,12 +595,19 @@ function test_a000() {
 
 	chip8.runCycle(opcode);
 
-	let test = ((chip8.i === 0x0140) & (chip8.pc === 514)) ? true : false;
+	let test = (chip8.i === 0x0140) ? true : false;
+	let test2 = (chip8.pc === 514) ? true : false;
 
 	if(test) {
-		console.log("SUCCESS: 0xa000");
+		document.getElementById("check0xANNNi").innerHTML = '<i class="fas fa-check"></i>';
 	} else {
-		console.log("ERROR: 0xa000");
+		document.getElementById("check0xANNNi").innerHTML = '<i class="fas fa-times"></i>';
+	}
+
+	if(test2) {
+		document.getElementById("check0xANNNii").innerHTML = '<i class="fas fa-check"></i>';
+	} else {
+		document.getElementById("check0xANNNii").innerHTML = '<i class="fas fa-times"></i>';
 	}
 }
 
@@ -404,9 +622,9 @@ function test_b000() {
 	let test = (chip8.pc === 0x0123 + 12) ? true : false;
 
 	if(test) {
-		console.log("SUCCESS: 0xb000");
+		document.getElementById("check0xBNNN").innerHTML = '<i class="fas fa-check"></i>';
 	} else {
-		console.log("ERROR: 0xb000");
+		document.getElementById("check0xBNNN").innerHTML = '<i class="fas fa-times"></i>';
 	}
 }
 
@@ -419,12 +637,19 @@ function test_c000() {
 
 	chip8.runCycle(opcode);
 
-	let test = ((chip8.v[1] != 0 || chip8.v[1] == 0) & (chip8.pc === 514)) ? true : false;
+	let test = (chip8.v[1] != 0 || chip8.v[1] == 0) ? true : false;
+	let test2 = (chip8.pc === 514) ? true : false;
 
 	if(test) {
-		console.log("SUCCESS: 0xc000");
+		document.getElementById("check0xCNNNi").innerHTML = '<i class="fas fa-check"></i>';
 	} else {
-		console.log("ERROR: 0xc000");
+		document.getElementById("check0xCNNNi").innerHTML = '<i class="fas fa-times"></i>';
+	}
+
+	if(test2) {
+		document.getElementById("check0xCNNNii").innerHTML = '<i class="fas fa-check"></i>';
+	} else {
+		document.getElementById("check0xCNNNii").innerHTML = '<i class="fas fa-times"></i>';
 	}
 }
 
@@ -441,9 +666,9 @@ function test_d000() {
 	let test = (chip8.v[0xf] === 0) ? true : false;
 
 	if(test) {
-		console.log(" - SUCCESS: DRAWS PIXELS");
+		document.getElementById("check0xDNNNi").innerHTML = '<i class="fas fa-check"></i>';
 	} else {
-		console.log(" - ERROR: DOESN'T DRAW PIXELS")
+		document.getElementById("check0xDNNNi").innerHTML = '<i class="fas fa-times"></i>';
 	}
 
 
@@ -456,16 +681,23 @@ function test_d000() {
 	test = (chip8.v[0xf] === 1) ? true : false;
 
 	if(test) {
-		console.log(" - SUCCESS: DETECTS EXISTING SPRITES");
+		document.getElementById("check0xDNNNii").innerHTML = '<i class="fas fa-check"></i>';
 	} else {
-		console.log(" - ERROR: DOESN'T DETECT EXISTING PIXELS")
+		document.getElementById("check0xDNNNii").innerHTML = '<i class="fas fa-times"></i>';
+	}
+
+	test = chip8.pc === 516 ? true : false;
+
+	if(test) {
+		document.getElementById("check0xDNNNiii").innerHTML = '<i class="fas fa-check"></i>';
+	} else {
+		document.getElementById("check0xDNNNiii").innerHTML = '<i class="fas fa-times"></i>';
 	}
 }
 
 
 function test_e09e() {
 	chip8.reset();
-	console.log("TEST: 0xe09e");
 
 
 	chip8.pc = 0;
@@ -475,10 +707,10 @@ function test_e09e() {
 
 	chip8.runCycle(opcode);
 
-	if(chip8.pc === 4) {
-		console.log(" - SUCCESS: SKIPS INSTRUCTION IF KEY IN V[X] IS PRESSED");
+	if(chip8.pc == 4) {
+		document.getElementById("check0xEX9Ei").innerHTML = '<i class="fas fa-check"></i>';
 	} else {
-		console.log(" - ERROR: DOESN'T SKIP INSTRUCTION IF KEY IN V[X] IS PRESSED");
+		document.getElementById("check0xEX9Ei").innerHTML = '<i class="fas fa-times"></i>';
 	}
 
 
@@ -490,16 +722,15 @@ function test_e09e() {
 
 	chip8.runCycle(opcode);
 
-	if(chip8.pc === 2) {
-		console.log(" - SUCCESS: DOES NOT SKIP INSTRUCTION IF KEY IN V[X] IS NOT PRESSED");
+	if(chip8.pc == 2) {
+		document.getElementById("check0xEX9Eii").innerHTML = '<i class="fas fa-check"></i>';
 	} else {
-		console.log(" - ERROR: DOES SKIP INSTRUCTION IF KEY IN V[X] IS NOT PRESSED");
+		document.getElementById("check0xEX9Eii").innerHTML = '<i class="fas fa-times"></i>';
 	}
 }
 
 function test_e01a() {
 	chip8.reset();
-	console.log("TEST: 0xe01a");
 
 
 	chip8.pc = 0;
@@ -510,10 +741,10 @@ function test_e01a() {
 
 	chip8.runCycle(0xe3a1);
 
-	if(chip8.pc === 4) {
-		console.log(" - SUCCESS: SKIPS INSTRUCTION IF KEY IN V[X] IS NOT PRESSED");
+	if(chip8.pc == 4) {
+		document.getElementById("check0xEXA1i").innerHTML = '<i class="fas fa-check"></i>';
 	} else {
-		console.log(" - ERROR: DOESN'T SKIP INSTRUCTION IF KEY IN V[X] IS NOT PRESSED");
+		document.getElementById("check0xEXA1i").innerHTML = '<i class="fas fa-times"></i>';
 	}
 
 
@@ -525,17 +756,16 @@ function test_e01a() {
 
 	chip8.runCycle(opcode);
 	
-	if(chip8.pc === 2) {
-		console.log(" - SUCCESS: DOESN'T SKIP INSTRUCTION IF KEY IN V[X] IS NOT PRESSED");
+	if(chip8.pc == 2) {
+		document.getElementById("check0xEXA1ii").innerHTML = '<i class="fas fa-check"></i>';
 	} else {
-		console.log(" - ERROR: DOES SKIP INSTRUCTION IF KEY IN V[X] IS NOT PRESSED");
+		document.getElementById("check0xEXA1ii").innerHTML = '<i class="fas fa-times"></i>';
 	}
 }
 
 
 function test_f000() {
 	chip8.reset();
-	console.log("TEST: 0xf000");
 
 	// OPCODE: 0xf007;
 	let opcode = 0xf007;
@@ -543,61 +773,122 @@ function test_f000() {
 	chip8.delayTimer = 12;
 	chip8.runCycle(opcode);
 
-	let test1 = ((chip8.pc === 514) & (chip8.v[x] === 12)) ? true : false;
+	let test1 = (chip8.pc === 514) ? true : false;
+	let test2 = (chip8.v[x] === 12) ? true : false;
+
+	
+	if(test2) {
+		document.getElementById("check0xFX07i").innerHTML = '<i class="fas fa-check"></i>';
+	} else {
+		document.getElementById("check0xFX07i").innerHTML = '<i class="fas fa-times"></i>';
+	}
+
 
 	if(test1) {
-		console.log(" - SUCCESS: 0xf007");
+		document.getElementById("check0xFX07ii").innerHTML = '<i class="fas fa-check"></i>';
 	} else {
-		console.log(" - ERROR: 0xf007");
+		document.getElementById("check0xFX07ii").innerHTML = '<i class="fas fa-times"></i>';
 	}
+
+
+
+	//OPCODE: 0xf00a
+	opcode = 0xf10a
+	chip8.runCycle(opcode);
+	test1 = chip8.paused == false ? true : false;
+	test2 = chip8.pc === 514 ? true : false;
+
+	if(test1) {
+		document.getElementById("check0xFX0Ai").innerHTML = '<i class="fas fa-check"></i>';
+	} else {
+		document.getElementById("check0xFX0Ai").innerHTML = '<i class="fas fa-times"></i>';
+	}
+
+	if(test2) {
+		document.getElementById("check0xFX0Aii").innerHTML = '<i class="fas fa-check"></i>';
+	} else {
+		document.getElementById("check0xFX0Aii").innerHTML = '<i class="fas fa-times"></i>';
+	}
+
+
+
 
 	// OPCODE: 0xf015;
 	chip8.v[x] = 11;
 	opcode = 0xf015;
 	chip8.runCycle(opcode);
 
-	let test2 = ((chip8.pc === 516) & (chip8.delayTimer === 11)) ? true : false;
+	test1 = chip8.delayTimer === 11 ? true : false
+	test2 = (chip8.pc === 516) ? true : false;
+
+
+	if(test1) {
+		document.getElementById("check0xFX15i").innerHTML = '<i class="fas fa-check"></i>';
+	} else {
+		document.getElementById("check0xFX15i").innerHTML = '<i class="fas fa-times"></i>';
+	}
 
 	if(test2) {
-		console.log(" - SUCCESS: 0xf015");
+		document.getElementById("check0xFX15ii").innerHTML = '<i class="fas fa-check"></i>';
 	} else {
-		console.log(" - ERROR: 0xf015");
+		document.getElementById("check0xFX15ii").innerHTML = '<i class="fas fa-times"></i>';
 	}
 
 	// OPCODE: 0xf018;
 	opcode = 0xf018;
 	chip8.runCycle(opcode);
 
-	let test3 = ((chip8.pc === 518) & (chip8.soundTimer === 11)) ? true : false;
+	test1 = (chip8.soundTimer === 11) ? true : false
+	test2 = (chip8.pc === 518) ? true : false;
 
-	if(test3) {
-		console.log(" - SUCCESS: 0xf018");
+	if(test1) {
+		document.getElementById("check0xFX18i").innerHTML = '<i class="fas fa-check"></i>';
 	} else {
-		console.log(" - ERROR: 0xf018");
+		document.getElementById("check0xFX18i").innerHTML = '<i class="fas fa-times"></i>';
+	}
+
+	if(test2) {
+		document.getElementById("check0xFX18ii").innerHTML = '<i class="fas fa-check"></i>';
+	} else {
+		document.getElementById("check0xFX18ii").innerHTML = '<i class="fas fa-times"></i>';
 	}
 
 	// OPCODE: 0xf01e;
 	opcode = 0xf01e;
 	chip8.runCycle(opcode);
 
-	let test4 = ((chip8.pc === 520) & (chip8.i === 11)) ? true : false;
+	test1 = (chip8.i === 11) ? true : false;
+	test2 = (chip8.pc === 520) ? true : false;
 
-	if(test4) {
-		console.log(" - SUCCESS: 0xf01e");
+	if(test1) {
+		document.getElementById("check0xFX1Ei").innerHTML = '<i class="fas fa-check"></i>';
 	} else {
-		console.log(" - ERROR: 0xf01e");
+		document.getElementById("check0xFX1Ei").innerHTML = '<i class="fas fa-times"></i>';
+	}
+
+	if(test2) {
+		document.getElementById("check0xFX1Eii").innerHTML = '<i class="fas fa-check"></i>';
+	} else {
+		document.getElementById("check0xFX1Eii").innerHTML = '<i class="fas fa-times"></i>';
 	}
 
 	// OPCODE: 0xf029;
 	opcode = 0xf029;
 	chip8.runCycle(opcode);
 
-	let test5 = ((chip8.pc === 522) & (chip8.i === 55)) ? true : false;
+	test1 = chip8.i === 55 ? true : false;
+	test2 = (chip8.pc === 522) ? true : false;
 
-	if(test5) {
-		console.log(" - SUCCESS: 0xf029");
+	if(test1) {
+		document.getElementById("check0xFX29i").innerHTML = '<i class="fas fa-check"></i>';
 	} else {
-		console.log(" - ERROR: 0xf029");
+		document.getElementById("check0xFX29i").innerHTML = '<i class="fas fa-times"></i>';
+	}
+
+	if(test2) {
+		document.getElementById("check0xFX29ii").innerHTML = '<i class="fas fa-check"></i>';
+	} else {
+		document.getElementById("check0xFX29ii").innerHTML = '<i class="fas fa-times"></i>';
 	}
 
 	// OPCODE: 0xf033;
@@ -606,11 +897,69 @@ function test_f000() {
 	chip8.i = 0;
 	chip8.runCycle(opcode);
 
-	let test6 = ((chip8.memory[chip8.i] === 1) & (chip8.memory[chip8.i + 1] === 0) & (chip8.memory[chip8.i + 2] === 1)) ? true : false;
+	test1 = ((chip8.memory[chip8.i] === 1) & (chip8.memory[chip8.i + 1] === 0) & (chip8.memory[chip8.i + 2] === 1)) ? true : false;
+	test2 = chip8.pc === 524 ? true : false;
 
-	if(test6) {
-		console.log(" - SUCCESS: 0xf029");
+	if(test1) {
+		document.getElementById("check0xFX33i").innerHTML = '<i class="fas fa-check"></i>';
 	} else {
-		console.log(" - ERROR: 0xf029");
+		document.getElementById("check0xFX33i").innerHTML = '<i class="fas fa-times"></i>';
+	}
+
+	if(test2) {
+		document.getElementById("check0xFX33ii").innerHTML = '<i class="fas fa-check"></i>';
+	} else {
+		document.getElementById("check0xFX33ii").innerHTML = '<i class="fas fa-times"></i>';
+	}
+
+	//OPCODE: 0xf055
+	opcode = 0xf855;
+	chip8.i = 5;
+	chip8.runCycle(opcode);
+
+	test =  true;
+	test2 = chip8.pc === 526 ? true : false;
+
+	for(let i = 0; i < 8; i++) {
+		if(chip8.v[i] != chip8.memory[chip8.i + i]) {
+			test = false;
+		}
+	}
+
+	if(test) {
+		document.getElementById("check0xFX55i").innerHTML = '<i class="fas fa-check"></i>';
+	} else {
+		document.getElementById("check0xFX55i").innerHTML = '<i class="fas fa-times"></i>';
+	}
+
+	if(test2) {
+		document.getElementById("check0xFX55ii").innerHTML = '<i class="fas fa-check"></i>';
+	} else {
+		document.getElementById("check0xFX55ii").innerHTML = '<i class="fas fa-times"></i>';
+	}
+
+	//OPCODE: 0xf065
+	opcode = 0xf865;
+	chip8.runCycle(opcode);
+
+	test = true;
+	test2 = chip8.pc === 528 ? true : false;
+
+	for(let i = 0; i < 8; i++) {
+		if(chip8.v[i] != chip8.memory[chip8.i + i]) {
+			test = false;
+		}
+	}
+
+	if(test) {
+		document.getElementById("check0xFX65i").innerHTML = '<i class="fas fa-check"></i>';
+	} else {
+		document.getElementById("check0xFX65i").innerHTML = '<i class="fas fa-times"></i>';
+	}
+
+	if(test2) {
+		document.getElementById("check0xFX65ii").innerHTML = '<i class="fas fa-check"></i>';
+	} else {
+		document.getElementById("check0xFX65ii").innerHTML = '<i class="fas fa-times"></i>';
 	}
 }

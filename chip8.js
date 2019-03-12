@@ -946,6 +946,9 @@ Backwards, Pause, Forwards, Help
 
 		chip8.previousCPU.pop();
 
+		let opcode = (chip8.memory[chip8.pc] << 8) | chip8.memory[chip8.pc + 1];
+		chip8.runCycle(opcode);
+
 		// chip8.emulate();
 		chip8.render();
 		chip8.start();

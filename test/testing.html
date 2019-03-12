@@ -1,23 +1,264 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>testing</title>
+	<title>Testing Page</title>
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+	<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
 	<script type="text/javascript" src="../chip8.js"></script>
 	<script type="text/javascript" src="../ops.js"></script>
 	<script src="testing.js"></script>
+
 </head>
+
+<style type="text/css">
+	body {
+		font-family: 'Open Sans', sans-serif;
+	}
+	h3 {
+		font-size: 16px;
+	}
+	li {
+		list-style-type: none;
+		font-size: 14px;
+	}
+</style>
+
 <body>
-	CHIP 8 Tests
+
+	<h2>Chip 8 Tests</h2>
+
+	<h3>Reset Function</h3>
 	<ul>
-		<li><span>&#10003</span>Reset Function Works</li>
+		<li><span id="checkPC"></span> Reset PC</li>
+		<li><span id="checkSP"></span> Reset Stack Pointer</li>
+		<li><span id="checkTimers"></span> Reset Timers</li>
+		<li><span id="checkPaused"></span> Reset Paused Boolean</li>
+		<li><span id="checkMemory"></span> Reset Memory</li>
+		<li><span id="checkVRegisters"></span> Reset V Registers</li>
+		<li><span id="checkStack"></span> Reset Stack</li>
+		<li><span id="checkVram"></span> Reset Video Memory</li>
+		<li><span id="checkKeyBuffer"></span> Reset Key Buffer Array</li>
 	</ul>
 
+	<h3>Pause Button</h3>
 	<ul>
-		<li><span>&#10003</span>Pause Button Works</li>
+		<li><span id="checkPause"></span> Pauses Correctly</li>
 	</ul>
+
+	<h3>0x00E0</h3>
+	<ul>
+		<li><span id="check0x00e0"></span> Clears The Screen</li>
+	</ul>
+
+	<h3>0x00EE</h3>
+	<ul>
+		<li><span id="check0x00EEi"></span> SUBTRACTS 1 FROM SP</li>
+		<li><span id="check0x00EEii"></span> PC SET TO TOP OF STACK</li>
+	</ul>
+
+	<h3>0x1NNN</h3>
+	<ul>
+		<li><span id="check0x1NNN"></span> Jumps to Address</li>
+	</ul>
+
+	<h3>0x2NNN</h3>
+	<ul>
+		<li><span id="check0x2NNNi"></span> Calls subroutine</li>
+		<li><span id="check0x2NNNii"></span> Stores PC on Stack</li>
+	</ul>
+
+	<h3>0x3NNN</h3>
+	<ul>
+		<li><span id="check0x3NNNi"></span> Skips Instruction if VX == NN</li>
+		<li><span id="check0x3NNNii"></span> Doesn't Skip if VX != NN</li>
+	</ul>
+
+	<h3>0x4NNN</h3>
+	<ul>
+		<li><span id="check0x4NNNi"></span> Skips Instruction if VX != NN</li>
+		<li><span id="check0x4NNNii"></span> Doesn't Skip if VX == NN</li>
+	</ul>
+
+	<h3>0x5XYN</h3>
+	<ul>
+		<li><span id="check0x5XYNi"></span> Skips Instruction if VX == VY</li>
+		<li><span id="check0x5XYNii"></span> Doesn't Skip if VX != VY</li>
+	</ul>
+
+	<h3>0x6XNN</h3>
+	<ul>
+		<li><span id="check0x6XNNi"></span> Sets VX to NN</li>
+		<li><span id="check0x6XNNii"></span> Updates PC</li>
+	</ul>
+
+	<h3>0x7XNN</h3>
+	<ul>
+		<li><span id="check0x7XNNi"></span> Stores VX + NN</li>
+		<li><span id="check0x7XNNii"></span> Updates PC</li>
+	</ul>
+
+	<h3>0x8XY0</h3>
+	<ul>
+		<li><span id="check0x8XY0i"></span> Sets VX to VY</li>
+		<li><span id="check0x8XY0ii"></span> Updates PC</li>
+	</ul>
+
+	<h3>0x8XY1</h3>
+	<ul>
+		<li><span id="check0x8XY1i"></span> Stores VX OR VY</li>
+		<li><span id="check0x8XY1ii"></span> Updates PC</li>
+	</ul>
+
+	<h3>0x8XY2</h3>
+	<ul> 
+		<li><span id="check0x8XY2i"></span> Stores VX AND VY</li>
+		<li><span id="check0x8XY2ii"></span> Updates PC</li>
+	</ul>
+
+	<h3>0x8XY3</h3>
+	<ul>
+		<li><span id="check0x8XY3i"></span>  Stores VX XOR VY</li>
+		<li><span id="check0x8XY3ii"></span> Updates PC</li>
+	</ul>
+
+	<h3>0x8XY4</h3>
+	<ul>
+		<li><span id="check0x8XY4i"></span> ADD VX, VY</li>
+		<li><span id="check0x8XY4ii"></span> SETS VF Flag Properly</li>
+		<li><span id="check0x8XY4iii"></span> Updates PC</li>
+	</ul>
+
+	<h3>0x8XY5</h3>
+	<ul>
+		<li><span id="check0x8XY5i"></span> SUB VX, VY</li>
+		<li><span id="check0x8XY5ii"></span> SETS VF Flag Properly</li>
+		<li><span id="check0x8XY5iii"></span> Updates PC</li>
+	</ul>
+
+	<h3>0x8XY6</h3>
+	<ul>
+		<li><span id="check0x8XY6i"></span> SHR VX, 1</li>
+		<li><span id="check0x8XY6ii"></span> SETS VF Flag Properly</li>
+		<li><span id="check0x8XY6iii"></span> Updates PC</li>
+	</ul>
+
+	<h3>0x8XY7</h3>
+	<ul>
+		<li><span id="check0x8XY7i"></span> SUBN VX, VY</li>
+		<li><span id="check0x8XY7ii"></span> SETS VF Flag Properly</li>
+		<li><span id="check0x8XY7iii"></span> Updates PC</li>
+	</ul>
+
+	<h3>0x8XYE</h3>
+	<ul>
+		<li><span id="check0x8XYEi"></span> SHL VX, 1</li>
+		<li><span id="check0x8XYEii"></span> SETS VF Flag Properly</li>
+		<li><span id="check0x8XYEiii"></span> Updates PC</li>
+	</ul>
+
+	<h3>0x9XY0</h3>
+	<ul>
+		<li><span id="check0x9XY0i"></span> SKIP IF VX != VY</li>
+		<li><span id="check0x9XY0ii"></span> Updates PC</li>
+	</ul>
+
+	<h3>0xANNN</h3>
+	<ul>
+		<li><span id="check0xANNNi"></span> SET I TO NNN</li>
+		<li><span id="check0xANNNii"></span> Updates PC</li>
+	</ul>
+
+	<h3>0xBNNN</h3>
+	<ul>
+		<li><span id="check0xBNNN"></span> JMP TO V0, addr</li>
+	</ul>
+
+	<h3>0xCNNN</h3>
+	<ul>
+		<li><span id="check0xCNNNi"></span> SET VX RANDOM BYTE</li>
+		<li><span id="check0xCNNNii"></span> Updates PC</li>
+	</ul>
+
+	<h3>0xDNNN</h3>
+	<ul>
+		<li><span id="check0xDNNNi"></span> DRAWS PIXELS</li>
+		<li><span id="check0xDNNNii"></span> DETECTS EXISTING PIXELS</li>
+		<li><span id="check0xDNNNiii"></span> UPDATES PC</li>
+	</ul>
+
+	<h3>0xEX9E</h3>
+	<ul>
+		<li><span id="check0xEX9Ei"></span> SKIP IF VX PRESSED</li>
+		<li><span id="check0xEX9Eii"></span> DON'T SKIP IF VX NOT PRESSED</li>
+	</ul>
+
+	<h3>0xEXA1</h3>
+	<ul>
+		<li><span id="check0xEXA1i"></span> SKIP IF VX NOT PRESSED</li>
+		<li><span id="check0xEXA1ii"></span> DON'T SKIP IF VX PRESSED</li>
+	</ul>
+
+	<h3>0xFX07</h3>
+	<ul>
+		<li><span id="check0xFX07i"></span> SET VX TO DELAY TIMER</li>
+		<li><span id="check0xFX07ii"></span> UPDATE PC</li>
+	</ul>
+
+	<h3>0xFX0A</h3>
+	<ul>
+		<li><span id="check0xFX0Ai"></span> PAUSE EMULATION TILL KEY PRESSED</li>
+		<li><span id="check0xFX0Aii"></span> UPDATE PC</li>
+	</ul>
+
+	<h3>0xFX15</h3>
+	<ul>
+		<li><span id="check0xFX15i"></span> SETS DELAY TIMER TO VX</li>
+		<li><span id="check0xFX15ii"></span> UPDATE PC</li>
+	</ul>
+
+	<h3>0xFX18</h3>
+	<ul>
+		<li><span id="check0xFX18i"></span> SETS SOUND TIMER TO VX</li>
+		<li><span id="check0xFX18ii"></span> UPDATE PC</li>
+	</ul>
+
+	<h3>0xFX1E</h3>
+	<ul>
+		<li><span id="check0xFX1Ei"></span> SET I TO I + VX</li>
+		<li><span id="check0xFX1Eii"></span> UPDATE PC</li>
+	</ul>
+
+	<h3>0xFX29</h3>
+	<ul>
+		<li><span id="check0xFX29i"></span> SET I TO LOCATION OF SPRITE FOR VX</li>
+		<li><span id="check0xFX29ii"></span> UPDATE PC</li>
+	</ul>
+
+	<h3>0xFX33</h3>
+	<ul>
+		<li><span id="check0xFX33i"></span> STORE BCD OF VX IN I, I+1, I+2</li>
+		<li><span id="check0xFX33ii"></span> UPDATE PC</li>
+	</ul>
+
+	<h3>0xFX55</h3>
+	<ul>
+		<li><span id="check0xFX55i"></span> STORE V REGISTERS INTO MEMORY STARTING AT I</li>
+		<li><span id="check0xFX55ii"></span> UPDATE PC</li>
+	</ul>
+
+	<h3>0xFX65</h3>
+	<ul>
+		<li><span id="check0xFX65i"></span> READ MEMORY INTO V REGISTERS</li>
+		<li><span id="check0xFX65ii"></span> UPDATE PC</li>
+	</ul>
+
 </body>
+</html>
 
 <script>
+	chip8.test = true;
+
+
 	resetTest();
 	pauseTest();
 	test_00e0();
@@ -39,5 +280,3 @@
 	test_e01a();
 	test_f000();
 </script>
-
-</html>
