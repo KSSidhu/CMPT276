@@ -52,7 +52,7 @@ This project is to design a Chip8 Emulator for CMPT 276. It is designed for educ
 - Git and [Github](https://github.com/KSSidhu/CMPT276)
 
 ## Testing and Quality Assurance Tools
-- Unit testing will be done javascript and html files
+- Unit testing will be done using javascript and html files
 - System testing will be done using Travis CI
 - Running previously created games
 
