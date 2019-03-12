@@ -37,37 +37,54 @@
 
 
 <body>
-    <textarea id="textbox">r0</textarea><br><br>
+    <textarea id="textbox"></textarea><br><br>
     <button id="create">SAVE TO FILE</button>
     <a download="notes.txt" id="downloadlink" style="display: none"><button onclick="functionreset()">DOWNLOAD</button></a>
     <br>
 
 
     <script>
-        var mnemonic = "SYS";
-        var N = 1;
-        var NN = 10;
-        var NNN = 100;
-
+        
+        var values;
+        var mneumonic;
         //INPUT
           
-        function handleFileSelect(evt) {
+        function readFile(evt) {
+            console.log("start");
+            path.length = 0;
+            pathCord.length = 0;
+
             var files = evt.target.files; // FileList object
+            file = files[0];
 
-            // files is a FileList of File objects. List some properties.
-            var output = [];
-            for (var i = 0, f; f = files[i]; i++) {
-              output.push('<li><strong>', escape(f.name), '</strong> (', f.type || 'n/a', ') - ',
-                          f.size, ' bytes, last modified: ',
-                          f.lastModifiedDate ? f.lastModifiedDate.toLocaleDateString() : 'n/a',
-                          '</li>');
-            }
-            document.getElementById('list').innerHTML = '<ul>' + output.join('') + '</ul>';
-      }
+            var reader = new FileReader();
+            
+            reader.onload = function(){
+                var text = reader.result;
+                var lines = text.split('\n');
+                alert(lines.length);
 
-        document.getElementById('files').addEventListener('change', handleFileSelect, false);
+                for(var i=0; i<lines.length; i++){
+                    if(lines[i].trim().charAt(0) == "#" || lines[i].trim().length == 0) {
+                        continue;
+                    } else {
+                        console.log(lines[i]);
+                        values = lines[i].split(' ');
+                    }
+                    mneumonic = values[0];
+                    
+                }
+                console.log("Done");
+            };
+            reader.readAsText(file);
+        }
 
         //OUTPUT
+        var NNN;
+            var NN;
+            var N;
+            var r1;
+            var r2;
 
         (function() {
             var textFile = null,
@@ -87,10 +104,6 @@
                     return textFile;
                 };
 
-            /////////////// EXTRACT INFO FROM A TEXT FILE///////////
-
-            //For sample
-            
             switch (mnemonic) {
                 case "CLS":
                     var create = document.getElementById('create'),textbox = document.getElementById("textbox").value = "0x00E0";
@@ -100,109 +113,212 @@
                 case "RTS" :
                     var create = document.getElementById('create'),textbox = document.getElementById("textbox").value = "0x00EE";
                     break;
+
                 case "SYS":
+                    NNN = values[1]; 
                     var create = document.getElementById('create'),textbox = document.getElementById("textbox").value = "0x0" + NNN;
                     break;
-                // case JUMP:
-                //     var create = document.getElementById('create'),textbox = document.getElementById("textbox").value = "0x1" + NNN;
-                //     break;
 
-                // case CALL:
-                //     var create = document.getElementById('create'),textbox = document.getElementById("textbox").value = "0x2" + NNN;
-                //     break;
+                case JUMP:
+                    NNN = values[1];
+                    var create = document.getElementById('create'),textbox = document.getElementById("textbox").value = "0x1" + NNN;
+                    break;
 
-                // case SKE:
-                //     var create = document.getElementById('create'),textbox = document.getElementById("textbox").value = "0x3" + reg + NNN;
-                //     break;
+                case CALL:
+                    NNN = values[1];
+                    var create = document.getElementById('create'),textbox = document.getElementById("textbox").value = "0x2" + NNN;
+                    break;
 
-                // case SKNE:
-                //     var create = document.getElementById('create'),textbox = document.getElementById("textbox").value = "0x4" + reg + NNN;
-                //     break;
+                case SKE:
+                    r1 = values[1];
+                    NN = values[2];
+
+                    var create = document.getElementById('create'),textbox = document.getElementById("textbox").value = "0x3" + r1 + NN;
+                    break;
+
+                case SKNE:
+                    r1 = values[1];
+                    NN = values[2];
+
+                    var create = document.getElementById('create'),textbox = document.getElementById("textbox").value = "0x4" + r1 + NN;
+                    break;
 
 
-                // case SKR:
-                //     var create = document.getElementById('create'),textbox = document.getElementById("textbox").value = "0x5" + reg + reg2 + "0";
-                //     break;
+                case SKR:
+                    r1 = values[1];
+                    r2 = values[2];
 
-                // case LOAD:
-                //     var create = document.getElementById('create'),textbox = document.getElementById("textbox").value = "0x6" + reg + NN;
-                //     break;
+                    var create = document.getElementById('create'),textbox = document.getElementById("textbox").value = "0x5" + r1 + r2 + "0";
+                    break;
+
+                case LOAD:
+                    r1 = values[1];
+                    NN = values[2];
+
+                    var create = document.getElementById('create'),textbox = document.getElementById("textbox").value = "0x6" + r1 + NN;
+                    break;
                     
 
-                // case ADD:
-                //     return "" + 7 + reg + NN;
+                case ADD:
+                    r1 = values[1];
+                    NN = values[2];
 
-                // case MOVE:
-                //     return "" + 8 + reg + reg2 + 0;
+                    var create = document.getElementById('create'),textbox = document.getElementById("textbox").value = "0x7" + r1 + NN;
+                    break;
 
-                // case OR:
-                //     return "" + 8 + reg + reg2 + 1;
+                case MOVE:
+                    r1 = values[1];
+                    r2 = values[2];
 
-                // case AND:
-                //     return "" + 8 + reg + reg2 + 2;
+                    var create = document.getElementById('create'),textbox = document.getElementById("textbox").value = "0x8" + r1 + r2 + 0;
+                    break;
 
-                // case XOR:
-                //     return "" + 8 + reg + reg2 + 3;
+                case OR:
+                    r1 = values[1];
+                    r2 = values[2];
 
-                // case ADDR:
-                //     return "" + 8 + reg + reg2 + 4;
+                    var create = document.getElementById('create'),textbox = document.getElementById("textbox").value = "0x8" + r1 + r2 + 1;
+                    break;
 
-                // case SUB:
-                //     return "" + 8 + reg + reg2 + 5;
+                case AND:
+                    r1 = values[1];
+                    r2 = values[2];
 
-                // case SHR:
-                //     return "" + 8 + reg + 0 + 6;
+                    var create = document.getElementById('create'),textbox = document.getElementById("textbox").value = "0x8" + r1 + r2 + 2;
+                    break;
 
-                // case SHL:
-                //     return "" + 8 + reg + 0 + "E";
+                case XOR:
+                    r1 = values[1];
+                    r2 = values[2];
 
-                // case SKNE:
-                //     return "" + 9 + reg + reg2 + 0;
+                    var create = document.getElementById('create'),textbox = document.getElementById("textbox").value = "0x8" + r1 + r2 + 3;
+                    break;
 
-                // case LOADI:
-                //     return "A" + "" + NNN;
+                case ADDR:
+                    r1 = values[1];
+                    r2 = values[2];
 
-                // case JUMPI:
-                //     return "B" + "" + NNN;
+                    var create = document.getElementById('create'),textbox = document.getElementById("textbox").value = "0x8" + r1 + r2 + 4;
+                    break;
 
-                // case RND:
-                //     return "C" + "" + reg + NN;
+                case SUB:
+                    r1 = values[1];
+                    r2 = values[2];
 
-                // case DRW:
-                //     return "D" + "" + reg + reg2 + N;
+                    var create = document.getElementById('create'),textbox = document.getElementById("textbox").value = "0x8" + r1 + r2 + 5;
+                    break;
 
-                // case SKPR:
-                //     return "E" + "" + reg + 9 + "E";
+                case SHR:
+                    r1 = values[1];
 
-                // case SKNP:
-                //     return "E" + "" + reg + "A" + 1;
+                    var create = document.getElementById('create'),textbox = document.getElementById("textbox").value = "0x8" + r1 + 0 + 6;
+                    break;
 
-                // case MOVED:
-                //     return "F" + "" + reg + 0 + 7;
+                case SHL:
+                    r1 = values[1];
 
-                // case KEYD:
-                //     return "F" + "" + reg + 0 + "A";
+                    var create = document.getElementById('create'),textbox = document.getElementById("textbox").value = "0x8" + r1 + 0 + "E";
+                    break;
 
-                // case LOADD:
-                //     return "F" + "" + reg + 1 + 5;
+                case SKNE:
+                    r1 = values[1];
+                    r2 = values[2];
 
-                // case LOADS:
-                //     return "F" + "" + reg + 1 + 8;
+                    var create = document.getElementById('create'),textbox = document.getElementById("textbox").value = "0x9" + r1 + r2 + 0;
+                    break;
 
-                // case ADDI:
-                //     return "F" + "" + reg + 1 + "E";
+                case LOADI:
+                    NNN = values[1];
 
-                // case LDSPR:
-                //     return "F" + "" + reg + 2 + 9;
+                    var create = document.getElementById('create'),textbox = document.getElementById("textbox").value = "0xA" + NNN;
+                    break;
 
-                // case BCD:
-                //     return "F" + "" + reg + 3 + 3;
+                case JUMPI:
+                    NNN = values[1];
 
-                // case STOR:
-                //     return "F" + "" + reg + 5 + 5;
+                    var create = document.getElementById('create'),textbox = document.getElementById("textbox").value = "0xB" + NNN;
+                    break;
 
-                // case READ:
-                //     return "F" + "" + reg + 6 + 5;
+                case RND:
+                    r1 = values[1];
+                    NN = values[2];
+
+                    var create = document.getElementById('create'),textbox = document.getElementById("textbox").value = "0xC" + r1 + NN;
+                    break;
+
+                case DRW:
+                    r1 = values[1];
+                    r2 = values[2];
+                    N = values[3];
+
+                    var create = document.getElementById('create'),textbox = document.getElementById("textbox").value = "0xD" + r1 + r2 + N;
+                    break;
+
+                case SKPR:
+                    r1 = values[1];
+
+                    var create = document.getElementById('create'),textbox = document.getElementById("textbox").value = "0xE" + r1 + 9 + "E";
+                    break;
+
+                case SKNP:
+                    r1 = values[1];
+
+                    var create = document.getElementById('create'),textbox = document.getElementById("textbox").value = "0xE" + r1 + "A" + 1;
+                    break;
+
+                case MOVED:
+                    r1 = values[1];
+
+                    var create = document.getElementById('create'),textbox = document.getElementById("textbox").value = "0xF" + r1 + 0 + 7;
+                    break;
+
+                case KEYD:
+                    r1 = values[1];
+
+                    var create = document.getElementById('create'),textbox = document.getElementById("textbox").value = "0xF" + r1 + 0 + "A";
+                    break;
+
+                case LOADD:
+                    r1 = values[1];
+
+                    var create = document.getElementById('create'),textbox = document.getElementById("textbox").value = "0xF" + r1 + 1 + 5;
+                    break;
+
+                case LOADS:
+                    r1 = values[1];
+
+                    var create = document.getElementById('create'),textbox = document.getElementById("textbox").value = "0xF" + r1 + 1 + 8;
+                    break;
+
+                case ADDI:
+                    r1 = values[1];
+
+                    var create = document.getElementById('create'),textbox = document.getElementById("textbox").value = "0xF" + r1 + 1 + "E";
+                    break;
+
+                case LDSPR:
+                    r1 = values[1];
+
+                    var create = document.getElementById('create'),textbox = document.getElementById("textbox").value = "0xF" + r1 + 2 + 9;
+                    break;
+
+                case BCD:
+                    r1 = values[1];
+
+                    var create = document.getElementById('create'),textbox = document.getElementById("textbox").value = "0xF" + r1 + 3 + 3;
+                    break;
+
+                case STOR:
+                    r1 = values[1];
+
+                    var create = document.getElementById('create'),textbox = document.getElementById("textbox").value = "0xF" + r1 + 5 + 5;
+                    break;
+
+                case READ:
+                    r1 = values[1];
+
+                    var create = document.getElementById('create'),textbox = document.getElementById("textbox").value = "0xF" + r1 + 6 + 5;
+                    break;
             }
 
             create.addEventListener('click', function() {
