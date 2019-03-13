@@ -16,9 +16,11 @@
 - Highlighting and updating memory, instructions, and registers
 - Forwards/Backwards buttons implemented
 - Added NavBar and added github and buttons there
+- Functioning assembler: can convert assembly into hex code with input and ouptput text files
 
 > ### Features Not Completed
 - Mouse click is not responsive
+- Assembler: Automated testing, error handling for text input
 
 ## Major Features For Next Release
 - Release 4: Chip8 Games
