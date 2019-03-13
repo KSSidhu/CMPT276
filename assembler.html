@@ -1,32 +1,32 @@
+<!-- INPUT TEXT FILE FORMAT
+
+[MNEUMONICS      OPERANDS]
+                 (NNN)
+                 (NN)
+                 (r1) (NN)
+                 (r1) (r2) (N)
+                 (r1) (r2)           
+-->
+
 
 <html>
 
+
 <head>
+    <!-- Selecting and uploading a file  -->
     <input type="file" id="files" name="files[]" multiple />
     <output id="list"></output>
     <br>
-    <!-- <button id = "upload" onclick="readFile()">UPLOAD</button> -->
-    <br> <br>
-
+    <br>
 
     <style>
 
         body {
             margin: 0%;
         }
-
-        @font-face {
-            font-family: "CG";
-            src: url(./resources/CENTURYGOTHIC.ttf) format("truetype");
-        }
-
         textarea {
-            height: 10%;
+            height: 40%;
             width: 20%;
-        }
-
-        button {
-            text-transform: capitalize;
         }
 
     </style>
@@ -34,26 +34,39 @@
 
 
 <body>
+
+    <!-- Creating text box for showing output result -->
     <textarea id="textbox"></textarea><br><br>
+    <!-- Dowload the file -->
     <button id="create">SAVE TO FILE</button>
-    <a download="notes.txt" id="downloadlink" style="display: none"><button onclick="functionreset()">DOWNLOAD</button></a>
+    <!-- Call resetFunction  -->
+    <a download="hexcodes.txt" id="download"><button onclick="resetFunction()">DOWNLOAD</button></a>
     <br>
     
     <script>
-        
         //Declaring textfile input variables
+
+        //Stores a line of textfile 
         var values;
+        //Mneumonic code
         var mneumonic;
+        //12-bit literal address
         var NNN;
+        //8-bit byte literals
         var NN;
+
+        //4-bit nibble literals
         var N;
+        //registers (0-F)
         var r1;
+        //registers (0-F)
         var r2;
         
         //Reading the file 
         function readFile(evt) {
             
-            var files = evt.target.files; // FileList object
+            // Create FileList object
+            var files = evt.target.files; 
             file = files[0];
 
             var reader = new FileReader();
@@ -61,74 +74,78 @@
             reader.onload = function(){
 
                 var text = reader.result;
+                //Split file into sentences
                 var lines = text.split('\r\n');
-                //alert(lines.length);
-
-                for(var i=0; i<lines.length; i++){
-                    if(lines[i].trim().charAt(0) == "#" || lines[i].trim().length == 0) {
+                
+                //Split setences into words
+                for (var i = 0; i < lines.length; i++){
+                    if (lines[i].trim().length == 0) {
                         continue;
                     } else {
-                        console.log(lines[i]);
                         values = lines[i].split(' ');
                     }
+                    //Let first word be mnemonic string
                     mneumonic = values[0];
+                    //Call function to output the corresponding text
                     processText();
                     
                 }
-                console.log("Done");
             };
-            //alert("start");
             reader.readAsText(file);
         }
 
-        //OUTPUT
-        
-        //Editing the text box 
+        //Function to process and output corresponding hex code
+        //Referenced as cited below
         function processText() {
-            //alert("say");
-            var textFile = null,
+            
+            var file = null,
                 makeTextFile = function(text) {
                     var data = new Blob([text], {
                         type: 'text/plain'
                     });
 
-                    // If we are replacing a previously generated file we need to
-                    // manually revoke the object URL to avoid memory leaks.
-                    if (textFile !== null) {
-                        window.URL.revokeObjectURL(textFile);
+                    if (file !== null) {
+                        window.URL.revokeObjectURL(file);
                     }
 
-                    textFile = window.URL.createObjectURL(data);
+                    file = window.URL.createObjectURL(data);
 
-                    return textFile;
+                    return file;
                 };
 
+            //Switch cases for all possible types    
             var create = document.getElementById('create');
             switch (mneumonic){
+                //clear video memory
                 case "CLS":
+                    //Define textbox output text 
                     textbox = document.getElementById("textbox").value += "0x00E0";
-                    alert(textbox);
                     break;
 
+                //return from subroute
                 case "RTS" :
                     textbox = document.getElementById("textbox").value += "0x00EE";
                     break;
 
+                //System call
                 case "SYS":
+                    //Assign operands based on position of operands on text file
                     NNN = values[1]; 
                     textbox = document.getElementById("textbox").value += "0x0" + NNN;
                     break;
-
+                //Jump to address
                 case "JUMP":
                     NNN = values[1];
                     textbox = document.getElementById("textbox").value += "0x1" + NNN;
                     break;
 
+                //call routine at address
                 case "CALL":
                     NNN = values[1];
                     textbox = document.getElementById("textbox").value += "0x2" + NNN;
                     break;
 
+                //skip next instruction if r1 = NN
                 case "SKE":
                     r1 = values[1];
                     NN = values[2];
@@ -136,206 +153,233 @@
                     textbox = document.getElementById("textbox").value += "0x3" + r1 + NN;
                     break;
 
+                //Don't skip next instruction if register r1 = NN
                 case "SKNE":
                     r1 = values[1];
                     NN = values[2];
 
-                    var create = document.getElementById('create'),textbox = document.getElementById("textbox").value += "0x4" + r1 + NN;
+                    textbox = document.getElementById("textbox").value += "0x4" + r1 + NN;
                     break;
 
-
+                //Skip if r1 == r2
                 case "SKR":
                     r1 = values[1];
                     r2 = values[2];
 
-                    var create = document.getElementById('create'),textbox = document.getElementById("textbox").value += "0x5" + r1 + r2 + "0";
+                    textbox = document.getElementById("textbox").value += "0x5" + r1 + r2 + "0";
                     break;
 
+                //Load r1 with NN
                 case "LOAD":
                     r1 = values[1];
                     NN = values[2];
 
-                    var create = document.getElementById('create'),textbox = document.getElementById("textbox").value += "0x6" + r1 + NN;
+                    textbox = document.getElementById("textbox").value += "0x6" + r1 + NN;
                     break;
                     
-
+                //Add NN to r1
                 case "ADD":
                     r1 = values[1];
                     NN = values[2];
 
-                    var create = document.getElementById('create'),textbox = document.getElementById("textbox").value += "0x7" + r1 + NN;
+                    textbox = document.getElementById("textbox").value += "0x7" + r1 + NN;
                     break;
 
+                //Move value from r1 to r2
                 case "MOVE":
                     r1 = values[1];
                     r2 = values[2];
 
-                    var create = document.getElementById('create'),textbox = document.getElementById("textbox").value += "0x8" + r1 + r2 + 0;
+                    textbox = document.getElementById("textbox").value += "0x8" + r1 + r2 + 0;
                     break;
 
+                //logical OR on r1 and r2 and store in r2
                 case "OR":
                     r1 = values[1];
                     r2 = values[2];
 
-                    var create = document.getElementById('create'),textbox = document.getElementById("textbox").value += "0x8" + r1 + r2 + 1;
+                    textbox = document.getElementById("textbox").value += "0x8" + r1 + r2 + 1;
                     break;
 
+                //logical AND
                 case "AND":
                     r1 = values[1];
                     r2 = values[2];
 
-                    var create = document.getElementById('create'),textbox = document.getElementById("textbox").value += "0x8" + r1 + r2 + 2;
+                    textbox = document.getElementById("textbox").value += "0x8" + r1 + r2 + 2;
                     break;
 
+                //logical XOR
                 case "XOR":
                     r1 = values[1];
                     r2 = values[2];
 
-                    var create = document.getElementById('create'),textbox = document.getElementById("textbox").value += "0x8" + r1 + r2 + 3;
+                    textbox = document.getElementById("textbox").value += "0x8" + r1 + r2 + 3;
                     break;
 
+                //Add r1 to r2 and store in r1
                 case "ADDR":
                     r1 = values[1];
                     r2 = values[2];
 
-                    var create = document.getElementById('create'),textbox = document.getElementById("textbox").value += "0x8" + r1 + r2 + 4;
+                    textbox = document.getElementById("textbox").value += "0x8" + r1 + r2 + 4;
                     break;
 
-                ///STOPS WORKING AFTER HERE
+                //Subtract r1 from r2 and store in r1
                 case "SUB":
                     r1 = values[1];
                     r2 = values[2];
 
-                    var create = document.getElementById('create'),textbox = document.getElementById("textbox").value += "0x8" + r1 + r2 + 5;
+                    textbox = document.getElementById("textbox").value += "0x8" + r1 + r2 + 5;
                     break;
 
+                //shift bits in r1 1 bit to the right
                 case "SHR":
                     r1 = values[1];
 
-                    var create = document.getElementById('create'),textbox = document.getElementById("textbox").value += "0x8" + r1 + 0 + 6;
+                    textbox = document.getElementById("textbox").value += "0x8" + r1 + 0 + 6;
                     break;
 
+                //shift bits in r1 1 bit to the left
                 case "SHL":
                     r1 = values[1];
 
-                    var create = document.getElementById('create'),textbox = document.getElementById("textbox").value += "0x8" + r1 + 0 + "E";
+                    textbox = document.getElementById("textbox").value += "0x8" + r1 + 0 + "E";
                     break;
 
+                //Skip next instruction if r1 != r2
                 case "SKNE":
                     r1 = values[1];
                     r2 = values[2];
 
-                    var create = document.getElementById('create'),textbox = document.getElementById("textbox").value += "0x9" + r1 + r2 + 0;
+                    textbox = document.getElementById("textbox").value += "0x9" + r1 + r2 + 0;
                     break;
 
+                //Load index with NNN
                 case "LOADI":
                     NNN = values[1];
 
-                    var create = document.getElementById('create'),textbox = document.getElementById("textbox").value += "0xA" + NNN;
+                    textbox = document.getElementById("textbox").value += "0xA" + NNN;
                     break;
 
+                //Jump to NNN +index
                 case "JUMPI":
                     NNN = values[1];
 
-                    var create = document.getElementById('create'),textbox = document.getElementById("textbox").value += "0xB" + NNN;
+                    textbox = document.getElementById("textbox").value += "0xB" + NNN;
                     break;
 
+                //Generate random number between 0 and NN and store in r1
                 case "RND":
                     r1 = values[1];
                     NN = values[2];
 
-                    var create = document.getElementById('create'),textbox = document.getElementById("textbox").value += "0xC" + r1 + NN;
+                    textbox = document.getElementById("textbox").value += "0xC" + r1 + NN;
                     break;
 
+                //Draw N byte spirit at x r1, y r2
                 case "DRW":
                     r1 = values[1];
                     r2 = values[2];
                     N = values[3];
 
-                    var create = document.getElementById('create'),textbox = document.getElementById("textbox").value += "0xD" + r1 + r2 + N;
+                    textbox = document.getElementById("textbox").value += "0xD" + r1 + r2 + N;
                     break;
 
+                //Skip next instruction if key in r1 is pressed
                 case "SKPR":
                     r1 = values[1];
 
-                    var create = document.getElementById('create'),textbox = document.getElementById("textbox").value += "0xE" + r1 + 9 + "E";
+                    textbox = document.getElementById("textbox").value += "0xE" + r1 + 9 + "E";
                     break;
 
+                //Skip next instruction if key in r1 is not pressed
                 case "SKNP":
                     r1 = values[1];
 
-                    var create = document.getElementById('create'),textbox = document.getElementById("textbox").value += "0xE" + r1 + "A" + 1;
+                    textbox = document.getElementById("textbox").value += "0xE" + r1 + "A" + 1;
                     break;
 
+                //Move delay timer value to r1
                 case "MOVED":
                     r1 = values[1];
 
-                    var create = document.getElementById('create'),textbox = document.getElementById("textbox").value += "0xF" + r1 + 0 + 7;
+                    textbox = document.getElementById("textbox").value += "0xF" + r1 + 0 + 7;
                     break;
 
+                //Wait for keypress and store in r1
                 case "KEYD":
                     r1 = values[1];
 
-                    var create = document.getElementById('create'),textbox = document.getElementById("textbox").value += "0xF" + r1 + 0 + "A";
+                    textbox = document.getElementById("textbox").value += "0xF" + r1 + 0 + "A";
                     break;
 
+                //Load delay timer with value in r1
                 case "LOADD":
                     r1 = values[1];
 
-                    var create = document.getElementById('create'),textbox = document.getElementById("textbox").value += "0xF" + r1 + 1 + 5;
+                    textbox = document.getElementById("textbox").value += "0xF" + r1 + 1 + 5;
                     break;
 
+                //Load sound timer with value in r1
                 case "LOADS":
                     r1 = values[1];
 
-                    var create = document.getElementById('create'),textbox = document.getElementById("textbox").value += "0xF" + r1 + 1 + 8;
+                    textbox = document.getElementById("textbox").value += "0xF" + r1 + 1 + 8;
                     break;
 
+                //Add value in r1 to index
                 case "ADDI":
                     r1 = values[1];
 
-                    var create = document.getElementById('create'),textbox = document.getElementById("textbox").value += "0xF" + r1 + 1 + "E";
+                    textbox = document.getElementById("textbox").value += "0xF" + r1 + 1 + "E";
                     break;
 
+                //Load index with sprite from r1
                 case "LDSPR":
                     r1 = values[1];
 
-                    var create = document.getElementById('create'),textbox = document.getElementById("textbox").value += "0xF" + r1 + 2 + 9;
+                    textbox = document.getElementById("textbox").value += "0xF" + r1 + 2 + 9;
                     break;
 
+                //Store binary coded decimal of r1 at index
                 case "BCD":
                     r1 = values[1];
 
-                    var create = document.getElementById('create'),textbox = document.getElementById("textbox").value += "0xF" + r1 + 3 + 3;
+                    textbox = document.getElementById("textbox").value += "0xF" + r1 + 3 + 3;
                     break;
 
+                //Store value of r1 registers at index
                 case "STOR":
                     r1 = values[1];
 
-                    var create = document.getElementById('create'),textbox = document.getElementById("textbox").value += "0xF" + r1 + 5 + 5;
+                    textbox = document.getElementById("textbox").value += "0xF" + r1 + 5 + 5;
                     break;
 
+                //Read back the stored value at index into registers
                 case "READ":
                     r1 = values[1];
 
-                    var create = document.getElementById('create'),textbox = document.getElementById("textbox").value += "0xF" + r1 + 6 + 5;
+                    textbox = document.getElementById("textbox").value += "0xF" + r1 + 6 + 5;
                     break;
 
             }
+            //Put next hex code in a new line
             textbox = document.getElementById("textbox").value += '\n';
 
+            //Referenced as cited 
             create.addEventListener('click', function() {
-                var link = document.getElementById('downloadlink');
-                console.log(textbox);
-                link.href = makeTextFile(textbox);
-                link.style.display = 'block';
+                var downloadLink = document.getElementById('download');
+                
+                //Call makeTextFile function to create a file with textfile
+                downloadLink.href = makeTextFile(textbox);
                 document.getElementById('create').style.display = 'none';
             }, false);
         };
 
-        function functionreset() {
-            var link = document.getElementById('downloadlink');
-            link.style.display = 'none';
+
+        function resetFunction() {
+            var link = document.getElementById('download');
             document.getElementById('create').style.display = 'block';
         }
 
@@ -343,13 +387,25 @@
 
     <script>
          document.getElementById("files").addEventListener('change', readFile, false)
-         document.getElementById("textbox").onchange = function() {functionreset()}
+         //When textbox changes, call resetFunction
+         document.getElementById("textbox").onchange = function() {resetFunction()}
     </script>
 
-    
+</body></html>
 
 <!-- REFERENCES: 
 
-    https://stackoverflow.com/questions/52792178/i-want-to-save-textbox-to-txt-file-in-html-using-javascript-but-i-have-an-error?fbclid=IwAR3imyhtf-nizrShgFY1RA1H7CQyIk7_ZgAb2P1kLIjIQePSTCFvUdnj-J0-->
+    https://stackoverflow.com/questions/52792178/i-want-to-save-textbox-to-txt-file-in-html-using-javascript-but-i-have-an-error?fbclid=IwAR3imyhtf-nizrShgFY1RA1H7CQyIk7_ZgAb2P1kLIjIQePSTCFvUdnj-J0
+    
+    https://github.com/Sachini/GPSVisualizer/blob/master/index.html?fbclid=IwAR1EOoSK3ie3SNjfpvuBEMLD0xWB4TZ1sLu2yxJySTFWppgnA4fYUBU74Ec
 
-</body></html>
+    https://www.htmlgoodies.com/beyond/javascript/read-text-files-using-the-javascript-filereader.html
+
+    https://stackoverflow.com/questions/41930538/how-to-get-input-values-from-html-to-text-file
+
+    https://www.html5rocks.com/en/tutorials/file/dndfiles/
+
+    https://github.com/craigthomas/Chip8Assembler
+
+
+    -->
