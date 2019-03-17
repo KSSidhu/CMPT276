@@ -225,6 +225,22 @@ let chip8 = {
 		let charStr = String.fromCharCode(evt.which);
 		if (evt.type == 'keydown') {
 			val = true;
+			if(charStr == 'K')
+			{
+				chip8.pause();
+				return;
+			}
+			else if (charStr == 'J')
+			{
+				chip8.backwards();
+				return;
+			}
+
+			else if (charStr == 'L')
+			{
+				chip8.forwards();
+				return;
+			}
 		} else if (evt.type == 'click') {
 			val = true;
 			charStr = name;
@@ -983,7 +999,7 @@ Backwards, Pause, Forwards, Help
 		chip8.pause();
 	},
 
-	help : function()
+	about : function()
 	{
 		var urlk = 'https://github.com/KSSidhu';
 		var urlj = 'https://github.com/leafittome';
@@ -991,6 +1007,13 @@ Backwards, Pause, Forwards, Help
 		var urlc = 'https://github.com/chamodib';
 		confirm(
 			"Chip 8 Emulator \n\n Created by: \n Kirat Sidhu " + urlk + " \n James Young " + urlj + " \n Adam Tran " + urla + " \n Chamodi Basnayake " + urlc
+			);
+	},
+
+	help : function()
+	{
+		confirm(
+			"J - Backwards \n K - Pause/Play \n L - Forwards "
 			);
 	},
 

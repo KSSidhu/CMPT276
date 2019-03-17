@@ -18,12 +18,13 @@
 <body>
 <ul>
   <li><a href="https://github.com/KSSidhu/CMPT276"><i class="far fa-file-code"></i></a></li>
-  <li><a href="#about" onclick="chip8.help()">About</a></li>
+  <li><a href="#about" onclick="chip8.about()">About</a></li>
+  <li><a href="#help" onclick="chip8.help()">Help</a></li>
   
 </ul>
 <br>
-<div class="wrapper" id="wrapper">
-  <div class="visualizer" id="visualizer" >
+<div class="wrapper" id="wrapper" >
+  <div class="visualizer" id="visualizer">
     <div class="row">
       <div class="toolbar" style="background-color:#eee;">
         <div class="toolbar-button-wrapper">
@@ -67,7 +68,7 @@
         <div class="controlDisplay" style="background-color:#7F8BA8;">
 
           <button name="backwards" id="backwards" class="log-button" type="button" onclick="chip8.backwards()"><i class="fas fa-step-backward"></i> Backwards </button>
-          <button name="pause" id="pause" class="log-button" type="button" onclick="chip8.pause()"><i class="fas fa-pause"></i> Pause </button>
+          <button name="pause" id="pause" autofocus="true" class="log-button" type="button" onclick="chip8.pause()"><i class="fas fa-pause"></i> Pause </button>
           <button name="forwards" id="fowards" class="log-button" type="button" onclick="chip8.forwards()"><i class="fas fa-step-forward"></i> Forwards </button>
             <div class="info-wrapper"> 
               <h2> Chip 8 Emulator </h2>
