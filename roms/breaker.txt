@@ -1,4 +1,31 @@
 clear
+# g
+: g
+0xF0 0x90 0x90 0xF0 0x10 0x10 0x90 0xF0 0x00 0x00 0x00 0x00 0x00 0x00 0x00
+
+# a
+: a
+0xF0 0x90 0x90 0xF0 0x10 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
+
+# m
+: m
+0xF8 0xA8 0xA8 0xA8 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
+
+# e
+: e
+0xF0 0x90 0xF0 0x80 0xF0 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
+
+# o
+: o
+0xF0 0x90 0x90 0x90 0xF0 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
+
+# v
+: v
+0x88 0x88 0xD8 0x70 0x20 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
+
+# r
+: r
+0xF0 0x90 0x80 0x80 0x80 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
 
 : block
   0xff
@@ -23,7 +50,9 @@ clear
   :alias scoreY vb
   :alias livesX vc
   :alias livesY vd
+  :alias lives vc
   
+  drawLives
   updateScore
 
   vd := 0 # x position
@@ -39,12 +68,9 @@ clear
     vc += 1
     end
   again
-   
-  drawLives
-  :alias lives vd
-  lives := 4
   
   : game
+  	 lives := 4
     # draw ball starting position
     :alias ballx v3
     ballx := 32 # ball x position
@@ -93,25 +119,25 @@ clear
   
 : deleteLives
 	v7 := lives
-	if lives == 2 begin
+	if v7 == 3 begin
   	livesX := 50
     livesY := 0
     sprite livesX livesY 1
   end
   
-  if lives == 1 begin
+  if v7 == 2 begin
   	livesX := 53
     livesY := 0
     sprite livesX livesY 1
   end
   
-  if lives == 1 begin
+  if v7 == 1 begin
   	livesX := 56
     livesY := 0
     sprite livesX livesY 1
   end
   
-  if lives == 0 begin
+  if v7 == 0 begin
   	livesX := 59
     livesY := 0
     sprite livesX livesY 1
@@ -142,9 +168,9 @@ clear
   i := paddle
   sprite paddlex paddley 1
   v7 := 4
-  if v7 key then v0 += -1
+  if v7 key then v0 += -2
   v8 := 6
-  if v8 key then v0 += 1
+  if v8 key then v0 += 2
   paddlex := v0
   paddley := v1
   sprite paddlex paddley 1
@@ -156,7 +182,9 @@ clear
   ballx := 32
   dirx := 1
   diry := -1
-  lives += -1
+  v7 := 1
+  lives -= v7
+  deleteLives
   return
   
 : reverse
@@ -249,3 +277,32 @@ clear
 
   
 : gameOver
+	clear
+	va := 22
+  vb := 8
+	i := g
+  sprite va vb 8
+  va += 5
+  i := a
+  sprite va vb 6
+  va += 5
+  i := m
+  sprite va vb 6
+  va += 6
+  i := e
+  sprite va vb 6
+  
+  va := 22
+  vb += 9
+  i := o
+  sprite va vb 6
+  va += 5
+  i := v
+  sprite va vb 6
+  va += 6
+  i := e
+  sprite va vb 6
+  va += 5
+  i := r
+  sprite va vb 6
+  
