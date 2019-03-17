@@ -1,29 +1,48 @@
 clear
 
 : block
-  0xf0
+  0xff
 
-: user
+: paddle
   0xff
   
 : ball
   0x80
   
+: breakBrick
+	0xc0
+
+  
+# Temp storage for hundreds, tens and ones
+: digits 0 0 0
+  
 
 : main
-  vd := 2 # x position
-  vc := 2 # y position
+	:alias score v9
+  :alias scoreX va
+  :alias scoreY vb
+  :alias livesX vc
+  :alias livesY vd
+  
+  updateScore
+
+  vd := 0 # x position
+  vc := 5 # y position
   i := block
 
   loop
     if vc == 18 then jump game
     sprite vd vc 1
-    vd += 5
+    vd += 8
     if vd >= 59 begin
     vd := 2
-    vc += 2
+    vc += 1
     end
   again
+   
+  drawLives
+  :alias lives vd
+  lives := 4
   
   : game
     # draw ball starting position
@@ -40,19 +59,68 @@ clear
     
     # paddle starting position
     :alias paddlex v0
-    v0 := 28
+    paddlex := 28
     :alias paddley v1
-    v1 := 29
-    i := user
+    paddley := 29
+    i := paddle
     sprite paddlex paddley 1
     
+   : mainLoop
     loop # main game loop
       updateBall
       if vf != 0 then updateBricks
       updatePaddle
-    again
+    if lives != 0 then again
+    jump gameOver
     
     
+####################################################
+# 				Lives Functions
+####################################################
+
+: drawLives
+  livesX := 50
+  livesY := 0
+  i := ball
+	sprite livesX livesY 1
+  livesX += 3
+  sprite livesX livesY 1
+  livesX += 3
+  sprite livesX livesY 1
+  livesX += 3
+  sprite livesX livesY 1
+  return
+  
+: deleteLives
+	v7 := lives
+	if lives == 2 begin
+  	livesX := 50
+    livesY := 0
+    sprite livesX livesY 1
+  end
+  
+  if lives == 1 begin
+  	livesX := 53
+    livesY := 0
+    sprite livesX livesY 1
+  end
+  
+  if lives == 1 begin
+  	livesX := 56
+    livesY := 0
+    sprite livesX livesY 1
+  end
+  
+  if lives == 0 begin
+  	livesX := 59
+    livesY := 0
+    sprite livesX livesY 1
+  end
+  lives := v7
+  return
+  
+####################################################
+# 				Movement Functions
 ####################################################
 
 : updateBall
@@ -71,7 +139,7 @@ clear
    
 : updatePaddle
   
-  i := user
+  i := paddle
   sprite paddlex paddley 1
   v7 := 4
   if v7 key then v0 += -1
@@ -88,23 +156,96 @@ clear
   ballx := 32
   dirx := 1
   diry := -1
+  lives += -1
   return
   
 : reverse
   diry := -1
   dirx := 1
   return
-
-: updateBricks
-  if bally == 29 then updateDirection
+  
+  
+  
+: reflect
+	dirx := 0
+  diry := -1
+  jump mainLoop
+  
+  
+: paddleReflect
+	v2 := paddlex
+  v2 += 4
+  if ballx == v2 begin
+  	reflect
+  else
+  	updateDirection
+  end
   return
   
+
 : updateDirection
-  diry := -1
-  if dirx == 1 begin
-    dirx := 1
+
+	if diry == -1 begin
+  	diry := 1
   else
-    dirx := -1
+  	diry := -1
+  end
+  
+  if dirx == 1 begin
+   dirx := 1
+  else
+   dirx := -1
   end
   
   return
+
+
+####################################################
+#					Screen Update Functions
+####################################################
+
+: updateBricks
+	# ball hits paddle
+  if bally == 29 begin 
+  	paddleReflect
+  else # ball hits bricks
+  	if bally >= 5 begin
+  	updateScore
+  	i := breakBrick
+    sprite ballx bally 1
+    i := ball
+    updateDirection
+    score += 1
+    updateScore
+  	end
+  end
+  return
+  
+: updateScore
+	v7 := paddlex
+  v8 := paddley
+	
+	i := digits
+  bcd score
+  i := digits
+  load v2
+  
+  i := hex v0
+  sprite scoreX scoreY 5
+  scoreX += 5
+  
+  i := hex v1
+  sprite scoreX scoreY 5
+  scoreX += 5
+  
+  i := hex v2
+  sprite scoreX scoreY 5
+  scoreX += 5
+  
+  va := 0
+  paddlex := v7
+  paddley := v8
+  return
+
+  
+: gameOver
