@@ -15,29 +15,31 @@
   <script src="ops.js"></script>
 
 </head>
-<body>
-<ul>
-  <li><a href="https://github.com/KSSidhu/CMPT276"><i class="far fa-file-code"></i></a></li>
-  <li><a href="#about" onclick="chip8.about()">About</a></li>
-  <li><a href="#help" onclick="chip8.help()">Help</a></li>
+<body id="body" class="light-mode">
+<ul id="ul" class="light-mode">
+  <li><a class="a-light" href="https://github.com/KSSidhu/CMPT276"><i class="far fa-file-code"></i></a></li>
+
+  <li><a name="dark-light" onclick="chip8.toggleDarkLight()"><span>🌗</span></a></li>
   
+  <li><a class="a-light" href="#about" onclick="chip8.about()">About</a></li>
+  <li><a class="a-light" href="#help" onclick="chip8.help()">Help</a></li>
 </ul>
 <br>
 <div class="wrapper" id="wrapper" >
-  <div class="visualizer" id="visualizer">
+  <div id="visualizer" class="visualizer" id="visualizer">
     <div class="row">
-      <div class="toolbar" style="background-color:#eee;">
+      <div id="toolbar" class="toolbar">
         <div class="toolbar-button-wrapper">
           <button class="toolbar-button" > Load ROM </button>
           <input type="file" name="myfile" id="fileInput"/>
         </div>
       </div>
-      <div class="romDisplay" style="background-color:#C7D4F0;">
+      <div id="romDisplay-container" class="romDisplay-container">
         <canvas id="romDisplay" width="640" height="320" >
         </canvas>
       </div>
-      <div class="regDisplay" style="background-color:#7F8BA8;">
-        <div class="reg-display-wrapper" style="background-color:#7F8BA8;">
+      <div id="regDisplay" class="regDisplay">
+        <div class="reg-display-wrapper">
           <table class="regTable" id="regTable">
             <tbody>
             </tbody>
@@ -47,7 +49,7 @@
     </div>
 
     <div class="row">
-      <div class="keyDisplay" style="background-color:#B5C1DF;">
+      <div id="keyDisplay" class="keyDisplay">
         <div class="keys">
           <button name="1" class="key-button" type="button" onclick="chip8.onKey(event, name)"> 1 </button>
           <button name="2" class="key-button" type="button" onclick="chip8.onKey(event, name)"> 2 </button>
@@ -65,10 +67,10 @@
           <button name="X" class="key-button" type="button" onclick="chip8.onKey(event, name)"> X </button>
           <button name="C" class="key-button" type="button" onclick="chip8.onKey(event, name)"> C </button>
           <button name="V" class="key-button" type="button" onclick="chip8.onKey(event, name)"> V </button>        
-        <div class="controlDisplay" style="background-color:#7F8BA8;">
+        <div id="controlDisplay" class="controlDisplay">
 
           <button name="backwards" id="backwards" class="log-button" type="button" onclick="chip8.backwards()"><i class="fas fa-step-backward"></i> Backwards </button>
-          <button name="pause" id="pause" autofocus="true" class="log-button" type="button" onclick="chip8.pause()"><i class="fas fa-pause"></i> Pause </button>
+          <button name="pause" id="pause" class="log-button" type="button" onclick="chip8.pause()"><i class="fas fa-pause"></i> Pause </button>
           <button name="forwards" id="fowards" class="log-button" type="button" onclick="chip8.forwards()"><i class="fas fa-step-forward"></i> Forwards </button>
             <div class="info-wrapper"> 
               <h2> Chip 8 Emulator </h2>
@@ -77,8 +79,8 @@
           </div>
          </div>
       </div>
-     <div class="logDisplay" style="background-color:#6D7995;">
-        <div class="log-display-wrapper" style="background-color:#6D7995;">
+     <div id="logDisplay" class="logDisplay">
+        <div class="log-display-wrapper">
           <table class="instrTable" id="instrTable">
             <tbody> 
             </tbody>

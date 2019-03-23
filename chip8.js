@@ -1,8 +1,13 @@
 // Reference http://www.multigesture.net/articles/how-to-write-an-emulator-chip-8-interpreter/ for chip8 object layout and functions to include
 // Refernce https://github.com/reu/chip8.js for emulation render cycle
 // Referenced http://devernay.free.fr/hacks/chip8/C8TECH10.HTM#00E0 for opcode instructions
-
+var bgColor = '#AAAAAA';
+var pixelColor = '#FFF';
+var defCellColor = '#FFF';
+var hlColor1 = '#DDD';
+var hlColor2 = '#EEE';
 let chip8 = {
+
 
 	debug: false,
 
@@ -272,7 +277,7 @@ let chip8 = {
 		chip8.keyPressed = chip8.keyBuffer.reduce((prevValue, currentValue) => prevValue | currentValue);
 
 		if(evt.type == 'click')
-			chip8.keyBuffer[translateKeys] = false;
+			chip8.keyBuffer[translateKeys] = true;
 	},
 /******************************************
 Display Registers, Memory, Instructions 
@@ -556,7 +561,7 @@ Display Registers, Memory, Instructions
 	{
 		if(!chip8.test) {
 
-			chip8.highlight("reg-V", index, "white");
+			chip8.highlight("reg-V", index, defCellColor);
 
 			if(chip8.paused)
 			{
@@ -566,13 +571,13 @@ Display Registers, Memory, Instructions
 				if(chip8.v[index] != chip8.prevReg)
 				{
 
-					chip8.highlight("reg-V", index, "#ddd");
+					chip8.highlight("reg-V", index, hlColor1);
 					$("#reg-V" + index).text(chip8.hexConverter(chip8.v[index]));
 				}
 				else if(chip8.v[index] == chip8.prevReg)
 				{
 
-					chip8.highlight("reg-V", index, "white");
+					chip8.highlight("reg-V", index, defCellColor);
 				}
 
 			$("#reg-I").text(chip8.hexConverter(chip8.i));
@@ -591,8 +596,8 @@ Display Registers, Memory, Instructions
 				return;
 			}
 
-			chip8.highlight("op", chip8.currInstr - 1, "white");
-			chip8.highlight("instr", chip8.currInstr - 1, "white");
+			chip8.highlight("op", chip8.currInstr - 1, defCellColor);
+			chip8.highlight("instr", chip8.currInstr - 1, defCellColor);
 
 			if(chip8.currInstr < 0)
 			{
@@ -600,8 +605,8 @@ Display Registers, Memory, Instructions
 			}
 			$("#op" + chip8.currInstr).text(opcode);
 			$("#instr" + chip8.currInstr).text(instruction);
-			chip8.highlight("op", chip8.currInstr, "#ddd");
-			chip8.highlight("instr", chip8.currInstr, "#eee");
+			chip8.highlight("op", chip8.currInstr, hlColor1);
+			chip8.highlight("instr", chip8.currInstr, hlColor2);
 
 			chip8.currInstr--;
 
@@ -617,8 +622,8 @@ Display Registers, Memory, Instructions
 				return;
 			}
 
-			chip8.highlight("mem", chip8.currMem - 1, "white");
-			chip8.highlight("val", chip8.currMem - 1, "white");
+			chip8.highlight("mem", chip8.currMem - 1, defCellColor);
+			chip8.highlight("val", chip8.currMem - 1, defCellColor);
 
 			if(chip8.currMem < 0)
 			{
@@ -626,8 +631,8 @@ Display Registers, Memory, Instructions
 			}
 			$("#mem" + chip8.currMem).text("memory" + index);
 			$("#val" + chip8.currMem).text(chip8.hexConverter(parseInt(value)));
-			chip8.highlight("mem", chip8.currMem, "#ddd");
-			chip8.highlight("val", chip8.currMem, "#eee");
+			chip8.highlight("mem", chip8.currMem, hlColor1);
+			chip8.highlight("val", chip8.currMem, hlColor2);
 
 			chip8.currMem--;
 
@@ -638,7 +643,82 @@ Display Registers, Memory, Instructions
 	{
 		$("#" + id + index).css("backgroundColor", colour);
 	},
-	
+
+/******************************************
+Dark Mode
+
+
+******************************************/
+	toggleDarkLight : function() {
+		var body = document.getElementById("body");
+		var toolbar = document.getElementById("toolbar");
+		var ul = document.getElementById("ul");
+		var li = document.getElementsByClassName("a-light");
+		var rom = document.getElementById("romDisplay-container");
+		var reg = document.getElementById("regDisplay");
+		var key = document.getElementById("keyDisplay");
+		var log = document.getElementById("logDisplay");
+		var con = document.getElementById("controlDisplay");
+		var itab = document.getElementById("instrTable");
+		var rtab = document.getElementById("regTable");
+		var mtab = document.getElementById("memTable");
+		var currentClass = body.className;
+		body.className = currentClass == "dark-mode" ? "light-mode" : "dark-mode";
+		if(currentClass != "light-mode")
+		{
+			toolbar.className  = "toolbar";
+			ul.className = "light-mode";
+			rom.className = "romDisplay-container";
+			reg.className = "regDisplay";
+			key.className = "keyDisplay";
+			log.className = "logDisplay";
+			con.className = "controlDisplay";
+
+			bgColor = "#AAAAAA"
+			defCellColor = '#FFF';
+			hlColor1 = '#DDD';
+			hlColor2 = '#EEE';
+
+			itab.style.backgroundColor = "white";
+			itab.style.color = "black";
+			rtab.style.backgroundColor = "white";
+			rtab.style.color = "black";
+			mtab.style.backgroundColor = "white";
+			mtab.style.color = "black";
+			for(var i = 0; i < li.length; i++)
+			{
+				li[i].style.color = "black";
+			}
+		}
+		else if (currentClass != "dark-mode")
+		{
+			toolbar.className = "toolbarDark";
+			ul.className = "dark-mode";
+			rom.className = "romDisplayDark";
+			reg.className = "regDisplayDark";
+			key.className = "keyDisplayDark";
+			log.className = "logDisplayDark";
+			con.className = "controlDisplayDark";
+
+			bgColor = "#152137";
+			defCellColor = '#152137';
+			hlColor1 = '#466eb9';
+			hlColor2 = '#385894';
+
+			itab.style.backgroundColor = bgColor;
+			itab.style.color = "white";
+			rtab.style.backgroundColor = bgColor;
+			rtab.style.color = "white";
+			mtab.style.backgroundColor = bgColor;
+			mtab.style.color = "white";
+			// rtab.className = "regTableDark";
+			for(var i = 0; i < li.length; i++)
+			{
+				li[i].style.color = "white";
+			}
+		}
+	},
+
 /******************************************
 Stop/Start Emulator
 
@@ -937,7 +1017,7 @@ Stop/Start Emulator
 		// chip8.updateRegisters();\
 	},
 
-	/******************************************
+/******************************************
 Backwards, Pause, Forwards, Help
 
 
@@ -1013,7 +1093,7 @@ Backwards, Pause, Forwards, Help
 	help : function()
 	{
 		confirm(
-			"J - Backwards \n K - Pause/Play \n L - Forwards "
+			"Load a ROM to start! \n\n\nJ - Backwards \nK - Pause/Play \nL - Forwards "
 			);
 	},
 
@@ -1026,10 +1106,10 @@ Render/Draw
 		let SCALE = 10;
 		let ctx = chip8.canvas.getContext('2d');
 		ctx.clearRect(0, 0, 64 * SCALE, 32 * SCALE);
-		ctx.fillStyle = '#AAAAAA';
+		ctx.fillStyle = bgColor;
 		ctx.fillRect(0, 0, 64 * SCALE, 32 * SCALE);
 
-		ctx.fillStyle = '#ffffff';
+		ctx.fillStyle = pixelColor;
 
 		for (let i = 0; i < chip8.vram.length; i++) {
 			let x = (i % 64) * SCALE;

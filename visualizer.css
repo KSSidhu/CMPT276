@@ -1,11 +1,54 @@
+
 body {
   font-family: 'Roboto', sans-serif;
 }
+
+
+body.dark-mode {
+  background-color: #111;
+  color: #111;
+}
+body.dark-mode a {
+  color: #111;
+}
+body.dark-mode button {
+  position: relative;
+  background-color: #2b4371;
+  border: 1px solid black ;
+  border-radius: 4px;
+  outline: none;
+  color: white;
+  text-align: center;
+  -webkit-transition-duration: 0.5s; /* Safari */
+  transition-duration: 0.5s;
+  text-decoration: none;
+  overflow: hidden;
+  cursor: pointer;
+  background-image: linear-gradient(to bottom,transparent,transparent 
+    25%,rgba(0,0,0,.3));
+}
+
+body.dark-mode button:hover {
+  background-color: #ddd;
+}
+
+
+body.light-mode {
+  background-color: #eee;
+  color: #111;
+}
+body.light-mode a {
+  color: #111;
+}
+body.light-mode button {
+
+}
+
 * {
   box-sizing: border-box;
 } 
 
-ul {
+ul.light-mode {
   list-style-type: none;
   margin: 0;
   padding: 0;
@@ -13,8 +56,33 @@ ul {
   background-color: #c7d4ef;
 }
 
+ul.dark-mode {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #152137;
+}
+
+img.emojione {  
+ margin: 0px;
+ display: inline;
+}
+
+span {
+  font-size:0.85rem;
+}
+
 li {
   float: left;
+}
+
+li a.a-light {
+  display: block;
+  color: black;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
 }
 
 li a {
@@ -26,7 +94,7 @@ li a {
 }
 
 li a:hover {
-  background-color: #fff;
+  background-color: #2b4371;
 }
 
 * {
@@ -44,34 +112,33 @@ html {
   box-sizing: inherit;
 }
 
-.visualizer {
+div.visualizer {
   border-radius: 5px;
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  
   width: 90%;
   height: 90%;
 }
 
 /*For UI Scaling*/
-.wrapper{
+div.wrapper{
   padding: 20px;
   resize: both;
   position: relative;
   height: 320px;
 }
 
-.resize-ui{
+div.resize-ui{
   width: 10px;
   height: 10px;
   position: absolute;
   bottom: 0;
   right: 0;
 }
-/* Create two equal columns that floats next to each other */
-.toolbar{
+
+div.toolbar{
   background-image: linear-gradient(-90deg, white, #eee);
   border: 1px solid #ccc;
   border-radius: 2px;
@@ -80,26 +147,52 @@ html {
   height: 10%;
 }
 
-.romDisplay {
+div.toolbarDark{
+  background-image: linear-gradient(-90deg, #152137, #404040);
+  border: 1px solid #484848;
+  border-radius: 2px;
+  float: left;
+  width: 100%;
+  height: 10%;
+}
+
+div.romDisplay-container {
   float: left;
   width: 65%;
   padding: 10px;
+  background-color: #C7D4F0;
 }
 
-.regDisplay {
+div.romDisplayDark {
+  float: left;
+  width: 65%;
+  padding: 10px;
+  background-color: #585858;
+}
+
+div.regDisplay {
   float: left;
   width: 35%;
   padding: 10px;
+  background-color: #7F8BA8;
 }
 
-.reg-display-wrapper {
+div.regDisplayDark {
+  float: left;
+  width: 35%;
+  padding: 10px;
+  background-color: #484848;
+}
+
+
+div.reg-display-wrapper {
   width:  calc(30vw - 20px);    
   height: calc(30vh - 20px);
   resize: none;
   max-height: 324px;
   min-height: 324px;
 }
-.log-display-wrapper {
+div.log-display-wrapper {
   width:  calc(30vw - 20px); 
   height: calc(30vh - 20px);
   resize: none;
@@ -110,13 +203,21 @@ html {
   padding: 5px;
 }
 
-.logDisplay {
+div.logDisplay {
   float: left;
   width: 35%;
   padding: 10px;
+  background-color:#6D7995;
 }
 
-.log-button{
+div.logDisplayDark {
+  float: left;
+  width: 35%;
+  padding: 10px;
+  background-color:#383838;
+}
+
+button.log-button{
   color: black;
   height: 40px;
   min-width: 50px;
@@ -131,28 +232,32 @@ html {
 
 }
 
-.keyDisplay {
+div.keyDisplay {
   float: left;
   width: 65%;
-  padding: 10px;    
+  padding: 10px;   
+  background-color:#B5C1DF; 
 }
 
-.keys {
+div.keyDisplayDark {
+  float: left;
+  width: 65%;
+  padding: 10px;   
+  background-color:#404040; 
+}
+
+div.keys {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
 }
 
-.key-button
+button.key-button
 {
   font-size: 17px;
   background-color: #fff;
 }
 
-.key-button:hover {
-  background-image: linear-gradient(-27deg, #eee, #eee);
-}
-
-.controlDisplay
+div.controlDisplay
 {
   grid-column-start: 5;
   grid-row-start: 1;
@@ -162,9 +267,23 @@ html {
   margin-left: 8px;
   border: 1px solid;
   border-radius: 4px;
+  background-color: #7F8BA8;
 }
 
-.info-wrapper {
+div.controlDisplayDark
+{
+  grid-column-start: 5;
+  grid-row-start: 1;
+  grid-row-end: 5;
+  height: 100%;
+  padding: 10px;
+  margin-left: 8px;
+  border: 1px solid;
+  border-radius: 4px;
+  background-color: #152137;
+}
+
+div.info-wrapper {
   text-align: center;
   padding-top: 35%;
   padding-bottom: 25%;
@@ -174,20 +293,20 @@ html {
 
 
 /* Clear floats after the columns */
-.row:after {
+div.row:after {
   content: "";
   display: table;
   clear: both;
 }
 
 /*Tool bar buttons formatting and working Load ROM button*/
-.toolbar-button-wrapper {
+div.toolbar-button-wrapper {
   position: relative;
   overflow: hidden;
   display: inline-block;
 }
 
-.toolbar-button {
+button.toolbar-button {
   color: black;
   height: 20px;
   background-color: #fff;
@@ -197,12 +316,14 @@ html {
     25%,rgba(0,0,0,.1));
 }
 
+
 .toolbar-button-wrapper input[type=file]{
   position: absolute;
   left: 0;
   top: 0;
   opacity: 0;
 }
+
 
 button {
   position: relative;
@@ -223,15 +344,15 @@ button {
     25%,rgba(0,0,0,.15));
 }
 
-button:hover {
+body.light-mode button:hover {
   background-color: #eee;
 }
 
-button:active{
+body.light-mode button:active{
   background-color: #eee;
 }
 
-button:after {
+body.light-mode button:after {
   content: "";
   background: #ccc;
   display: block;
@@ -244,7 +365,7 @@ button:after {
   transition: all 0.5s
 }
 
-button:active:after {
+body.light-mode button:active:after {
   padding: 0;
   margin: 0;
   opacity: 1;
@@ -256,6 +377,22 @@ table.instrTable {
   position: relative;
   border: 1px solid #1C6EA4;
   background-color: #fff;
+  text-align: left;
+  border-collapse: collapse;
+  width:  calc(15vw - 10px);    
+  height: calc(35vh - 20px);
+  resize: none;
+  max-height: 300px;
+  min-height: 300px;
+
+}
+
+table.instrTableDark {
+  float: left;
+  position: relative;
+  border: 1px solid #1C6EA4;
+  background-color: #152137;
+  color : white;
   text-align: left;
   border-collapse: collapse;
   width:  calc(15vw - 10px);    
@@ -288,6 +425,23 @@ table.regTable {
   max-height: 324px;
   min-height: 324px;
 }
+
+
+table.regTableDark {
+  float: left;
+  position: relative;
+  border: 1px solid #1C6EA4;
+  background-color: #152137;
+  color: white;
+  text-align: left;
+  border-collapse: collapse;
+  width:  calc(30vw - 20px);    
+  height: calc(50vh - 30px);
+  resize: none;
+  max-height: 324px;
+  min-height: 324px;
+}
+
 
 table.regTable td, table.regTable th {
   border: 1px solid #AAAAAA;
