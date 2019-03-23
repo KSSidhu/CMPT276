@@ -307,6 +307,7 @@ clear
 ####################################################
 
 : startMenu
+v2 := 0
 clear
 	va := 18
   vb := 8
@@ -351,8 +352,8 @@ clear
   i := T
   sprite va vb 6
   
+  v0 := 0
   loop
-  	v0 := 0
   	v0 := key
     if v0 != 0 then return
   again
@@ -459,11 +460,17 @@ clear
   i := r
   sprite va vb 6
   
+  loop
+    v2 := 0
+    v2 := key
+    if v2 != 0 then jump endGame
+  again
+  
   
   
 : endGame
 	clear
-  va := 2
+  va := 4
   vb := 8
 	i := L
   sprite va vb 8
@@ -477,8 +484,8 @@ clear
   i := D
   sprite va vb 6
   
-  va := 2
-  vb += 6
+  va := 4
+  vb += 10
   i := G
   sprite va vb 6
   va += 6
@@ -563,6 +570,3 @@ clear
     v2 := key
     if v2 == 8 then main
   again
-
-
-  
