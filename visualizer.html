@@ -98,13 +98,20 @@
 
 <script>
 
+  let firstLoad = true;
+
   let inputFile = document.getElementById('fileInput');
   inputFile.addEventListener('change', function(event, name) {
       let file = inputFile.files[0];
-      chip8.reset();
-      chip8.loadGame(file);
-      chip8.start();
-    
+      if(file.length != 0 ) {
+        if(!firstLoad) {
+          chip8.stop();
+        }
+        chip8.reset();
+        chip8.loadGame(file);
+        chip8.start();
+        firstLoad = false;
+      }
   });
 
   window.addEventListener("keydown", function(event, name) {
