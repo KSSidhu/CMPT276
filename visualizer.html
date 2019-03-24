@@ -100,11 +100,13 @@
 
   let inputFile = document.getElementById('fileInput');
   inputFile.addEventListener('change', function(event, name) {
+      chip8.loaded = false;
       let file = inputFile.files[0];
       chip8.reset();
       chip8.loadGame(file);
       chip8.start();
-    
+      // chip8.pause();
+      // chip8.pause();
   });
 
   window.addEventListener("keydown", function(event, name) {

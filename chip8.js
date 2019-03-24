@@ -68,6 +68,9 @@ let chip8 = {
 	memFlag: false,
 	currMem: 7,
 
+	//rom loaded
+	loaded: false,
+
 	interval: null,
 
 	paused: false,
@@ -533,29 +536,6 @@ Display Registers, Memory, Instructions
 		}
 	},
 
-
-	// //Update register values after opcode is retrieved
-	// updateRegisters: function()
-	// {
-	// 	if(!chip8.test) {
-	// 		if(chip8.paused)
-	// 		{
-	// 			return;
-	// 		}
-
-	// 			for(var i = 0; i < 16; i++)
-	// 			{
-	// 				$("#reg-V" + i).text(chip8.hexConverter(chip8.v[i]));
-
-					
-	// 			}
-
-	// 			$("#reg-I").text(chip8.hexConverter(chip8.i));
-	// 			$("#reg-PC").text(chip8.hexConverter(chip8.pc));
-	// 	}
-		
-	// },
-
 	//Update Register Display
 	updateRegister: function(index)
 	{
@@ -642,6 +622,14 @@ Display Registers, Memory, Instructions
 	highlight: function(id, index, colour)
 	{
 		$("#" + id + index).css("backgroundColor", colour);
+		if(colour == "#DDD" || colour == "#EEE" || colour == "#FFF")
+		{
+			$("#" + id + index).css("color", "black");
+		}
+		else
+		{
+			$("#" + id + index).css("color", "white");
+		}
 	},
 
 /******************************************
@@ -766,12 +754,17 @@ Stop/Start Emulator
 				buffer.map((val, index) => (chip8.memory[index + 512] = buffer[index]));
 				chip8.pc = 512;
 				console.log('Game is now loaded');
+				// chip8.pause();
+				// chip8.backwards();
+				// chip8.pause();
 			});
 			if(reader.length != 0)
 				reader.readAsArrayBuffer(file);
 		} catch (err) {
 			alert("Improper File Selected, Please Try Again.");
-			chip8.start();
+
+			chip8.reset();
+			chip8.pause();
 
 		}
 	},
@@ -1014,7 +1007,6 @@ Stop/Start Emulator
 			default:
 				console.log('Unknown Opcode: 0x' + opcode.toString(16));
 		}
-		// chip8.updateRegisters();\
 	},
 
 /******************************************
