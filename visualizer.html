@@ -102,7 +102,9 @@
 
   let inputFile = document.getElementById('fileInput');
   inputFile.addEventListener('change', function(event, name) {
+      chip8.loaded = false;
       let file = inputFile.files[0];
+
       if(file.length != 0 ) {
         if(!firstLoad) {
           chip8.stop();

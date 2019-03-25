@@ -66,6 +66,9 @@ let chip8 = {
 	memFlag: false,
 	currMem: 7,
 
+	//rom loaded
+	loaded: false,
+
 	interval: null,
 
 	paused: false,
@@ -270,7 +273,8 @@ let chip8 = {
 
 		if (evt.type == 'click') chip8.keyBuffer[translateKeys] = true;
 	},
-	/******************************************
+	
+/******************************************
 Display Registers, Memory, Instructions 
 
 
@@ -560,11 +564,20 @@ Display Registers, Memory, Instructions
 		}
 	},
 
-	highlight: function (id, index, colour) {
-		$('#' + id + index).css('backgroundColor', colour);
+	highlight: function(id, index, colour)
+	{
+		$("#" + id + index).css("backgroundColor", colour);
+		if(colour == "#DDD" || colour == "#EEE" || colour == "#FFF")
+		{
+			$("#" + id + index).css("color", "black");
+		}
+		else
+		{
+			$("#" + id + index).css("color", "white");
+		}
 	},
 
-	/******************************************
+/******************************************
 Dark Mode
 
 
@@ -634,7 +647,7 @@ Dark Mode
 		}
 	},
 
-	/******************************************
+/******************************************
 Stop/Start Emulator
 
 
@@ -932,10 +945,9 @@ Stop/Start Emulator
 			default:
 				console.log('Unknown Opcode: 0x' + opcode.toString(16));
 		}
-		// chip8.updateRegisters();\
 	},
 
-	/******************************************
+/******************************************
 Backwards, Pause, Forwards, Help
 
 
