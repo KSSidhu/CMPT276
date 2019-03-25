@@ -497,27 +497,6 @@ Display Registers, Memory, Instructions
 		}
 	},
 
-	// //Update register values after opcode is retrieved
-	// updateRegisters: function()
-	// {
-	// 	if(!chip8.test) {
-	// 		if(chip8.paused)
-	// 		{
-	// 			return;
-	// 		}
-
-	// 			for(var i = 0; i < 16; i++)
-	// 			{
-	// 				$("#reg-V" + i).text(chip8.hexConverter(chip8.v[i]));
-
-	// 			}
-
-	// 			$("#reg-I").text(chip8.hexConverter(chip8.i));
-	// 			$("#reg-PC").text(chip8.hexConverter(chip8.pc));
-	// 	}
-
-	// },
-
 	//Update Register Display
 	updateRegister: function (index) {
 		if (!chip8.test) {
@@ -964,9 +943,7 @@ Backwards, Pause, Forwards, Help
 	//Step back in emulator one step
 	backwards: function () {
 		chip8.paused = false;
-		// chip8.render();
 		chip8.stop();
-		// chip8.emulate();
 
 		// Reset chip8 properties to previously saved chip8 object
 		chip8.vram = chip8.previousCPU[chip8.previousCPU.length - 1].video.slice();
@@ -985,8 +962,7 @@ Backwards, Pause, Forwards, Help
 
 		let opcode = (chip8.memory[chip8.pc] << 8) | chip8.memory[chip8.pc + 1];
 		chip8.runCycle(opcode);
-
-		// chip8.emulate();
+		chip8.updateMem(chip8.pc, opcode);
 		chip8.render();
 		chip8.start();
 		chip8.pause();

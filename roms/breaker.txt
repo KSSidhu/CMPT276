@@ -252,14 +252,29 @@ clear
 
 
 : reset
-  bally := 28
-  ballx := 32
-  dirx := 1
+  bally := paddley
+  ballx := paddlex
+	resetDirection
   diry := -1
   v7 := 1
   lives -= v7
   deleteLives
   return
+  
+: resetDirection
+	loop
+    v7 := 4
+    v8 := 6
+    v2 := key
+    if v2 == v8 begin
+    	dirx := 1
+      return
+    end
+    if v2 == v7 begin
+    	dirx := -1
+      return
+    end
+  again
   
 : reverse
   diry := -1
