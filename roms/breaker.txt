@@ -171,7 +171,7 @@ clear
       updateBall
       if vf != 0 then updateBricks
       updatePaddle
-      if score == 224 then jump wonGame
+      if score == 125 then jump wonGame
     again
     
     
@@ -281,11 +281,12 @@ clear
   
 : paddleReflect
 	v2 := paddlex
-  v2 += 4
+  v2 += 3
   if ballx == v2 begin
   	dirx := 0
-  diry := -1
+  	diry := -1
   else
+  	v7 := 22
   	updateDirection
   end
   return
@@ -298,6 +299,11 @@ clear
   else
   	diry := -1
   end
+  if v7 == 22 begin
+		if dirx == 0 then dirx := 1
+  end
+  if dirx == 1 then dirx := 1
+  if dirx == -1 then dirx := -1
   
   return
 
@@ -368,6 +374,7 @@ clear
   	i := breakBrick
     sprite ballx bally 1
     i := ball
+    v7 := 0
     updateDirection
     score += 1
     updateScore
