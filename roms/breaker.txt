@@ -148,11 +148,12 @@ clear
     :alias ballx v3
     ballx := 32 # ball x position
     :alias bally v4
-    bally := 20 # ball y position
-    :alias dirx v5
-    dirx := 1 # ball x direction
+    bally := 28 # ball y position
+    
+    :alias dirx v5 # ball x direction
     :alias diry v6
     diry := -1 # ball y direction
+    
     i := ball
     sprite ballx bally 1
     
@@ -165,13 +166,13 @@ clear
     sprite paddlex paddley 1
     
    : mainLoop
+   	resetDirection
     loop # main game loop
       updateBall
       if vf != 0 then updateBricks
       updatePaddle
       if score == 224 then jump wonGame
-    if lives != 0 then again
-    jump gameOver
+    again
     
     
 ####################################################
@@ -254,11 +255,12 @@ clear
 : reset
   bally := paddley
   ballx := paddlex
-	resetDirection
   diry := -1
   v7 := 1
   lives -= v7
   deleteLives
+  if lives == 0 then jump gameOver
+  resetDirection
   return
   
 : resetDirection
@@ -276,24 +278,13 @@ clear
     end
   again
   
-: reverse
-  diry := -1
-  dirx := 1
-  return
-  
-  
-  
-: reflect
-	dirx := 0
-  diry := -1
-  jump mainLoop
-  
   
 : paddleReflect
 	v2 := paddlex
   v2 += 4
   if ballx == v2 begin
-  	reflect
+  	dirx := 0
+  diry := -1
   else
   	updateDirection
   end
@@ -306,12 +297,6 @@ clear
   	diry := 1
   else
   	diry := -1
-  end
-  
-  if dirx == 1 begin
-   dirx := 1
-  else
-   dirx := -1
   end
   
   return
@@ -442,7 +427,11 @@ clear
   i := N
   sprite va vb 8
   
-  jump endGame
+  loop
+    v2 := 0
+    v2 := key
+    if v2 != 0 then jump endGame
+  again
   
   
 : gameOver
