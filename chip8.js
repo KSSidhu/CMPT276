@@ -231,6 +231,8 @@ let chip8 = {
 		let charStr = String.fromCharCode(evt.which);
 		if (evt.type == 'keydown') {
 			val = true;
+
+			//Handle Backwards, Pause and Forwards
 			if (charStr == 'K') {
 				chip8.pause();
 				return;
@@ -344,7 +346,7 @@ Display Registers, Memory, Instructions
 					tr.appendChild(regCol2);
 					tr.appendChild(regVal2);
 
-					//Add to table
+					//Add rows to table
 					tbody.appendChild(tr);
 
 					//Add the i register and program counter to the table
@@ -358,23 +360,24 @@ Display Registers, Memory, Instructions
 						var pcReg = document.createElement('TD');
 						var pcRegVal = document.createElement('TD');
 
-						//"I" id for updating value
+						//add "I" id to reference updating value
 						var iID = document.createAttribute('id');
 						iID.value = 'reg-I';
 						iRegVal.setAttributeNode(iID);
-						//PC id for updating value
+						//add PC id to reference  updating value
 						var pcID = document.createAttribute('id');
 						pcID.value = 'reg-PC';
 						pcRegVal.setAttributeNode(pcID);
 
-						//Append the "I" register
+						//Append the "I" register to row
 						iReg.appendChild(document.createTextNode('I'));
 						iRegVal.appendChild(document.createTextNode(chip8.i));
 
-						//Append the program counter
+						//Append the program counter to row
 						pcReg.appendChild(document.createTextNode('PC'));
 						pcRegVal.appendChild(document.createTextNode(chip8.pc));
 
+						//Append rows to table
 						tr.appendChild(iReg);
 						tr.appendChild(iRegVal);
 						tr.appendChild(pcReg);
@@ -386,26 +389,6 @@ Display Registers, Memory, Instructions
 				//Register table is created, prevent program from creating multiple tables
 				chip8.registerFlag = true;
 			}
-		}
-	},
-
-	//Update Register Display
-	updateRegister: function (index) {
-		if (!chip8.test) {
-			$('#reg-V' + index).css('backgroundColor', 'white');
-			if (chip8.paused) {
-				return;
-			}
-
-			if (chip8.v[index] != chip8.prevReg) {
-				$('#reg-V' + index).css('backgroundColor', 'grey');
-				$('#reg-V' + index).text(chip8.hexConverter(chip8.v[index]));
-			} else if (chip8.v[index] == chip8.prevReg) {
-				$('#reg-V' + index).css('backgroundColor', 'white');
-			}
-
-			$('#reg-I').text(chip8.hexConverter(chip8.i));
-			$('#reg-PC').text(chip8.pc);
 		}
 	},
 
@@ -504,12 +487,14 @@ Display Registers, Memory, Instructions
 	//Update Register Display
 	updateRegister: function (index) {
 		if (!chip8.test) {
+			//Reset to default cell color
 			chip8.highlight('reg-V', index, defCellColor);
 
 			if (chip8.paused) {
 				return;
 			}
 
+			//Compare value to previously stored value, if different highlight cell, otherwise keep as normal or reset 
 			if (chip8.v[index] != chip8.prevReg) {
 				chip8.highlight('reg-V', index, hlColor1);
 				$('#reg-V' + index).text(chip8.hexConverter(chip8.v[index]));
@@ -522,18 +507,22 @@ Display Registers, Memory, Instructions
 		}
 	},
 
+	//Update Instruction Display
 	updateInstruction: function (opcode, instruction) {
 		if (!chip8.test) {
 			if (chip8.paused) {
 				return;
 			}
-
+			//Reset previous cell to default cell color
 			chip8.highlight('op', chip8.currInstr - 1, defCellColor);
 			chip8.highlight('instr', chip8.currInstr - 1, defCellColor);
 
+			//Reset current row count
 			if (chip8.currInstr < 0) {
 				chip8.currInstr = chip8.maxRows;
 			}
+
+			//Highlight and update the most recent row values
 			$('#op' + chip8.currInstr).text(opcode);
 			$('#instr' + chip8.currInstr).text(instruction);
 			chip8.highlight('op', chip8.currInstr, hlColor1);
@@ -543,18 +532,22 @@ Display Registers, Memory, Instructions
 		}
 	},
 
+	//Update Memory Display
 	updateMem: function (index, value) {
 		if (!chip8.test) {
 			if (chip8.paused) {
 				return;
 			}
-
+			//Reset previous cell to default cell color
 			chip8.highlight('mem', chip8.currMem - 1, defCellColor);
 			chip8.highlight('val', chip8.currMem - 1, defCellColor);
 
+			//Reset current row count
 			if (chip8.currMem < 0) {
 				chip8.currMem = chip8.maxRows;
 			}
+
+			//Highlight and update the most recent row values
 			$('#mem' + chip8.currMem).text('memory' + index);
 			$('#val' + chip8.currMem).text(chip8.hexConverter(parseInt(value)));
 			chip8.highlight('mem', chip8.currMem, hlColor1);
@@ -564,6 +557,7 @@ Display Registers, Memory, Instructions
 		}
 	},
 
+	//Highlight table cell
 	highlight: function(id, index, colour)
 	{
 		$("#" + id + index).css("backgroundColor", colour);
@@ -583,6 +577,7 @@ Dark Mode
 
 ******************************************/
 	toggleDarkLight: function () {
+		//References to elements
 		var body = document.getElementById('body');
 		var toolbar = document.getElementById('toolbar');
 		var ul = document.getElementById('ul');
@@ -595,8 +590,12 @@ Dark Mode
 		var itab = document.getElementById('instrTable');
 		var rtab = document.getElementById('regTable');
 		var mtab = document.getElementById('memTable');
+
+		//Determine whether or not program is in dark or light mode
 		var currentClass = body.className;
 		body.className = currentClass == 'dark-mode' ? 'light-mode' : 'dark-mode';
+
+		//Set colors to light mode
 		if (currentClass != 'light-mode') {
 			toolbar.className = 'toolbar';
 			ul.className = 'light-mode';
@@ -617,9 +616,12 @@ Dark Mode
 			rtab.style.color = 'black';
 			mtab.style.backgroundColor = 'white';
 			mtab.style.color = 'black';
+			//Set each tab element to black text
 			for (var i = 0; i < li.length; i++) {
 				li[i].style.color = 'black';
 			}
+
+		//Set colors to dark mode
 		} else if (currentClass != 'dark-mode') {
 			toolbar.className = 'toolbarDark';
 			ul.className = 'dark-mode';
@@ -640,7 +642,8 @@ Dark Mode
 			rtab.style.color = 'white';
 			mtab.style.backgroundColor = bgColor;
 			mtab.style.color = 'white';
-			// rtab.className = "regTableDark";
+
+			//set each tab element to white text
 			for (var i = 0; i < li.length; i++) {
 				li[i].style.color = 'white';
 			}

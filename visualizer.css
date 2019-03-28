@@ -118,8 +118,9 @@ div.visualizer {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 90%;
-  height: 90%;
+  width:  calc(90vw - 8px);    
+  height: calc(35vh - 10px);
+  min-width: 260px;
 }
 
 /*For UI Scaling*/
@@ -268,6 +269,7 @@ div.controlDisplay
   border: 1px solid;
   border-radius: 4px;
   background-color: #7F8BA8;
+  min-width: 230px;
 }
 
 div.controlDisplayDark
@@ -281,6 +283,7 @@ div.controlDisplayDark
   border: 1px solid;
   border-radius: 4px;
   background-color: #152137;
+  min-width: 230px;
 }
 
 div.info-wrapper {
@@ -289,6 +292,7 @@ div.info-wrapper {
   padding-bottom: 25%;
   font-family: "Arial", Helvetica, sans-serif;
   color: #fff;
+  min-width: 200px;
 }
 
 
@@ -334,6 +338,7 @@ button {
   outline: none;
   color: black;
   height : 60px;
+  min-width : 60px;
   text-align: center;
   -webkit-transition-duration: 0.5s; /* Safari */
   transition-duration: 0.5s;
@@ -406,10 +411,11 @@ table.instrTableDark {
 table.instrTable td, table.instrTable th {
   border: 1px solid #AAAAAA;
   padding: 2%;
+  min-width: 75px;
 }
 
 table.instrTable tbody td {
-  font-size: 13px;
+  font-size: 12px;
 }
 
 table.regTable {
@@ -446,6 +452,7 @@ table.regTableDark {
 table.regTable td, table.regTable th {
   border: 1px solid #AAAAAA;
   padding: 7.5px 2px;
+  min-width: 75px;
 }
 
 table.regTable tbody td {
