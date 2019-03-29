@@ -1,0 +1,231 @@
+: digits 0 0 0
+  
+: ball
+0x80
+
+: leftPaddle
+0x80 0x80 0x80 0x80 0x80 0x80 0x80 0x80
+
+: rightPaddle
+0x01 0x01 0x01 0x01 0x01 0x01 0x01 0x01
+
+: letterP
+0xF0 0x90 0xF0 0x80 0x80 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
+
+: one
+0x60 0x20 0x20 0x20 0x70 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
+
+: two
+0xF0 0x10 0xF0 0x80 0xF0 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
+
+: letterW
+0xA8 0xA8 0xA8 0xA8 0xF8 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
+
+: letterI
+0x80 0x80 0x80 0x80 0x80 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
+
+: letterN
+0xC4 0xA4 0x94 0x94 0x8C 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
+
+: letterS
+0xF8 0x80 0xF8 0x08 0xF8 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
+
+:alias ballx vd
+:alias bally vc
+:alias rightPaddleY vb
+:alias leftPaddleY va
+:alias scoreLeft v9
+:alias scoreLeftX v8
+:alias scoreY v7
+:alias scoreRight v6
+:alias scoreRightX v5
+:alias dirx v4
+:alias diry v3
+:alias winner ve
+
+: main
+	winner := 0
+	drawInitialScore
+  
+	drawBar
+	
+	ballx := 28
+  bally := 10
+  
+  i := ball
+	sprite ballx bally 1
+  drawPaddles
+  
+  dirx := 1
+  diry := 1
+  
+  
+	loop
+  	updateLeftPaddle
+  	updateBall
+    updateRightPaddle
+  again
+
+
+: drawBar
+	v2 := 32
+  v3 := 0
+  i := ball
+  loop
+  	sprite v2 v3 1
+    v3 += 1
+	  if v3 == 32 then return
+  again
+  
+: drawPaddles
+	rightPaddleY := 12
+  leftPaddleY := 12
+	v3 := 55
+  i := rightPaddle
+  sprite v3 rightPaddleY 8
+  v2 := 1
+  i := leftPaddle
+  sprite v2 leftPaddleY 8
+  return
+  
+
+: updateBall
+	i := ball
+  sprite ballx bally 1
+  
+  if bally == 31 then diry := -1
+  if bally == 0 then diry := 1
+
+  if ballx == 62 begin
+ 		if vf == 0 then dirx := -1
+  else
+  	if ballx == 63 begin
+      updateLeftScore
+    end
+  end
+  
+  if ballx == 1 begin
+  	if vf == 0 then dirx := 1
+  else
+  	if ballx == 0 begin
+      updateRightScore
+    end
+  end
+  i := ball
+  ballx += dirx
+  bally += diry
+  sprite ballx bally 1
+  return
+
+: updateLeftPaddle
+	v2 := 1
+	i := leftPaddle
+  sprite v2 leftPaddleY 8 
+	v5 := 1
+  v8 := 7
+  if v8 key then leftPaddleY += 1
+  if v5 key then leftPaddleY += -1
+  sprite v2 leftPaddleY 8 
+	return
+
+
+: updateRightPaddle
+	v2 := 55
+	i := rightPaddle
+  sprite v2 rightPaddleY 8 
+	v5 := 0xC
+  v8 := 0xE
+  if v8 key then rightPaddleY += 1
+  if v5 key then rightPaddleY += -1
+  sprite v2 rightPaddleY 8
+  return
+  
+: resetBall
+	i := ball
+	ballx := 32
+  bally := 10
+  return
+  
+: drawInitialScore
+	scoreLeft := 0
+  scoreRight := 2
+  scoreRightX := 45
+  scoreLeftX := 15
+  scoreY := 5
+  
+	# Update right player's score
+	scoreRightX := 45
+  scoreY := 5
+  i := hex scoreRight
+  sprite scoreRightX scoreY 5
+  
+  # Update Left player's score
+  scoreLeftX := 15
+  scoreY := 5
+  i := hex scoreLeft
+  sprite scoreLeftX scoreY 5
+  return
+  
+: updateRightScore
+	# Update right player's score
+  scoreRightX := 45
+  scoreY := 5
+  i := hex scoreRight
+  sprite scoreRightX scoreY 5
+  scoreRight += 1
+  i := hex scoreRight
+  sprite scoreRightX scoreY 5
+  if scoreRight == 3 begin
+  	winner := 2
+  	jump endGame
+  end
+  resetBall
+  dirx := 1
+  return
+
+: updateLeftScore
+  # Update Left player's score
+  scoreLeftX := 15
+  scoreY := 5
+  i := hex scoreLeft
+  sprite scoreLeftX scoreY 5
+  scoreLeft += 1
+  i := hex scoreLeft
+  sprite scoreLeftX scoreY 5
+  if scoreLeft == 3 begin
+  	winner := 1
+  	jump endGame
+  end
+  resetBall
+  dirx := -1
+  return
+  
+: endGame
+	clear
+  
+  v0 := 28
+  v1 := 10
+  
+  i := letterP
+  sprite v0 v1 5
+  v0 += 5
+  if winner == 1 then i := one
+  if winner == 2 then i := two
+  sprite v0 v1 5
+  
+  v0 := 22
+  v1 += 8
+  i := letterW
+  sprite v0 v1 5
+  
+  v0 += 6
+  i := letterI
+  sprite v0 v1 5
+  
+  v0 += 2
+  i := letterN
+  sprite v0 v1 5
+  
+  v0 += 7
+  i := letterS
+  sprite v0 v1 5
