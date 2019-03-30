@@ -1,68 +1,127 @@
-<!-- INPUT TEXT FILE FORMAT
-
-[MNEUMONICS      OPERANDS]
-                 (NNN)
-                 (NN)
-                 (r1) (NN)
-                 (r1) (r2) (N)
-                 (r1) (r2)   
-
-Separate operands by spaces. Registers are always put first, then the        
--->
+*,*::before,*::after{
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+}
 
 
-<html>
+html{
+    font-size: 1.1rem;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+
+}
+
+#textid {
+	width: 220px;
+	margin: 0 auto;
+}
+
+.textfield {
+    display:inline-block;
+}
+.text-field{
+    width: 200px;
+	height: 300px;
+	border: 3px solid #cccccc;
+	padding: 5px;
+	position: relative;
+  	top: 20;
+  	left: 30;
+  	resize: both;
+  	overflow: auto;
+	font-family: Tahoma, sans-serif;
+	background-color: #FDFDFE;
+	background-position: bottom right;
+	background-repeat: no-repeat;
+}
+
+.toolbar{
+    /*display:grid;*/
+    grid-template-columns: repeat(auto-fit,minmax(30px,40px));
+    background-color: rgb(231, 231, 231);
+    color: rgb(0, 0, 0);
+    grid-gap: 1rem;
+    padding: 1rem;
+
+    /*justify-content: center;*/
+
+    /*align-items:center;*/
+}
+
+/*#toolid{
+	width: 10px;
+	margin: 0 auto;
+}*/
+.tool-items{
+	font-family: "Times New Roman", Times, serif;
+	left: 40px;
+	background-color: #7e1111;
+	padding-top: .4rem;
+	padding-bottom:.4rem;
+	padding-left: .3rem;
+	padding-right: .3rem;
+	cursor: pointer;
+	color: #ffff;
+	display: inline-block;
+	position: relative;
+	transition: all 0.3s;
+	vertical-align: middle;
+	left: 110px;
 
 
-<head>
-    <!-- Selecting and uploading a file  -->
-    <input type="file" id="files" name="files[]" multiple />
-    <output id="list"></output>
-    <br>
-    <br>
+	
+}
 
-    <style>
+.tool-items:hover{
+    box-shadow: none;
+    background-color: #6b5e5e;
 
-        body {
-            margin: 0%;
-        }
-        textarea {
-            height: 40%;
-            width: 20%;
-        }
+}
 
-    </style>
+.file{
+	background-color: rgb(231, 231, 231);
+    color: rgb(0, 0, 0);
+    grid-gap: 1rem;
+    padding: 1rem;
+    justify-content: center;
 
-    <script type="text/javascript" src="assembler.js"></script>
-</head>
+}
 
 
-<body>
+.tool-items:hover{
+    box-shadow: none;
+    background-color: #6b5e5e;
 
-    <!-- Creating text box for showing output result -->
-    <textarea id="textbox"></textarea><br><br>
-    <!-- Dowload the file -->
-    <button id="create">SAVE TO FILE</button>
-    <!-- Call resetFunction  -->
-    <a download="hexcodes.txt" id="download"><button onclick="resetFunction()">DOWNLOAD</button></a>
-    <br>
-    
-    
+}
 
-</body></html>
+.inputfile {
+	width: 0.1px;
+	height: 0.1px;
+	opacity: 0;
+	overflow: hidden;
+	position: absolute;
+	z-index: -1;
+}
 
-<!-- REFERENCES: 
 
-    https://stackoverflow.com/questions/52792178/i-want-to-save-textbox-to-txt-file-in-html-using-javascript-but-i-have-an-error?fbclid=IwAR3imyhtf-nizrShgFY1RA1H7CQyIk7_ZgAb2P1kLIjIQePSTCFvUdnj-J0
-    
-    https://github.com/Sachini/GPSVisualizer/blob/master/index.html?fbclid=IwAR1EOoSK3ie3SNjfpvuBEMLD0xWB4TZ1sLu2yxJySTFWppgnA4fYUBU74Ec
+.inputfile + label {
+	left: 40px;
+	top: 20px;
+	background: white;
+	font-family: "Times New Roman", Times, serif;
+	background-color: rgb(27, 26, 26);
+	padding-top: .4rem;
+	padding-bottom:.4rem;
+	padding-left: .3rem;
+	padding-right: .3rem;
+	cursor: pointer;
+	color: #ffff;
+	display: inline-block;
+	position: relative;
+	transition: all 0.3s;
+	vertical-align: middle;
+}
 
-    https://www.htmlgoodies.com/beyond/javascript/read-text-files-using-the-javascript-filereader.html
-
-    https://stackoverflow.com/questions/41930538/how-to-get-input-values-from-html-to-text-file
-
-    https://www.html5rocks.com/en/tutorials/file/dndfiles/
-
-    https://github.com/craigthomas/Chip8Assembler
-
-    -->
+ .inputfile + label:hover {
+     background-color: #6b5e5e;
+  }
