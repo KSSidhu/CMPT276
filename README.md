@@ -1,21 +1,15 @@
-# CMPT 276: Product Document Release 3
+# CMPT 276: Product Document Release 4
 
 ### What's Changed
 > ### Features completed
-- Functioning Chip8 Emulator
-- Runs all opcodes and passes tests
-- Finalized design of HTML interface
-- Draws to the HTML canvas
-- Loads files
-- Keyboard Mapping (both mouse click and keyboard)
-- Pause Button
+- Created our implemententation of Breakout
+- Loads files and fixed loading bug
 - Register Display and automatic updating
-- Altered Testing: Not using Jest.js for this release, instead using separate Javascript and HTML file
 - Emulator can run all ROMS
 - Memory, instructions, and registers displayed
 - Highlighting and updating memory, instructions, and registers
 - Forwards/Backwards buttons implemented
-- Added NavBar and added github and buttons there
+- Added dark mode
 - Functioning assembler: can convert assembly into hex code with input and ouptput text files
 
 > ### Features Not Completed
@@ -23,17 +17,8 @@
 - Assembler: Automated testing, error handling for text input
 
 ## Major Features For Next Release
-- Release 4: Chip8 Games
-
 Chip8 Tool:
 - Fully completed and begin implementation if not fully implemented by end date
-
-Chip8 Emulator :
-- Fix Bugs
-
-Chip8 Visualizer :
-- Fix bugs
-- Improve mouse input
 
 
 ## Introduction
@@ -74,14 +59,13 @@ However, when problems arise the creators of said product must return, fix, and 
 
 ## Risk analysis
 
-### Current Risks:
-- <strong>Feature implementaion estimate has been inaccurate and the group has fallen behind schedule.</strong>
-- <strong>SOLUTION: We've worked over the reading break to fix bugs and will continue working on the emulator and visualizer into next release. </strong>
+### Schedule Inacuracies:
+- Feature implementaion estimate has been inaccurate and the group has fallen behind schedule.
+- SOLUTION: We've worked over the reading break to fix bugs and will continue working on the emulator and visualizer into next release.
 
-### Release 1 Risks:
-- <strong>Weather
+### Weather:
   - Due to extreme weather, the group was not able to make every meeting
-  - SOLUTION: We had an extra meeting during the week in case we couldn't make the weekend meeting</strong>
+  - SOLUTION: We had an extra meeting during the week in case we couldn't make the weekend meeting
 
 ### Exams and Other Courses:
   - During exam periods work may be postponed or given to other team members who aren't studying for exams.
@@ -116,27 +100,26 @@ Release 2:
   <li><del>James and Kirat Implement design of Visualizer</del>
   <li><del>Chamodi begins implementation of Chip8 tool</del>
   <li><del>Test visualizer with available games and software, and run with created Emulator</del>
-  <li>Test tool with Sublime and recreate Emulator to test if runs accordingly
 </ol>
 
 Release 3:
 <ol>
   <li><del>Select both games if haven't already</del>
   <li><del>Research possible implementations</del>
-  <li> Adam works on one game
-  <li> James and Kirat, if finished with Emulator and Visualizer, can aid in game development
-  <li>Test games by running on available emulators and visualizers
-  <li>Also test on team's visualizer and emulator
-  <li>If problems arise with team's visualizer and emulator, Kirat and James will return to them to improve
+  <li> <del>Adam works on one game</del>
+  <li> <del>James and Kirat, if finished with Emulator and Visualizer, can aid in game development</del>
+  <li><del>Test games by running on available emulators and visualizers</del>
+  <li><del>Also test on team's visualizer and emulator</del>
+  <li><del>If problems arise with team's visualizer and emulator, Kirat and James will return to them to improve</del>
 </ol>
 
 Release 4:
   <ol>
-  <li>Allocate members to work on games, or improve previous releases if needed
-  <li>Members not working on any coding parts of the project will finalize the presentation
-  <li>Emulator and Visualizer should be fully completed at this point, with no bugs
-  <li>Game designers should be able to use them freely at this point
-  <li>Designers will test games on our own emulators and visualizers along with publicly available ones
+  <li><del>Allocate members to work on games, or improve previous releases if needed</del>
+  <li><del>Members not working on any coding parts of the project will finalize the presentation</del>
+  <li><del>Emulator and Visualizer should be fully completed at this point, with no bugs</del>
+  <li><del>Game designers should be able to use them freely at this point</del>
+  <li><del>Designers will test games on our own emulators and visualizers along with publicly available ones</del>
   </ol>
   
 
@@ -153,24 +136,26 @@ Release 4:
   > - <del>Submit Feb. 6</del>
 
 ### Release 2: Chip8 Visualizer -> 50 Hrs <strong>each member</strong>
-<strong>Actual Time: 120 hrs</strong>
+Actual Time: 120 hrs
 > - <del>Research: Jan. 14 - 19</del>
 > - <del>Design Two Weeks: Jan. 20 - Feb. 20</del>
 > - <del>Test: Feb. 20 - Feb. 26</del>
 > - <del>Submit Feb. 27</del>
 
-#### Release 3: Chip8 Plugin -> 60 Hrs <strong>each member</strong>
+#### Release 3: Chip8 Plugin -> 60 Hrs each member
+Actual Time: 240 hrs
 > - <del>Research: Feb. 18 - 27</del>
-> - Design Two Weeks: Feb. 27 - <strong>Mar</strong>. 6
-> - Test: Mar. 6 - Mar. 12
-> - Submit Mar. 13
+> - <del>Design Two Weeks: Feb. 27 - Mar. 6</del>
+> - <del>Test: Mar. 6 - Mar. 12</del>
+> - <del>Submit Mar. 13</del>
 
-#### Release 4: Chip8 Games: Space Invaders, Snake -> 50 Hrs <strong>each member</strong>
-> - Research Game Design: Mar. 13 - Mar. 20
-> - Create Presentation: Mar. 20 - Mar. 27
-> - Design Two Weeks: Mar. 20 - Apr. 3
-> - Test: Apr. 3 - Apr. 7
-> - Submit Apr. 8
+#### Release 4: Chip8 Games: Space Invaders, Snake -> 50 Hrs each member
+Actual Time: 210 hrs
+> - <del>Research Game Design: Mar. 13 - Mar. 20</del>
+> - <del>Create Presentation: Mar. 20 - Mar. 27</del>
+> - <del>Design Two Weeks: Mar. 20 - Apr. 3</del>
+> - <del>Test: Apr. 3 - Apr. 7</del>
+> - <del>Submit Apr. 8</del>
 > - Presentation Apr. 8
 
 ## Monitoring and reporting mechanisms
