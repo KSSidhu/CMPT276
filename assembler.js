@@ -48,7 +48,6 @@ function readFile(evt) {
     };
     reader.readAsText(file);
 }
-
 //Function to process and output corresponding hex code
 //Referenced as cited below
 function processText() {
@@ -69,7 +68,7 @@ function processText() {
         };
 
     //Switch cases for all possible types    
-    var create = document.getElementById('create');
+    var create = document.getElementById('download');
     //Variables to test each input operand
     var test1;
     var test2;
@@ -656,7 +655,7 @@ function processText() {
         
         //Call makeTextFile function to create a file with textfile
         downloadLink.href = makeTextFile(textbox);
-        document.getElementById('create').style.display = 'none';
+        //document.getElementById('create').style.display = 'none';
     }, false);
 };
 
@@ -677,14 +676,13 @@ function firstOperand(index) {
 
 //Specify the specific values registers should take
 var requirements = /^[0-9a-fA-F]+$/;
-
 function register(index) {
     return requirements.test(values[index]);
 } 
 
 function resetFunction() {
     var link = document.getElementById('download');
-    document.getElementById('create').style.display = 'block';
+    document.getElementById('download').style.display = 'block';
 }
 
 
