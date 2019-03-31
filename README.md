@@ -3,6 +3,7 @@
 ### What's Changed
 > ### Features completed
 - Created our implemententation of Breakout
+- Created our implementation of PONG
 - Loads files and fixed loading bug
 - Register Display and automatic updating
 - Emulator can run all ROMS
@@ -14,11 +15,6 @@
 
 > ### Features Not Completed
 - Mouse click is not responsive
-- Assembler: Automated testing, error handling for text input
-
-## Major Features For Next Release
-Chip8 Tool:
-- Fully completed and begin implementation if not fully implemented by end date
 
 
 ## Introduction
@@ -149,14 +145,14 @@ Actual Time: 240 hrs
 > - <del>Test: Mar. 6 - Mar. 12</del>
 > - <del>Submit Mar. 13</del>
 
-#### Release 4: Chip8 Games: Space Invaders, Snake -> 50 Hrs each member
+#### Release 4: Chip8 Games: <strong>Breakout, PONG,</strong> Snake -> 50 Hrs each member
 Actual Time: 210 hrs
 > - <del>Research Game Design: Mar. 13 - Mar. 20</del>
 > - <del>Create Presentation: Mar. 20 - Mar. 27</del>
 > - <del>Design Two Weeks: Mar. 20 - Apr. 3</del>
 > - <del>Test: Apr. 3 - Apr. 7</del>
 > - <del>Submit Apr. 8</del>
-> - Presentation Apr. 8
+> - <del>Presentation Apr. 8</del>
 
 ## Monitoring and reporting mechanisms
 
