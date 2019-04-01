@@ -1,0 +1,279 @@
+: user
+0xE0 0xE0 0xE0 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
+
+: dot #for both food and snake
+0x80
+
+: G
+0xF0 0x80 0xB0 0x90 0xF0 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
+
+: A
+0x40 0xA0 0xE0 0xA0 0xA0 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
+
+: M
+0x50 0xA8 0xA8 0xA8 0xA8 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
+
+: E
+0xE0 0x80 0xE0 0x80 0xE0 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
+
+: O
+0xE0 0xA0 0xA0 0xA0 0xE0 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
+
+: V
+0xA0 0xA0 0xA0 0xA0 0x40 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
+
+: R
+0xF0 0x90 0xF0 0xA0 0x90 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
+
+: S
+0xE0 0x80 0xE0 0x20 0xE0 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
+
+: C
+0xE0 0x80 0x80 0x80 0xE0 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
+
+: T
+0xE0 0x40 0x40 0x40 0x40 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
+
+: seven
+0xE0 0x20 0x40 0x40 0x40 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
+
+:alias headx ve
+:alias heady vd
+:alias direction vc
+:alias foodx v8
+:alias foody v7
+:alias score v6
+: digits 0 0 0
+
+:const UP 5
+:const LEFT 7
+:const DOWN 8
+:const RIGHT 9
+
+: user_input
+	v2 := UP
+	if v2 key then direction := UP
+	v2 := LEFT
+	if v2 key then direction := LEFT
+  v2 := DOWN
+	if v2 key then direction := DOWN
+  v2 := RIGHT
+	if v2 key then direction := RIGHT
+  
+: move
+	#Need to erase previous position
+	i := user
+  sprite headx heady 3
+	if direction == UP then heady += -2
+  if direction == LEFT then headx += -2
+  if direction == DOWN then heady += 2
+  if direction == RIGHT then headx += 2
+
+  sprite headx heady 3
+  #if hit something, check if its food
+  if vf == 1 then jump hit_food?
+  return
+  
+: place_food
+	i := dot
+	loop
+		foodx := random 60
+		foody := random 31
+		sprite foodx foody 1
+    #check placed in borders
+		if vf == 0 then return
+		sprite foodx foody 1
+	again
+  
+: init
+	clear
+	score := 0
+  
+  #draw border
+	i  := dot
+	v0 := 0
+	v1 := 31
+	loop
+		sprite v0 v1 1
+		v0 += 1
+		if v0 != 64 then
+	again
+  
+	v0 := 0
+	v1 := 0
+	loop
+		sprite v0 v1 1
+		v0 += 1
+		if v0 != 64 then
+	again
+  
+	v0 := 0
+	v1 := 1
+	loop
+		sprite v0 v1 1
+		v1 += 1
+		if v1 != 31 then
+	again
+  
+	v0 := 63
+	v1 := 1
+	loop
+		sprite v0 v1 1
+		v1 += 1
+		if v1 != 31 then
+	again
+
+	#initial positions
+	headx := 10
+	heady := 10
+  
+  #removes initial position
+  i := user
+  sprite headx heady 3
+
+	direction := RIGHT
+	move
+	place_food
+  return
+
+: hit_edge
+	if headx == 60 then jump gameover
+  if headx == 0 then jump gameover
+  if heady == 30 then jump gameover
+  if heady == 0 then jump gameover
+  return
+  
+: hit_food?
+	i := dot
+  sprite foodx foody 1
+  sprite foodx foody 1
+  if vF == 1 then jump eat_food
+  return
+  
+: eat_food
+  sprite foodx foody 1
+  score += 1
+	place_food
+  return
+
+: title
+	clear
+	va := 21
+  vb := 8
+	i := T
+  sprite va vb 5
+  va += 4
+  i := E
+  sprite va vb 5
+  va += 4
+  i := A
+  sprite va vb 5
+  va += 4
+  i := M
+  sprite va vb 5
+  va += 6
+  i := seven
+  sprite va vb 5
+  
+  va := 21
+  vb += 8
+  i := E
+  sprite va vb 5
+  va += 4
+  i := A
+  sprite va vb 5
+  va += 4
+  i := T
+  sprite va vb 5
+  va += 4
+  i := E
+  sprite va vb 5
+  va += 4
+  i := R
+  sprite va vb 5
+  
+  loop
+    v2 := key
+    if v2 != 0 then return
+  again
+    
+: gameover
+  clear
+	va := 22
+  vb := 8
+	i := G
+  sprite va vb 5
+  va += 5
+  i := A
+  sprite va vb 5
+  va += 4
+  i := M
+  sprite va vb 5
+  va += 6
+  i := E
+  sprite va vb 5
+  
+  va := 22
+  vb += 6
+  i := O
+  sprite va vb 5
+  va += 4
+  i := V
+  sprite va vb 5
+  va += 4
+  i := E
+  sprite va vb 5
+  va += 4
+  i := R
+  sprite va vb 5
+  
+  va := 18
+  vb += 8
+  i := S
+  sprite va vb 5
+  va += 4
+  i := C
+  sprite va vb 5
+  va += 4
+  i := O
+  sprite va vb 5
+  va += 4
+  i := R
+  sprite va vb 5
+  va += 5
+  i := E
+  sprite va vb 5
+  va += 6
+  
+  i := digits
+  bcd score
+  load v2
+  i := hex v0 
+	sprite va vb 5
+	va += 5
+
+	i := hex v1 
+	sprite va vb 5
+	va += 5
+
+	i := hex v2
+	sprite va vb 5
+  
+  #delay restarting game immediately
+  v0 := 100
+	loop
+		v0 += -1
+	if v0 != 0 then again 
+  
+  loop
+    v2 := key
+    if v2 != 0 then jump main
+  again
+  
+  : main
+	title
+	init
+  loop
+  	user_input
+    hit_edge
+  again
