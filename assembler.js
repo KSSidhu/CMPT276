@@ -48,6 +48,7 @@ function readFile(evt) {
     };
     reader.readAsText(file);
 }
+
 //Function to process and output corresponding hex code
 //Referenced as cited below
 function processText() {
@@ -74,16 +75,25 @@ function processText() {
     var test2;
     var test3;
 
+    var hexcode;
+    var binary;
+
     switch (mneumonic){
         //clear video memory
         case "CLS":
             //Define textbox output text 
-            textbox = document.getElementById("textbox").value += "0x00E0" + "\n";
+            hexcode = "00E0";
+            textbox = document.getElementById("textbox").value += "0x" + hexcode + "\n";
+            binary = hex2bin(hexcode);
+            textbox2 = document.getElementById("textbox2").value += binary + "\n";
             break;
 
         //return from subroute
         case "RTS" :
-            textbox = document.getElementById("textbox").value += "0x00EE" + "\n";
+            hexcode = "00EE";
+            textbox = document.getElementById("textbox").value += "0x" + hexcode + "\n";
+            binary = hex2bin(hexcode);
+            textbox2 = document.getElementById("textbox2").value += binary + "\n";
             break;
 
         //System call
@@ -94,8 +104,10 @@ function processText() {
             if(test === 1) {
                 
                 NNN = values[1]; 
-                //alert(NNN);
-                textbox = document.getElementById("textbox").value += "0x0" + NNN + "\n";
+                hexcode = "0" + NNN;
+                textbox = document.getElementById("textbox").value += "0x" + hexcode + "\n";
+                binary = hex2bin(hexcode);
+                textbox2 = document.getElementById("textbox2").value += binary + "\n";
                 break;
             }else{
                 break;
@@ -108,7 +120,10 @@ function processText() {
             test = firstOperand(1);
             if(test === 1){
                 NNN = values[1];
-                textbox = document.getElementById("textbox").value += "0x1" + NNN + "\n";
+                hexcode = "1" + NNN;
+                textbox = document.getElementById("textbox").value += "0x" + hexcode + "\n";
+                binary = hex2bin(hexcode);
+                textbox2 = document.getElementById("textbox2").value += binary + "\n";
                 break;
             }else{
                 break;
@@ -123,8 +138,12 @@ function processText() {
             test = firstOperand(1);
             //Assign operands based on position of operands on text file
             if(test === 1) {
+
                 NNN = values[1];
-                textbox = document.getElementById("textbox").value += "0x2" + NNN + "\n";
+                hexcode = "2" + NNN;
+                textbox = document.getElementById("textbox").value += "0x" + hexcode + "\n";
+                binary = hex2bin(hexcode);
+                textbox2 = document.getElementById("textbox2").value += binary + "\n";
                 break;
             }else{
                 break;
@@ -142,8 +161,10 @@ function processText() {
             if(test && test2 === 1) {
                 r1 = values[1];
                 NN = values[2];
-
-                textbox = document.getElementById("textbox").value += "0x3" + r1 + NN + "\n";
+                hexcode = "3" + r1 + NN;
+                textbox = document.getElementById("textbox").value += "0x" + hexcode + "\n";
+                binary = hex2bin(hexcode);
+                textbox2 = document.getElementById("textbox2").value += binary + "\n";
                 break;
             }else{
                 break;
@@ -160,8 +181,10 @@ function processText() {
             if(test && test2 === 1) {
                 r1 = values[1];
                 NN = values[2];
-
-                textbox = document.getElementById("textbox").value += "0x4" + r1 + NN + "\n";
+                hexcode = "4" + r1 + NN;
+                textbox = document.getElementById("textbox").value += "0x" + hexcode + "\n";
+                binary = hex2bin(hexcode);
+                textbox2 = document.getElementById("textbox2").value += binary + "\n";
                 break;
             }else{
                 break;
@@ -171,16 +194,19 @@ function processText() {
 
 
         //Skip if r1 == r2
-        case "SKR":
+        case "SKRE":
 
             test = register(1);
-            test2 = firstOperand(2);
+            test2 = register(2);
             //Assign operands based on position of operands on text file
-            if(test && test2 === 1) {
+            if(test && test2) {
                 r1 = values[1];
                 r2 = values[2];
 
-                textbox = document.getElementById("textbox").value += "0x5" + r1 + r2 + "0" + "\n";
+                hexcode = "5" + r1 + r2 + "0";
+                textbox = document.getElementById("textbox").value += "0x" + hexcode + "\n";
+                binary = hex2bin(hexcode);
+                textbox2 = document.getElementById("textbox2").value += binary + "\n";
                 break;
             }else{
                 break;
@@ -198,8 +224,10 @@ function processText() {
             if(test && test2 === 1) {
                 r1 = values[1];
                 NN = values[2];
-
-                textbox = document.getElementById("textbox").value += "0x6" + r1 + NN + "\n";
+                hexcode = "6" + r1 + NN;
+                textbox = document.getElementById("textbox").value += "0x" + hexcode + "\n";
+                binary = hex2bin(hexcode);
+                textbox2 = document.getElementById("textbox2").value += binary + "\n";
                 break;
             }else{
                 break;
@@ -216,8 +244,10 @@ function processText() {
             if(test && test2 === 1) {
                 r1 = values[1];
                 NN = values[2];
-
-                textbox = document.getElementById("textbox").value += "0x7" + r1 + NN + "\n";
+                hexcode = "7" + r1 + NN;
+                textbox = document.getElementById("textbox").value += "0x" + hexcode + "\n";
+                binary = hex2bin(hexcode);
+                textbox2 = document.getElementById("textbox2").value += binary + "\n";
                 break;
             }else{
                 break;
@@ -235,8 +265,10 @@ function processText() {
             if(test && test2) {
                 r1 = values[1];
                 r2 = values[2];
-
-                textbox = document.getElementById("textbox").value += "0x8" + r1 + r2 + 0 + "\n";
+                hexcode = "8" + r1 + r2 + "0";
+                textbox = document.getElementById("textbox").value += "0x" + hexcode + "\n";
+                binary = hex2bin(hexcode);
+                textbox2 = document.getElementById("textbox2").value += binary + "\n";
                 break;
             }else{
                 break;
@@ -254,8 +286,10 @@ function processText() {
             if(test && test2) {
                 r1 = values[1];
                 r2 = values[2];
-
-                textbox = document.getElementById("textbox").value += "0x8" + r1 + r2 + 1 + "\n";
+                hexcode = "8" + r1 + r2 + "1";
+                textbox = document.getElementById("textbox").value += "0x" + hexcode + "\n";
+                binary = hex2bin(hexcode);
+                textbox2 = document.getElementById("textbox2").value += binary + "\n";
                 break;
             }else{
                 break;
@@ -273,8 +307,10 @@ function processText() {
             if(test && test2) {
                 r1 = values[1];
                 r2 = values[2];
-
-                textbox = document.getElementById("textbox").value += "0x8" + r1 + r2 + 2 + "\n";
+                hexcode = "8" + r1 + r2 + "2";
+                textbox = document.getElementById("textbox").value += "0x" + hexcode + "\n";
+                binary = hex2bin(hexcode);
+                textbox2 = document.getElementById("textbox2").value += binary + "\n";
                 break;
             }else{
                 break;
@@ -292,8 +328,10 @@ function processText() {
             if(test && test2) {
                 r1 = values[1];
                 r2 = values[2];
-
-                textbox = document.getElementById("textbox").value += "0x8" + r1 + r2 + 3 + "\n";
+                hexcode = "8" + r1 + r2 + "3";
+                textbox = document.getElementById("textbox").value += "0x" + hexcode + "\n";
+                binary = hex2bin(hexcode);
+                textbox2 = document.getElementById("textbox2").value += binary + "\n";
                 break;
             }else{
                 break;
@@ -311,8 +349,10 @@ function processText() {
             if(test && test2) {
                 r1 = values[1];
                 r2 = values[2];
-
-                textbox = document.getElementById("textbox").value += "0x8" + r1 + r2 + 4 + "\n";
+                hexcode = "8" + r1 + r2 + "4";
+                textbox = document.getElementById("textbox").value += "0x" + hexcode + "\n";
+                binary = hex2bin(hexcode);
+                textbox2 = document.getElementById("textbox2").value += binary + "\n";
                 break;
             }else{
                 break;
@@ -330,8 +370,10 @@ function processText() {
             if(test && test2) {
                 r1 = values[1];
                 r2 = values[2];
-
-                textbox = document.getElementById("textbox").value += "0x8" + r1 + r2 + 5 + "\n";
+                hexcode = "8" + r1 + r2 + "5";
+                textbox = document.getElementById("textbox").value += "0x" + hexcode + "\n";
+                binary = hex2bin(hexcode);
+                textbox2 = document.getElementById("textbox2").value += binary + "\n";
                 break;
             }else{
                 break;
@@ -347,8 +389,10 @@ function processText() {
             //Assign operands based on position of operands on text file
             if(test) {
                 r1 = values[1];
-
-                textbox = document.getElementById("textbox").value += "0x8" + r1 + r2 + 5 + "\n";
+                hexcode = "8" + r1 + r2 + "5";
+                textbox = document.getElementById("textbox").value += "0x" + hexcode + "\n";
+                binary = hex2bin(hexcode);
+                textbox2 = document.getElementById("textbox2").value += binary + "\n";
                 break;
             }else{
                 break;
@@ -363,8 +407,10 @@ function processText() {
             //Assign operands based on position of operands on text file
             if(test) {
                 r1 = values[1];
-
-                textbox = document.getElementById("textbox").value += "0x8" + r1 + 0 + "E" + "\n";
+                hexcode = "8" + r1 + 0 + "E";
+                textbox = document.getElementById("textbox").value += "0x" + hexcode + "\n";
+                binary = hex2bin(hexcode);
+                textbox2 = document.getElementById("textbox2").value += binary + "\n";
                 break;
             }else{
                 break;
@@ -374,16 +420,17 @@ function processText() {
             
 
         //Skip next instruction if r1 != r2
-        case "SKNE":
-
+        case "SKRNE":
             test = register(1);
             test2 = register(2);
             //Assign operands based on position of operands on text file
             if(test && test2) {
                 r1 = values[1];
                 r2 = values[2];
-
-                textbox = document.getElementById("textbox").value += "0x9" + r1 + r2 + 0  + "\n";
+                hexcode = "9" + r1 + r2 + 0; 
+                textbox = document.getElementById("textbox").value += "0x" + hexcode + "\n";
+                binary = hex2bin(hexcode);
+                textbox2 = document.getElementById("textbox2").value += binary + "\n";
                 break;
             }else{
                 break;
@@ -399,8 +446,10 @@ function processText() {
             if(test === 1) {
                 
                 NNN = values[1];
-
-                textbox = document.getElementById("textbox").value += "0xA" + NNN + "\n";
+                hexcode = "A" + NNN;
+                textbox = document.getElementById("textbox").value += "0x" + hexcode + "\n";
+                binary = hex2bin(hexcode);
+                textbox2 = document.getElementById("textbox2").value += binary + "\n";
                 break;
             }else{
                 break;
@@ -416,8 +465,10 @@ function processText() {
             if(test === 1) {
                 
                 NNN = values[1];
-
-                textbox = document.getElementById("textbox").value += "0xB" + NNN + "\n";
+                hexcode = "B" + NNN;
+                textbox = document.getElementById("textbox").value += "0x" + hexcode + "\n";
+                binary = hex2bin(hexcode);
+                textbox2 = document.getElementById("textbox2").value += binary + "\n";
                 break;
             }else{
                 break;
@@ -435,8 +486,10 @@ function processText() {
             if(test && test2 === 1) {
                 r1 = values[1];
                 NN = values[2];
-
-                textbox = document.getElementById("textbox").value += "0xC" + r1 + NN + "\n";
+                hexcode = "C" + r1 + NN;
+                textbox = document.getElementById("textbox").value += "0x" + hexcode + "\n";
+                binary = hex2bin(hexcode);
+                textbox2 = document.getElementById("textbox2").value += binary + "\n";
                 break;
             }else{
                 break;
@@ -456,8 +509,10 @@ function processText() {
                 r1 = values[1];
                 r2 = values[2];
                 N = values[3];
-
-                textbox = document.getElementById("textbox").value += "0xD" + r1 + r2 + N + "\n";
+                hexcode = "D" + r1 + r2 + N;
+                textbox = document.getElementById("textbox").value += "0x" + hexcode + "\n";
+                binary = hex2bin(hexcode);
+                textbox2 = document.getElementById("textbox2").value += binary + "\n";
                 break;
 
             }else{
@@ -472,8 +527,10 @@ function processText() {
             //Assign operands based on position of operands on text file
             if(test) {
                 r1 = values[1];
-
-                textbox = document.getElementById("textbox").value += "0xE" + r1 + 9 + "E" + "\n";
+                hexcode = "E" + r1 + 9 + "E";
+                textbox = document.getElementById("textbox").value += "0x" + hexcode + "\n";
+                binary = hex2bin(hexcode);
+                textbox2 = document.getElementById("textbox2").value += binary + "\n";
                 break;
             }else{
                 break;
@@ -489,8 +546,10 @@ function processText() {
             //Assign operands based on position of operands on text file
             if(test) {
                 r1 = values[1];
-
-                textbox = document.getElementById("textbox").value += "0xE" + r1 + "A" + 1 + "\n";
+                hexcode = "E" + r1 + "A" + 1;
+                textbox = document.getElementById("textbox").value += "0x" + hexcode + "\n";
+                binary = hex2bin(hexcode);
+                textbox2 = document.getElementById("textbox2").value += binary + "\n";
                 break;
             }else{
                 break;
@@ -505,8 +564,10 @@ function processText() {
             //Assign operands based on position of operands on text file
             if(test) {
                 r1 = values[1];
-
-                textbox = document.getElementById("textbox").value += "0xF" + r1 + 0 + 7 + "\n";
+                hexcode = "F" + r1 + 0 + 7;
+                textbox = document.getElementById("textbox").value += "0x" + hexcode + "\n";
+                binary = hex2bin(hexcode);
+                textbox2 = document.getElementById("textbox2").value += binary + "\n";
                 break;
             }else{
                 break;
@@ -521,8 +582,10 @@ function processText() {
             //Assign operands based on position of operands on text file
             if(test) {
                 r1 = values[1];
-
-                textbox = document.getElementById("textbox").value += "0xF" + r1 + 0 + "A" + "\n";
+                hexcode = "F" + r1 + 0 + "A";
+                textbox = document.getElementById("textbox").value += "0x" + hexcode + "\n";
+                binary = hex2bin(hexcode);
+                textbox2 = document.getElementById("textbox2").value += binary + "\n";
                 break;
             }else{
                 break;
@@ -537,8 +600,10 @@ function processText() {
             //Assign operands based on position of operands on text file
             if(test) {
                 r1 = values[1];
-
-                textbox = document.getElementById("textbox").value += "0xF" + r1 + 1 + 5 + "\n";
+                hexcode = "F" + r1 + 1 + 5;
+                textbox = document.getElementById("textbox").value += "0x" + hexcode + "\n";
+                binary = hex2bin(hexcode);
+                textbox2 = document.getElementById("textbox2").value += binary + "\n";
                 break;
             }else{
                 break;
@@ -554,8 +619,10 @@ function processText() {
             //Assign operands based on position of operands on text file
             if(test) {
                 r1 = values[1];
-
-                textbox = document.getElementById("textbox").value += "0xF" + r1 + 1 + 8 + "\n";
+                hexcode = "F" + r1 + 1 + 8;
+                textbox = document.getElementById("textbox").value += "0x" + hexcode + "\n";
+                binary = hex2bin(hexcode);
+                textbox2 = document.getElementById("textbox2").value += binary + "\n";
                 break;
             }else{
                 break;
@@ -570,8 +637,10 @@ function processText() {
             //Assign operands based on position of operands on text file
             if(test) {
                 r1 = values[1];
-
-                textbox = document.getElementById("textbox").value += "0xF" + r1 + 1 + "E" + "\n";
+                hexcode = "F" + r1 + 1 + "E";
+                textbox = document.getElementById("textbox").value += "0x" + hexcode + "\n";
+                binary = hex2bin(hexcode);
+                textbox2 = document.getElementById("textbox2").value += binary + "\n";
                 break;
             }else{
                 break;
@@ -586,8 +655,10 @@ function processText() {
             //Assign operands based on position of operands on text file
             if(test) {
                 r1 = values[1];
-
-                textbox = document.getElementById("textbox").value += "0xF" + r1 + 2 + 9 + "\n";
+                hexcode = "F" + r1 + 2 + 9;
+                textbox = document.getElementById("textbox").value += "0x" + hexcode + "\n";
+                binary = hex2bin(hexcode);
+                textbox2 = document.getElementById("textbox2").value += binary + "\n";
                 break;
             }else{
                 break;
@@ -602,8 +673,10 @@ function processText() {
             //Assign operands based on position of operands on text file
             if(test) {
                 r1 = values[1];
-
-                textbox = document.getElementById("textbox").value += "0xF" + r1 + 3 + 3 + "\n";
+                hexcode = "F" + r1 + 3 + 3; 
+                textbox = document.getElementById("textbox").value += "0x" + hexcode + "\n";
+                binary = hex2bin(hexcode);
+                textbox2 = document.getElementById("textbox2").value += binary + "\n";
                 break;
             }else{
                 break;
@@ -619,8 +692,10 @@ function processText() {
             //Assign operands based on position of operands on text file
             if(test) {
                 r1 = values[1];
-
-                textbox = document.getElementById("textbox").value += "0xF" + r1 + 5 + 5 + "\n";
+                hexcode = "F" + r1 + 5 + 5;
+                textbox = document.getElementById("textbox").value += "0x" + hexcode + "\n";
+                binary = hex2bin(hexcode);
+                textbox2 = document.getElementById("textbox2").value += binary + "\n";
                 break;
             }else{
                 break;
@@ -635,8 +710,10 @@ function processText() {
             //Assign operands based on position of operands on text file
             if(test) {
                 r1 = values[1];
-
-                textbox = document.getElementById("textbox").value += "0xF" + r1 + 6 + 5 + "\n";
+                hexcode = "F" + r1 + 6 + 5;
+                textbox = document.getElementById("textbox").value += "0x" + hexcode + "\n";
+                binary = hex2bin(hexcode);
+                textbox2 = document.getElementById("textbox2").value += binary + "\n";
                 break;
 
             }else{
@@ -685,6 +762,10 @@ function resetFunction() {
     document.getElementById('download').style.display = 'block';
 }
 
+function hex2bin(hex){
+    return (parseInt(hex, 16).toString(2)).padStart(16, '0');
+
+}
 
  document.getElementById("files").addEventListener('change', readFile, false)
  //When textbox changes, call resetFunction
