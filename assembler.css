@@ -6,92 +6,171 @@
 
 
 html{
-    font-size: 1.1rem;
+    font-size: .8rem;
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 
 }
 
-#textid {
-	width: 220px;
-	margin: 0 auto;
+
+/*/////////////////////////TEXT FIELD///////////////////////////*/
+body { 
+	background-image: url(https://images.wallpaperscraft.com/image/gradient_light_dark_background_51893_2560x1600.jpg) ;
+	/*background-image: url(https://opticalcortex.com/app/uploads/2014/08/grad-670x376.jpg);*/
+	/*background-image: url(https://www.desktopbackground.org/download/o/2013/12/30/693421_12-excellent-hd-gradient-wallpapers-hdwallsource-com_1920x1080_h.jpg) ;*/
+
+	background-position: center center;
+	background-repeat:  no-repeat;
+	background-attachment: fixed;
+	background-size:  cover;
+	/*background-color: #999;*/
+  
 }
 
+#textid {
+	
+	/*width: 46%;*/
+}
+
+#textbox{
+	/*margin: 30 160%;*/
+
+  	text-align: center;
+
+}
+
+#textbox2{
+	/*margin: 30 160%;*/
+
+  	text-align: center;
+
+}
 .textfield {
     display:inline-block;
+    /*position: fixed;
+    top: 50%;
+	left: 50%;
+	margin-top: -50px;
+	margin-left: -100px;*/
+
 }
+
 .text-field{
-    width: 200px;
-	height: 300px;
-	border: 3px solid #cccccc;
-	padding: 5px;
-	position: relative;
-  	top: 20;
-  	left: 30;
-  	resize: both;
-  	overflow: auto;
-	font-family: Tahoma, sans-serif;
-	background-color: #FDFDFE;
-	background-position: bottom right;
-	background-repeat: no-repeat;
-}
-
-.toolbar{
-    /*display:grid;*/
-    grid-template-columns: repeat(auto-fit,minmax(30px,40px));
-    background-color: rgb(231, 231, 231);
-    color: rgb(0, 0, 0);
-    grid-gap: 1rem;
-    padding: 1rem;
-
-    /*justify-content: center;*/
-
-    /*align-items:center;*/
-}
-
-/*#toolid{
-	width: 10px;
-	margin: 0 auto;
-}*/
-.tool-items{
-	font-family: "Times New Roman", Times, serif;
-	left: 40px;
-	background-color: #7e1111;
-	padding-top: .4rem;
-	padding-bottom:.4rem;
-	padding-left: .3rem;
-	padding-right: .3rem;
-	cursor: pointer;
-	color: #ffff;
-	display: inline-block;
-	position: relative;
-	transition: all 0.3s;
-	vertical-align: middle;
-	left: 110px;
-
-
+    width: 280px;
+	height: 400px;
+	
+	position: fixed;
+	top: 55%;
+	left: 33%;
+	/* bring your own prefixes */
+	transform: translate(-60%, -50%);
 	
 }
 
-.tool-items:hover{
+.text-field1{
+    width: 280px;
+	height: 400px;
+	
+	position: fixed;
+	top: 55%;
+	left: 74%;
+	/* bring your own prefixes */
+	transform: translate(-55%, -50%);
+	
+}
+
+
+
+/*/////////////////////// LOW BAR (DOWNLOAD)/////////////////*/
+.text {
+	font-family: "Avant Garde", Avantgarde, "Century Gothic", CenturyGothic, "AppleGothic", sans-serif;
+	font-size: 36px;
+	padding: 10px 50px;
+	text-align: center;
+	text-transform: uppercase;
+	text-rendering: optimizeLegibility;
+	color: #2c2c2c;
+	background-color: #FEFEFE;
+	letter-spacing: .05em;
+	text-shadow: 
+	4px 4px 0px #d5d5d5, 
+	7px 7px 0px rgba(0, 0, 0, 0.2);
+}
+.lowbar{
+   /* display:grid;*/
+    grid-template-columns: repeat(auto-fit,minmax(1000px,1000px));
+    /*background-color: #131312;*/
+
+    grid-gap: 7px;
+    padding-left: 40rem;
+    padding-right: 50rem;
+    position: fixed;
+	top: 91%;
+	left: 50%;
+	/* bring your own prefixes */
+	transform: translate(-55%, -50%);
+	display:inline-block;
+}
+
+.bar-items{
+	font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+	top: 90%;
+	left: 44%;
+	background-color: #7e1111;
+	padding-top: .4rem;
+	padding-bottom:.4rem;
+	padding-left: 1rem;
+	padding-right: 1rem;
+	cursor: pointer;
+
+	transform: translate(-55%, -50%);
+	color: #ffff;/*
+
+	display: inline-block;*/
+	position: fixed;
+}
+
+.bar-items1 {
+	font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+	top: 90%;
+	left: 67%;
+	background-color: #7e1111;
+	padding-top: .4rem;
+	padding-bottom:.4rem;
+	padding-left: 1rem;
+	padding-right: 1rem;
+	cursor: pointer;
+	color: #ffff;
+	/*display: inline-block;*/
+	position: fixed;
+	transform: translate(-55%, -50%);
+}
+.bar-items:hover{
     box-shadow: none;
     background-color: #6b5e5e;
 
 }
 
-.file{
-	background-color: rgb(231, 231, 231);
-    color: rgb(0, 0, 0);
-    grid-gap: 1rem;
-    padding: 1rem;
-    justify-content: center;
+.bar-items1:hover{
+    box-shadow: none;
+    background-color: #6b5e5e;
 
 }
 
 
-.tool-items:hover{
-    box-shadow: none;
-    background-color: #6b5e5e;
 
+/*////////////////////////////FILE INPUT BUTTON////////////////////////*/
+.fileclass {
+	/*display:grid;
+    grid-template-columns: repeat(auto-fit,minmax(200px,200px));*/
+    /*background-color: #131312;*/
+    background-color: #1D2634;
+
+    /*color: #ACADB4;*/
+    grid-gap: 0.5rem;
+    padding: 0.5rem;
+    padding-bottom: 5rem;
+    /*justify-content: center;*/
+    /*align-items:center;*/
 }
 
 .inputfile {
@@ -105,11 +184,11 @@ html{
 
 
 .inputfile + label {
-	left: 40px;
-	top: 20px;
-	background: white;
-	font-family: "Times New Roman", Times, serif;
-	background-color: rgb(27, 26, 26);
+	position: fixed;
+	top: 15%;
+	left: 46%;
+	font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+	background-color: #6b5e5e;
 	padding-top: .4rem;
 	padding-bottom:.4rem;
 	padding-left: .3rem;
@@ -117,11 +196,11 @@ html{
 	cursor: pointer;
 	color: #ffff;
 	display: inline-block;
-	position: relative;
-	transition: all 0.3s;
 	vertical-align: middle;
 }
 
  .inputfile + label:hover {
-     background-color: #6b5e5e;
+     background-color: #7e1111;
   }
+
+  
