@@ -281,7 +281,7 @@ clear
   
 : paddleReflect
 	v2 := paddlex
-  v2 += 3
+  v2 += 4
   if ballx == v2 begin
   	dirx := 0
   	diry := -1
@@ -300,11 +300,22 @@ clear
   	diry := -1
   end
   if v7 == 22 begin
-		if dirx == 0 then dirx := 1
+		if dirx == 0 then jump breakStraight
   end
-  if dirx == 1 then dirx := 1
-  if dirx == -1 then dirx := -1
   
+  return
+  
+: breakStraight
+	v7 := v2
+  v7 += 3
+  
+  if ballx > v2 begin
+  	if ballx <= v7 then dirx := 1
+  end
+  
+  if ballx < v2 begin
+  	if ballx >= paddlex then dirx := -1
+  end
   return
 
 

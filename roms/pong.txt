@@ -1,28 +1,30 @@
 :macro redirectRight {
 	v0 := leftPaddleY
   v0 += 4
+  v1 := v0
+  v1 += 3
+  
+  if diry == 0 then jump alterDirectionRight
+  
   if bally == v0 then diry := 0
-  if bally > v0 begin
-  	if bally <= 9 then diry := 1
-  end
-  if bally < v0 begin
-  	if bally >= leftPaddleY then diry := -1
-  end
+  
   dirx := 1
+	: finishRight
 }
 
 
 :macro redirectLeft {
 	v0 := rightPaddleY
   v0 += 4
+  v1 := v0
+  v1 += 3
+  
+  if diry == 0 then jump alterDirectionLeft
+  
   if bally == v0 then diry := 0
-  if bally > v0 begin
-  	diry := 1
-  end
-  if bally < v0 begin
-  	diry := -1
-  end
+  
   dirx := -1
+  : finishLeft
 }
 
 
@@ -129,12 +131,34 @@
   sprite v2 leftPaddleY 8
   return
   
+: alterDirectionLeft
+	if bally < v0 begin
+  	if bally >= rightPaddleY then diry := -1
+  end
+  
+  if bally > v0 begin
+  	if bally <= v1 then diry := 1
+  end
+  dirx := -1
+  jump finishLeft
 
+  
+: alterDirectionRight
+	if bally < v0 begin
+  	if bally >= leftPaddleY then diry := -1
+  end
+  
+  if bally > v0 begin
+  	if bally <= v1 then diry := 1
+  end
+  dirx := 1
+  jump finishRight
 
 : updateBall
 	i := ball
   sprite ballx bally 1
   
+  # controls hitting top or bottom
   if bally == 31 then diry := -1
   if bally == 0 then diry := 1
 
@@ -143,9 +167,7 @@
     	redirectLeft
     end
   else
-  	if ballx == 63 begin
-      updateLeftScore
-    end
+  	if ballx == 63 then jump updateLeftScore
   end
   
   if ballx == 1 begin
@@ -153,10 +175,9 @@
     	redirectRight
     end
   else
-  	if ballx == 0 begin
-      updateRightScore
-    end
+  	if ballx == 0 then jump updateRightScore
   end
+  
   i := ball
   ballx += dirx
   bally += diry
