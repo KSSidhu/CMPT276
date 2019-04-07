@@ -4,6 +4,7 @@
 > ### Features completed
 - Created our implemententation of Breakout
 - Created our implementation of PONG
+- Created our implementation of Eater (A snake-type game)
 - Loads files and fixed loading bug
 - Register Display and automatic updating
 - Emulator can run all ROMS
@@ -11,10 +12,62 @@
 - Highlighting and updating memory, instructions, and registers
 - Forwards/Backwards buttons implemented
 - Added dark mode
-- Functioning assembler: can convert assembly into hex code with input and ouptput text files
+- Functioning assembler: can convert assembly into hex and binary code with input and ouptput text files
 
-> ### Features Not Completed
+### Unintended Features
+- Dark Mode
+  - We thought having a darker colored UI would appeal to more users especially since most students and professors we come across use dark themes in their text editors and IDEs
+  - Also a lighter color is easier to see during presentations whereas a darker colored UI may be more favorable for personal use
+
+### Features Not Completed
 - Mouse click is not responsive
+  - We were not able to solve the problem where a mouse click would simulate holding down a key indefinitely
+
+
+## Post-Mortem
+### What Worked Well?
+- Slack as communication
+  - Everyone participated in slack conversations
+  - Slack helped us stay in touch during weeks where we weren't able to hold in person meetings
+
+- GitHub
+  - Made sharing source code much easier
+  - We could monitor who made changes to which files
+
+- Panic/Catch-Up Week
+  - We were behind especially on our emulator and visualizer
+  - Having a week set aside during reading break to focus more on the project helped us get back on track
+
+### What didn't work well?
+- Segmented the work too much
+  - Made reading everyone's source code difficult
+  - Were unaware of each other's work
+
+= Worked from master branch
+  - Pushed all our changes to a single master branch
+  - If any bugs were present it would cause conflicts with other people's work
+
+### Biggest Challenge?
+- Lost a team member early on
+  - Had to rework schedule and reassign project roles just after finishing first iteration
+
+- New Technology
+  - For testing and creating project had to learn a lot of new languages and frameworks
+  - Spent a lot of time researching and watching videos
+  - Slowed our progress tremendously in beginning since we dealt with many bugs
+
+### What We Would've Done Differently?
+- Have more team members work on a single part of project at a time
+  - Would've had more help and could bounce ideas off one another
+  - Reduced bus factor for each part of project
+
+- Started developing games earlier
+  - Had to learn Octo 8 or Assembly late into term when most busy
+  - Ran into many bugs
+
+- Kept a bug log
+  - Often lost track of bugs present in code
+  - Some sort of Trello/Kanban board or document to keep track of current bugs, solved bugs and bugs being worked on
 
 
 ## Introduction
@@ -22,9 +75,9 @@ This project is to design a Chip8 Emulator for CMPT 276. It is designed for educ
 
 ## Project Organization
 - Project Manger: Kirat Sidhu
-- 2 Testers: Adam Tran, Chamodi Basnayake
+- 2 Testers: Adam Tran, Kirat Sidhu
 - Emulator and Visualizer Designers: James Young, Kirat Sidhu
-- Game Designers: Adam Tran, Kirat Sidhu, James Young
+- Game Designers: Adam Tran, Kirat Sidhu
 - Chip8 Tool Designer: Chamodi Basnayake
 
 ## Communication Tools
@@ -124,28 +177,28 @@ Release 4:
 ### Meeting Schedule
 - Every Saturday at 1:00 pm - 2:00 pm
 
-### Release 1: Chip8 Emulator -> 50 Hrs <strong>each member</strong>
+### Release 1: Chip8 Emulator -> Estimate: 20 Hrs
  Actual Time: 40 hrs
   > - <del>Research: Jan. 8 - 12</del>
   > - <del>Design Two Weeks: Jan. 12 - Jan. 26</del>
   > - <del>Test: Jan. 26 - Feb. 6</del>
   > - <del>Submit Feb. 6</del>
 
-### Release 2: Chip8 Visualizer -> 50 Hrs <strong>each member</strong>
+### Release 2: Chip8 Visualizer -> Estimate: 100 Hrs
 Actual Time: 120 hrs
 > - <del>Research: Jan. 14 - 19</del>
 > - <del>Design Two Weeks: Jan. 20 - Feb. 20</del>
 > - <del>Test: Feb. 20 - Feb. 26</del>
 > - <del>Submit Feb. 27</del>
 
-#### Release 3: Chip8 Plugin -> 60 Hrs each member
+#### Release 3: Chip8 Plugin -> Estimate: 240 Hrs
 Actual Time: 240 hrs
 > - <del>Research: Feb. 18 - 27</del>
 > - <del>Design Two Weeks: Feb. 27 - Mar. 6</del>
 > - <del>Test: Mar. 6 - Mar. 12</del>
 > - <del>Submit Mar. 13</del>
 
-#### Release 4: Chip8 Games: <strong>Breakout, PONG,</strong> Snake -> 50 Hrs each member
+#### Release 4: Chip8 Games: <strong>Breakout, PONG, Eater -> Estimate: 200 Hrs
 Actual Time: 210 hrs
 > - <del>Research Game Design: Mar. 13 - Mar. 20</del>
 > - <del>Create Presentation: Mar. 20 - Mar. 27</del>
