@@ -1,7 +1,7 @@
 : user
 0xE0 0xE0 0xE0 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
 
-: dot #for both food and snake
+: dot #for food
 0x80
 
 : G
@@ -71,7 +71,7 @@
 
   sprite headx heady 3
   #if hit something, check if its food
-  if vf == 1 then jump hit_food?
+  if vf == 1 then jump hit
   return
   
 : place_food
@@ -135,19 +135,13 @@
 	move
 	place_food
   return
-
-: hit_edge
-	if headx == 60 then jump gameover
-  if headx == 0 then jump gameover
-  if heady == 30 then jump gameover
-  if heady == 0 then jump gameover
-  return
   
-: hit_food?
+: hit
 	i := dot
   sprite foodx foody 1
   sprite foodx foody 1
   if vF == 1 then jump eat_food
+  gameover
   return
   
 : eat_food
@@ -275,5 +269,4 @@
 	init
   loop
   	user_input
-    hit_edge
   again
