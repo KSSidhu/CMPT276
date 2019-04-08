@@ -1,0 +1,283 @@
+: dot #for both food and snake
+0x80
+
+: G
+0xF0 0x80 0xB0 0x90 0xF0 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
+
+: A
+0x40 0xA0 0xE0 0xA0 0xA0 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
+
+: M
+0x50 0xA8 0xA8 0xA8 0xA8 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
+
+: E
+0xE0 0x80 0xE0 0x80 0xE0 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
+
+: O
+0xE0 0xA0 0xA0 0xA0 0xE0 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
+
+: V
+0xA0 0xA0 0xA0 0xA0 0x40 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
+
+: R
+0xF0 0x90 0xF0 0xA0 0x90 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
+
+: S
+0xE0 0x80 0xE0 0x20 0xE0 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
+
+: C
+0xE0 0x80 0x80 0x80 0xE0 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
+
+: T
+0xE0 0x40 0x40 0x40 0x40 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
+
+: seven
+0xE0 0x20 0x40 0x40 0x40 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
+
+:alias headx ve
+:alias heady vd
+:alias direction vc
+:alias tailx vb
+:alias taily va
+:alias foodx v8
+:alias foody v7
+:alias score v6
+:alias extend v5
+:alias taildir v4
+: digits 0 0 0
+
+:const UP 5
+:const LEFT 7
+:const DOWN 8
+:const RIGHT 9
+
+: user_input
+	v2 := UP
+	if v2 key then direction := UP
+	v2 := LEFT
+	if v2 key then direction := LEFT
+  v2 := DOWN
+	if v2 key then direction := DOWN
+  v2 := RIGHT
+	if v2 key then direction := RIGHT
+  
+: move
+	i := dot
+	if direction == UP then heady += -1
+  if direction == LEFT then headx += -1
+  if direction == DOWN then heady += 1
+  if direction == RIGHT then headx += 1
+
+  sprite headx heady 1
+  #if hit something, check if its food
+  if vf == 1 then jump hit
+  return
+  
+: place_food
+	i := dot
+	loop
+		foodx := random 60
+		foody := random 31
+		sprite foodx foody 1
+    #check placed in borders
+		if vf == 0 then return
+		sprite foodx foody 1
+	again
+  
+: init
+	clear
+	score := 0
+  extend := 3
+  
+  #draw border
+	i  := dot
+	v0 := 0
+	v1 := 31
+	loop
+		sprite v0 v1 1
+		v0 += 1
+		if v0 != 64 then
+	again
+  
+	v0 := 0
+	v1 := 0
+	loop
+		sprite v0 v1 1
+		v0 += 1
+		if v0 != 64 then
+	again
+  
+	v0 := 0
+	v1 := 1
+	loop
+		sprite v0 v1 1
+		v1 += 1
+		if v1 != 31 then
+	again
+  
+	v0 := 63
+	v1 := 1
+	loop
+		sprite v0 v1 1
+		v1 += 1
+		if v1 != 31 then
+	again
+
+	#initial positions
+	headx := 10
+	heady := 10
+  tailx := headx
+  taily := heady
+
+	direction := RIGHT
+	move
+	place_food
+  return
+  
+: hit
+	i := dot
+  sprite foodx foody 1
+  sprite foodx foody 1
+  if vF == 1 then jump eat_food
+  gameover
+  return
+  
+: eat_food
+  sprite foodx foody 1
+  score += 1
+  extend += 3
+	place_food
+  return
+
+: title
+	clear
+	va := 21
+  vb := 8
+	i := T
+  sprite va vb 5
+  va += 4
+  i := E
+  sprite va vb 5
+  va += 4
+  i := A
+  sprite va vb 5
+  va += 4
+  i := M
+  sprite va vb 5
+  va += 6
+  i := seven
+  sprite va vb 5
+  
+  va := 21
+  vb += 8
+  i := E
+  sprite va vb 5
+  va += 4
+  i := A
+  sprite va vb 5
+  va += 4
+  i := T
+  sprite va vb 5
+  va += 4
+  i := E
+  sprite va vb 5
+  va += 4
+  i := R
+  sprite va vb 5
+  
+  loop
+    v2 := key
+    if v2 != 0 then return
+  again
+    
+: gameover
+  clear
+	va := 22
+  vb := 8
+	i := G
+  sprite va vb 5
+  va += 5
+  i := A
+  sprite va vb 5
+  va += 4
+  i := M
+  sprite va vb 5
+  va += 6
+  i := E
+  sprite va vb 5
+  
+  va := 22
+  vb += 6
+  i := O
+  sprite va vb 5
+  va += 4
+  i := V
+  sprite va vb 5
+  va += 4
+  i := E
+  sprite va vb 5
+  va += 4
+  i := R
+  sprite va vb 5
+  
+  va := 18
+  vb += 8
+  i := S
+  sprite va vb 5
+  va += 4
+  i := C
+  sprite va vb 5
+  va += 4
+  i := O
+  sprite va vb 5
+  va += 4
+  i := R
+  sprite va vb 5
+  va += 5
+  i := E
+  sprite va vb 5
+  va += 6
+  
+  i := digits
+  bcd score
+  load v2
+  i := hex v0 
+	sprite va vb 5
+	va += 5
+
+	i := hex v1 
+	sprite va vb 5
+	va += 5
+
+	i := hex v2
+	sprite va vb 5
+  
+  #delay restarting game immediately
+  v0 := 100
+	loop
+		v0 += -1
+	if v0 != 0 then again 
+  
+  loop
+    v2 := key
+    if v2 != 0 then jump main
+  again
+  
+  : delete_tail
+  i := dot
+	if direction == UP then taily += -1
+  if direction == LEFT then tailx += -1
+  if direction == DOWN then taily += 1
+  if direction == RIGHT then tailx += 1
+
+  sprite tailx taily 1
+	return
+  
+  : main
+	title
+	init
+  loop
+    if extend == 0 then delete_tail
+  	if extend != 0 then extend += -1
+  	user_input
+  again
