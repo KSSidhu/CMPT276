@@ -15,53 +15,32 @@ html{
 /*/////////////////////////TEXT FIELD///////////////////////////*/
 body { 
 	background-image: url(https://images.wallpaperscraft.com/image/gradient_light_dark_background_51893_2560x1600.jpg) ;
-	/*background-image: url(https://opticalcortex.com/app/uploads/2014/08/grad-670x376.jpg);*/
-	/*background-image: url(https://www.desktopbackground.org/download/o/2013/12/30/693421_12-excellent-hd-gradient-wallpapers-hdwallsource-com_1920x1080_h.jpg) ;*/
-
 	background-position: center center;
 	background-repeat:  no-repeat;
 	background-attachment: fixed;
 	background-size:  cover;
-	/*background-color: #999;*/
   
 }
 
-#textid {
-	
-	/*width: 46%;*/
-}
-
 #textbox{
-	/*margin: 30 160%;*/
-
   	text-align: center;
 
 }
 
 #textbox2{
-	/*margin: 30 160%;*/
-
   	text-align: center;
 
 }
 .textfield {
     display:inline-block;
-    /*position: fixed;
-    top: 50%;
-	left: 50%;
-	margin-top: -50px;
-	margin-left: -100px;*/
-
 }
 
 .text-field{
     width: 280px;
 	height: 400px;
-	
 	position: fixed;
 	top: 55%;
 	left: 33%;
-	/* bring your own prefixes */
 	transform: translate(-60%, -50%);
 	
 }
@@ -69,18 +48,20 @@ body {
 .text-field1{
     width: 280px;
 	height: 400px;
-	
 	position: fixed;
 	top: 55%;
-	left: 74%;
-	/* bring your own prefixes */
+	left: 70%;
 	transform: translate(-55%, -50%);
 	
 }
 
 
 
-/*/////////////////////// LOW BAR (DOWNLOAD)/////////////////*/
+/*/////////////////////// LOW BAR (DOWNLOAD BUTTONS)/////////////////*/
+
+
+/*Code for the title styling was taken directly from the following website. All credits to it*/
+/*https://codepen.io/juanbrujo/pen/yGpAK?editors=1100*/
 .text {
 	font-family: "Avant Garde", Avantgarde, "Century Gothic", CenturyGothic, "AppleGothic", sans-serif;
 	font-size: 36px;
@@ -96,43 +77,44 @@ body {
 	7px 7px 0px rgba(0, 0, 0, 0.2);
 }
 .lowbar{
-   /* display:grid;*/
     grid-template-columns: repeat(auto-fit,minmax(1000px,1000px));
-    /*background-color: #131312;*/
-
     grid-gap: 7px;
     padding-left: 40rem;
     padding-right: 50rem;
     position: fixed;
 	top: 91%;
 	left: 50%;
-	/* bring your own prefixes */
 	transform: translate(-55%, -50%);
 	display:inline-block;
 }
 
+							/*//////////// DOWNLOAD HEX BUTTON/////////////*/
 .bar-items{
 	font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-	top: 90%;
-	left: 44%;
+	top: 93%;
+	left: 33.5%;
 	background-color: #7e1111;
 	padding-top: .4rem;
 	padding-bottom:.4rem;
 	padding-left: 1rem;
 	padding-right: 1rem;
 	cursor: pointer;
-
 	transform: translate(-55%, -50%);
-	color: #ffff;/*
-
-	display: inline-block;*/
+	color: #ffff;
 	position: fixed;
 }
 
+.bar-items:hover{
+    box-shadow: none;
+    background-color: #6b5e5e;
+
+}
+
+							/*//////////// DOWNLOAD BIN BUTTON/////////////*/
 .bar-items1 {
 	font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-	top: 90%;
-	left: 67%;
+	top: 93%;
+	left: 79%;
 	background-color: #7e1111;
 	padding-top: .4rem;
 	padding-bottom:.4rem;
@@ -140,37 +122,24 @@ body {
 	padding-right: 1rem;
 	cursor: pointer;
 	color: #ffff;
-	/*display: inline-block;*/
 	position: fixed;
 	transform: translate(-55%, -50%);
 }
-.bar-items:hover{
-    box-shadow: none;
-    background-color: #6b5e5e;
 
-}
 
 .bar-items1:hover{
     box-shadow: none;
     background-color: #6b5e5e;
-
 }
 
 
 
 /*////////////////////////////FILE INPUT BUTTON////////////////////////*/
 .fileclass {
-	/*display:grid;
-    grid-template-columns: repeat(auto-fit,minmax(200px,200px));*/
-    /*background-color: #131312;*/
     background-color: #1D2634;
-
-    /*color: #ACADB4;*/
     grid-gap: 0.5rem;
     padding: 0.5rem;
     padding-bottom: 5rem;
-    /*justify-content: center;*/
-    /*align-items:center;*/
 }
 
 .inputfile {
