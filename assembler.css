@@ -172,4 +172,11 @@ body {
      background-color: #7e1111;
   }
 
-  
+  /*//////////////////////////REFERENCES///////////////*/
+
+  .reference {
+  	position: fixed;
+  	color: white;
+    top: 97%;
+    left: 5%;
+  }
